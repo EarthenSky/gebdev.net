@@ -1,0 +1,8 @@
+body {
+  background: backgroundImg.jpg;
+  color: red;
+}
+
+body * {
+   color: #333;
+}
