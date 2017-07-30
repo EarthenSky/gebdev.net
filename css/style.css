@@ -1,25 +1,114 @@
+html * {
+  /*sets basic text font*/
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 100;
+
+  /*sets basic text color*/
+  color: #eee;
+}
+
 body {
   /*sets the background image and makes it fill the entire screen*/
   background: url(cssResources/background.jpg);
   background-size: cover;
   background-attachment: fixed;
-  /*sets text color*/
-  color: #eee;
 }
 
-#playbtn {
+#name {
+  /*positions the name elements horizontally*/
+  display: inline;
+  /*moves the name to the top corner*/
+  margin: auto;
+  /*moves the name to the left*/
+  float: left;
+}
+
+#namekana {
+  /*positions the name elements horizontally*/
+  display: inline;
+  /*centers the kana with the normal name*/
+  position: relative;
+  top: 0.15em;
+}
+
+#infobar {
+  /*positions list horizontally*/
+  display: inline;
+  /*moves the list to the right*/
+  float: right;
+  /*moves the list to the top corner*/
+  margin: auto;
+  /*
+  max-width: 30%;
+  max-height: 30%;
+  */
+}
+
+#infobar * {
+    /*positions elements horizontally*/
+    display: inline;
+    /*makes the button change cursor type when hovering*/
+    cursor: pointer;
+}
+
+#infobar *:hover {
+  color: #ddd;
+}
+
+#infobar *:active {
+  color: #999;
+}
+
+#curentlyactive {
+  font-size: 1.5em;
+}
+
+.linebutton {
+  /*places the button at the center of the screen*/
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
+  /*makes the button change cursor type when hovering*/
+  cursor: pointer;
+  /*sets colours*/
+  color: #eee;
+  background-color: rgba(16, 16, 16, 0);
+  /*sets the button size and border*/
   padding: 1em 1.5em 1em 1.5em;
   border: 0.08em solid #eee;
+  border-radius: 0.2em;
+
+  clear: both;
 }
 
-#playbtn:hover {
-  border: 0.08em solid #fff;
-  color: #fff;
+.linebutton:hover {
+  /*changes colours*/
+  border: 0.08em solid #ddd;
+  color: #ddd;
   background-color: rgba(16, 16, 16, 0.2);
+}
+
+.linebutton:active {
+  /*changes colours again*/
+  border: 0.08em solid #999;
+  color: #999;
+  background-color: rgba(16, 16, 16, 0.3);
+}
+
+#wrapper {
+    min-width: 8em;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
