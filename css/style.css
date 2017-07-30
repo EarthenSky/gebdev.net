@@ -4,7 +4,6 @@ html * {
   font-style: normal;
   font-variant: normal;
   font-weight: 100;
-
   /*sets basic text color*/
   color: #eee;
 }
@@ -14,6 +13,9 @@ body {
   background: url(cssResources/background.jpg);
   background-size: cover;
   background-attachment: fixed;
+  /*keeps the positioning of the elements the same at small screen sizes*/
+  min-width: 1080px;
+  min-height: 480px;
 }
 
 #name {
@@ -23,6 +25,13 @@ body {
   margin: auto;
   /*moves the name to the left*/
   float: left;
+  /*stops the name from wraping around the screen or moving out of the screen*/
+  white-space: nowrap;
+  overflow: auto;
+  /*sets the font size*/
+  font-size: 4em;
+
+  /*background-color: red;*/
 }
 
 #namekana {
@@ -30,48 +39,77 @@ body {
   display: inline;
   /*centers the kana with the normal name*/
   position: relative;
-  top: 0.15em;
-}
-
-#infobar {
-  /*positions list horizontally*/
-  display: inline;
-  /*moves the list to the right*/
-  float: right;
-  /*moves the list to the top corner*/
+  top: 0.3em;
+  /*stops the name from wraping around the screen or moving out of the screen*/
+  white-space: nowrap;
+  overflow: auto;
+  /*moves the name to the left*/
+  float: left;
+  /*makes margin smaller*/
   margin: auto;
-  /*
-  max-width: 30%;
-  max-height: 30%;
-  */
+  /*sets the font size*/
+  font-size: 2.5em;
+
+  /*background-color: green;*/
 }
 
-#infobar * {
+#titledesc {
+  /*sets the font size and family*/
+  font-size: 2em;
+  font-family: Papyrus, "Brush Script MT", "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  /*positioning*/
+  float: right;
+  margin: 0.4em 0 0 0;
+}
+
+#navbar {
+  /*keeps the list to the left*/
+  float: left;
+  /*keeps the list at the bottom corner*/
+  margin: auto;
+  /*stops the list items from wraping*/
+  white-space: nowrap;
+  overflow: auto;
+  /*removes weird padding on the left*/
+  padding-left: 0;
+  /*moves element to the bottom*/
+  position: absolute;
+  top: 100%;
+  transform: translateY(-100%);
+
+  /*background-color: yellow;*/
+}
+
+#navbar * {
     /*positions elements horizontally*/
     display: inline;
     /*makes the button change cursor type when hovering*/
     cursor: pointer;
+    /*sets the font size*/
+    font-size: 2em;
+    /*separates the elements horizontally*/
+    padding: 0 0.1em 0 0.1em;
+    /*background-color: pink;*/
 }
 
-#infobar *:hover {
+#navbar *:hover {
+  /*sets colour*/
   color: #ddd;
 }
 
-#infobar *:active {
+#navbar *:active {
+  /*sets colour*/
   color: #999;
 }
 
 #curentlyactive {
-  font-size: 1.5em;
+  /*sets the font size*/
+  font-size: 3em;
 }
 
 .linebutton {
-  /*places the button at the center of the screen*/
+  /*positioning*/
   margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   /*makes the button change cursor type when hovering*/
   cursor: pointer;
   /*sets colours*/
@@ -81,8 +119,10 @@ body {
   padding: 1em 1.5em 1em 1.5em;
   border: 0.08em solid #eee;
   border-radius: 0.2em;
-
-  clear: both;
+  /*sets the font size*/
+  font-size: 2em;
+  /*stops the text from wraping*/
+  white-space: nowrap;
 }
 
 .linebutton:hover {
@@ -99,8 +139,16 @@ body {
   background-color: rgba(16, 16, 16, 0.3);
 }
 
-#wrapper {
-    min-width: 8em;
+#bodywrapper {
+    min-width: 8em; /*what does this do?*/
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /*bring your own prefixes*/
+  transform: translate(-50%, -50%);
 }
 
 .noselect {
