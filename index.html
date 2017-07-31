@@ -3,8 +3,8 @@
 <html>
   <head>
     <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/mainScreen.js"></script>
     <title>Websites are Pretty Great</title>
-
   </head>
 
   <body ontouchstart="">
@@ -21,10 +21,12 @@
         <li>More</li>
       </ul>
 
-      <btn class="linebutton noselect centered">Play Demo Track</btn>
+      <btn onclick="alertUser()" class="linebutton noselect centered">
+        Play Demo Track
+        <img id="image" src="generalResources/PlayButton.png"></img>
+      </btn>
 
     </div>
-
   </body>
 
 </html>
