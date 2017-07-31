@@ -14,7 +14,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   /*keeps the positioning of the elements the same at small screen sizes*/
-  min-width: 1080px;
+  min-width: 960px;
   min-height: 480px;
 }
 
@@ -55,11 +55,11 @@ body {
 
 #titledesc {
   /*sets the font size and family*/
-  font-size: 2em;
+  font-size: 1.5em;
   font-family: Papyrus, "Brush Script MT", "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   /*positioning*/
   float: right;
-  margin: 0.4em 0 0 0;
+  margin: 1em 0 0 0;
 }
 
 #navbar {
