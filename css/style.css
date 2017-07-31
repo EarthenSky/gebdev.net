@@ -13,22 +13,52 @@ body {
   background: url(cssResources/background.jpg);
   background-size: cover;
   background-attachment: fixed;
+}
+
+#headerwrapper {
   /*keeps the positioning of the elements the same at small screen sizes*/
   min-width: 960px;
-  min-height: 480px;
+  /*positioning*/
+  height: 80px;
+}
+
+#songwrapper {
+  display: block;
+  /*keeps the positioning of the elements the same at small screen sizes*/
+
+  /*sets the size of the body*/
+  min-height: calc(100vh - 120px);
+}
+
+#footerwrapper {
+  /*sets position to the bottom*/
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+}
+
+#footercolour {
+  /*colour*/
+  background-color: rgba(16, 16, 16, 0.8);
+  /*positioning*/
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
 }
 
 #name {
-  /*positions the name elements horizontally*/
+  /*positioning*/
   display: inline;
-  /*moves the name to the top corner*/
   margin: auto;
-  /*moves the name to the left*/
   float: left;
-  /*stops the name from wraping around the screen or moving out of the screen*/
+  /*stops wraping*/
   white-space: nowrap;
   overflow: auto;
-  /*sets the font size*/
+  /*font*/
   font-size: 4em;
 
   /*background-color: red;*/
@@ -60,22 +90,19 @@ body {
   /*positioning*/
   float: right;
   margin: 1em 0 0 0;
+  padding-right: 0.2em;
 }
 
 #navbar {
   /*keeps the list to the left*/
   float: left;
-  /*keeps the list at the bottom corner*/
-  margin: auto;
+  clear: left;
   /*stops the list items from wraping*/
   white-space: nowrap;
-  overflow: auto;
-  /*removes weird padding on the left*/
+  /*positioning*/
+  margin: 0;
   padding-left: 0;
-  /*moves element to the bottom*/
-  position: absolute;
-  top: 100%;
-  transform: translateY(-100%);
+  bottom: 0;
 
   /*background-color: yellow;*/
 }
@@ -85,40 +112,41 @@ body {
     display: inline;
     /*makes the button change cursor type when hovering*/
     cursor: pointer;
-    /*sets the font size*/
+    /*font*/
     font-size: 2em;
     /*separates the elements horizontally*/
     padding: 0 0.1em 0 0.1em;
+
     /*background-color: pink;*/
 }
 
 #navbar *:hover {
-  /*sets colour*/
-  color: #ddd;
+  color: #aaa;
 }
 
 #navbar *:active {
-  /*sets colour*/
-  color: #999;
+  color: #777;
 }
 
 #curentlyactive {
-  /*sets the font size*/
+  /*font*/
   font-size: 3em;
 }
 
 .linebutton {
-  /*positioning*/
-  margin: 0;
+  /*moves the name to the left*/
+  float: left;
   /*makes the button change cursor type when hovering*/
   cursor: pointer;
   /*sets colours*/
   color: #eee;
   background-color: rgba(16, 16, 16, 0);
-  /*sets the button size and border*/
+  /*sets the size of the button and the border*/
   padding: 0.25em 1em 0.25em 1em;
   border: 0.08em solid #eee;
   border-radius: 0.2em;
+  /*positioning of the button*/
+  margin: 1em 0 0 0.2em;
   /*sets the font size*/
   font-size: 2em;
   /*stops the text from wraping*/
@@ -132,7 +160,7 @@ body {
   background-color: rgba(16, 16, 16, 0.2);
 }
 
-.linebutton:hover > #image{
+.linebutton:hover > #image {
   /*changes colours*/
   #image.filter: invert(87%);
 }
@@ -149,16 +177,25 @@ body {
   filter: invert(60%);
 }
 
+#buttontext {
+  margin: 0;
+  color: inherit;
+}
+
 #image {
+  margin: 0;
   display: flex;
   width: 2em;
   height: 2em;
   filter: invert(93%);
-  transform: translateX(148%);
+  transform: translateX(174%);
 }
 
-#bodywrapper {
-    min-width: 8em; /*what does this do?*/
+.songname {
+  text-align: center;
+  font-size: 0.7em;
+  margin: 0;
+  color: #ddd;
 }
 
 .centered {
