@@ -16,18 +16,40 @@ body {
 }
 
 #headerwrapper {
-  /*keeps the positioning of the elements the same at small screen sizes*/
-  min-width: 960px;
+
   /*positioning*/
   height: 80px;
 }
 
+#headercolour {
+  /*colour*/
+  background-color: rgba(16, 16, 16, 0.95);
+  /*positioning*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  /*pushes behind other elements*/
+  z-index: -10;
+}
+
 #songwrapper {
   display: block;
-  /*keeps the positioning of the elements the same at small screen sizes*/
-
   /*sets the size of the body*/
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 160px);
+}
+
+#songcolour {
+  /*colour*/
+  background-color: rgba(12, 12, 12, 0.4);
+  /*positioning*/
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: calc(100vh - 160px);
+  /*pushes behind other elements*/
+  z-index: -10;
 }
 
 #footerwrapper {
@@ -41,7 +63,7 @@ body {
 
 #footercolour {
   /*colour*/
-  background-color: rgba(16, 16, 16, 0.8);
+  background-color: rgba(16, 16, 16, 0.95);
   /*positioning*/
   position: fixed;
   bottom: 0;
@@ -53,7 +75,7 @@ body {
 #name {
   /*positioning*/
   display: inline;
-  margin: auto;
+  margin: -0.1em 0 0 0;
   float: left;
   /*stops wraping*/
   white-space: nowrap;
@@ -69,14 +91,14 @@ body {
   display: inline;
   /*centers the kana with the normal name*/
   position: relative;
-  top: 0.3em;
+  top: 0.15em;
   /*stops the name from wraping around the screen or moving out of the screen*/
   white-space: nowrap;
   overflow: auto;
   /*moves the name to the left*/
   float: left;
   /*makes margin smaller*/
-  margin: auto;
+  margin: 0 0 0 0.25em;
   /*sets the font size*/
   font-size: 2.5em;
 
@@ -89,8 +111,8 @@ body {
   font-family: Papyrus, "Brush Script MT", "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   /*positioning*/
   float: right;
-  margin: 1em 0 0 0;
-  padding-right: 0.2em;
+  margin: 0.6em 0 0 0;
+  padding: 0 0 0 0.2em;
 }
 
 #navbar {

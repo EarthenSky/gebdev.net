@@ -1,3 +1,4 @@
-function alertUser() {
-  alert("Warning!");
+function killScreen() {
+  alert("You Broke It");
+  window.history.back();
 }
