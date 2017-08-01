@@ -1,0 +1,10 @@
+body {
+  background: black;
+  font-family: "consolas", monospace;
+  color: white;
+}
+
+.inverted {
+  background: black;
+  color: white;
+}

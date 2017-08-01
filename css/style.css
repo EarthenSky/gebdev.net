@@ -58,7 +58,7 @@ body {
 #songwrapper {
   display: block;
   /*sets the size of the body*/
-  min-height: calc(100vh - 182px);
+  min-height: calc(100vh - 200px);
 
   min-width: 960px;
 
@@ -196,15 +196,17 @@ body {
   color: #eee;
   background-color: rgba(16, 16, 16, 0);
   /*sets the size of the button and the border*/
-  padding: 0.25em 1em 0.25em 1em;
+  padding: 0.75vh 3vw 0.75vh 3vw;
   border: 0.08em solid #eee;
   border-radius: 0.2em;
   /*positioning of the button*/
-  margin: 1em 0 0 0.2em;
+  margin: 3vh 0 0 2.5vw;
   /*sets the font size*/
-  font-size: 2em;
+  font-size: 4.4vw;
   /*stops the text from wraping*/
   white-space: nowrap;
+
+
 }
 
 .linebutton:hover {
@@ -231,12 +233,12 @@ body {
   filter: invert(60%);
 }
 
-#buttontext {
+.buttontext {
   margin: 0;
   color: inherit;
 }
 
-#image {
+.image {
   margin: 0;
   display: flex;
   width: 2em;
