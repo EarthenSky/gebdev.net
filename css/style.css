@@ -12,50 +12,77 @@ body {
   /*sets the background image and makes it fill the entire screen*/
   background: url(cssResources/background.jpg);
   background-size: cover;
+  background-repeat: repeat;
   background-attachment: fixed;
+
+  /*
+  keeps the positioning of the elements the same at small screen sizes
+  min-width: 960px;
+*/
+  overflow-y: hidden;
+}
+
+#scrollup {
+  /*overflow-y: auto;*/
+
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 200px);
+  left: 0;
+  top: 140px;
+  z-index: 0;
 }
 
 #headerwrapper {
-
   /*positioning*/
-  height: 80px;
+  position: relative;
+  width: 100%;
+  height: 140px;
+  /*stops wraping*/
+  white-space: nowrap;
 }
 
 #headercolour {
   /*colour*/
-  background-color: rgba(16, 16, 16, 0.95);
+  background-color: rgba(16, 16, 16, 1);
   /*positioning*/
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 140px;
   /*pushes behind other elements*/
-  z-index: -10;
+  z-index: 0;
 }
 
 #songwrapper {
   display: block;
   /*sets the size of the body*/
-  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 182px);
+
+  min-width: 960px;
+
+  overflow-y: auto;
+
+  position: absolute;
 }
 
 #songcolour {
   /*colour*/
-  background-color: rgba(12, 12, 12, 0.4);
+  background-color: rgba(12, 12, 12, 0);
   /*positioning*/
   position: fixed;
   left: 0;
   right: 0;
-  height: calc(100vh - 160px);
+  height: calc(100vh - 182px);
   /*pushes behind other elements*/
   z-index: -10;
 }
 
 #footerwrapper {
   /*sets position to the bottom*/
-  position: fixed;
-  bottom: 0;
+  position: absolute;
+  top: calc(100vh - 66px);
   left: 0;
   right: 0;
   height: 60px;
@@ -63,7 +90,7 @@ body {
 
 #footercolour {
   /*colour*/
-  background-color: rgba(16, 16, 16, 0.95);
+  background-color: rgba(16, 16, 16, 1);
   /*positioning*/
   position: fixed;
   bottom: 0;
@@ -90,11 +117,11 @@ body {
   /*positions the name elements horizontally*/
   display: inline;
   /*centers the kana with the normal name*/
-  position: relative;
+  position: absolute;
   top: 0.15em;
   /*stops the name from wraping around the screen or moving out of the screen*/
   white-space: nowrap;
-  overflow: auto;
+  overflow-x: auto;
   /*moves the name to the left*/
   float: left;
   /*makes margin smaller*/
@@ -110,9 +137,12 @@ body {
   font-size: 1.5em;
   font-family: Papyrus, "Brush Script MT", "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   /*positioning*/
-  float: right;
+  float: left;
+  clear: left;
   margin: 0.6em 0 0 0;
   padding: 0 0 0 0.2em;
+  /*stops the name from wraping around the screen or moving out of the screen*/
+  white-space: nowrap;
 }
 
 #navbar {
@@ -156,6 +186,8 @@ body {
 }
 
 .linebutton {
+  /*puts these elements behind bars*/
+  position: relative;
   /*moves the name to the left*/
   float: left;
   /*makes the button change cursor type when hovering*/
