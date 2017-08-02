@@ -2,9 +2,32 @@ body {
   background: black;
   font-family: "consolas", monospace;
   color: white;
+  white-space: nowrap;
+  display: block;
 }
 
 .inverted {
   background: black;
   color: white;
+}
+
+#face {
+  float: left;
+}
+
+#txt {
+  float: left;
+  clear: left;
+
+  margin-top: 0;
+}
+
+#ui {
+  float: left;
+  clear: left;
+}
+
+#gameWindow {
+  float: left;
+  clear: left;
 }

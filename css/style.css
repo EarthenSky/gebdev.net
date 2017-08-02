@@ -65,6 +65,7 @@ body {
   overflow-y: auto;
 
   position: absolute;
+
 }
 
 #songcolour {
@@ -202,11 +203,9 @@ body {
   /*positioning of the button*/
   margin: 3vh 0 0 2.5vw;
   /*sets the font size*/
-  font-size: 4.4vw;
+  font-size: 4vh;
   /*stops the text from wraping*/
   white-space: nowrap;
-
-
 }
 
 .linebutton:hover {
@@ -216,7 +215,7 @@ body {
   background-color: rgba(16, 16, 16, 0.2);
 }
 
-.linebutton:hover > #image {
+.linebutton:hover > .image {
   /*changes colours*/
   #image.filter: invert(87%);
 }
@@ -228,7 +227,7 @@ body {
   background-color: rgba(16, 16, 16, 0.3);
 }
 
-.linebutton:active > #image {
+.linebutton:active > .image {
   /*changes colours again*/
   filter: invert(60%);
 }
@@ -241,10 +240,10 @@ body {
 .image {
   margin: 0;
   display: flex;
-  width: 2em;
-  height: 2em;
+  width: 1.5em;
+  height: 1.5em;
   filter: invert(93%);
-  transform: translateX(174%);
+  transform: translateX(250%);
 }
 
 .songname {
