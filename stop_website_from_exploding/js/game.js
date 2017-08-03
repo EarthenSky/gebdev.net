@@ -10,6 +10,7 @@ var track1 = new Audio('js/jsResources/146Endless.wav');
 
 function start () {
   console.log("start()");
+  createGameWindow();
   setTimeout(dialogueNeg2, 2000);
 }
 

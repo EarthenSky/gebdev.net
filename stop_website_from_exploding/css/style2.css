@@ -30,4 +30,6 @@ body {
 #gameWindow {
   float: left;
   clear: left;
+
+  margin: 0;
 }

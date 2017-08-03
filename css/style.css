@@ -1,4 +1,8 @@
 html * {
+
+}
+
+body {
   /*sets basic text font*/
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   font-style: normal;
@@ -6,9 +10,7 @@ html * {
   font-weight: 100;
   /*sets basic text color*/
   color: #eee;
-}
 
-body {
   /*sets the background image and makes it fill the entire screen*/
   background: url(cssResources/background.jpg);
   background-size: cover;
