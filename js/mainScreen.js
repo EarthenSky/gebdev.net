@@ -4,7 +4,6 @@ function killScreen() {
   document.getElementById('headercolour').style.background = 'black';
   document.getElementById('footercolour').style.background = 'black';
   document.getElementById('songwrapper').style.display = 'flex';
-  document.getElementById('songwrapper').style.display = 'flex';
 
   setTimeout(killScreen1, 500);
 }
