@@ -5,7 +5,7 @@ function killScreen() {
   document.getElementById('footercolour').style.background = 'black';
   document.getElementById('songwrapper').style.display = 'flex';
 
-  setTimeout(killScreen1, 500);
+  setTimeout(killScreen1, 400);
 }
 
 function killScreen1() {
@@ -14,7 +14,7 @@ function killScreen1() {
   document.body.style.fontSize = '6px';
   document.body.style.color = 'white';
 
-  setTimeout(openHTML, 500, 'stop_website_from_exploding/website_safe_mode.html');
+  setTimeout(openHTML, 400, 'stop_website_from_exploding/website_safe_mode.html');
 }
 
 function openHTML(path) {

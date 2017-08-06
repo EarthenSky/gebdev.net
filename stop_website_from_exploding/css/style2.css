@@ -11,6 +11,10 @@ body {
   color: white;
 }
 
+#screenObjects {
+  position: absolute;
+}
+
 #face {
   float: left;
 }
@@ -30,6 +34,4 @@ body {
 #gameWindow {
   float: left;
   clear: left;
-
-  margin: 0;
 }

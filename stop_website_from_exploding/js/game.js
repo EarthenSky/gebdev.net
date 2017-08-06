@@ -5,12 +5,16 @@ var speech = document.getElementById('txt');
 var face = document.getElementById('face');
 var ui = document.getElementById('ui');
 var game = document.getElementById('gameWindow');
+var objects = document.getElementById('screenObjects');
 
 var track1 = new Audio('js/jsResources/146Endless.wav');
 
 function start () {
+  //window.onclick = spawnPixel;
   console.log("start()");
-  createGameWindow();
+  createEmptyGameWindow();
+  document.getElementById('item' + 0 + 'x' + 0).innerHTML = 'ClickMe';
+  document.getElementById('item' + 0 + 'x' + 0).onclick = spawnPixel;
   setTimeout(dialogueNeg2, 2000);
 }
 
@@ -53,7 +57,7 @@ function dialogue3() {
 function dialogue4() {
   face.innerHTML = "[▪_▪]";
   speech.innerHTML += "<br> > Just... Don't break anything ok?";
-  setTimeout(addButton, 2000, "ok?", "dialogue5()");
+  setTimeout(addButton, 2000, "sure?", "dialogue5()");
 }
 
 function dialogue5() {
