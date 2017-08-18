@@ -22,49 +22,37 @@ function dialogueNeg2() {
 }
 
 function dialogueNeg1() {
-  face.innerHTML = "[._.]";
-  speech.innerHTML += "> Sigh...";
-  setTimeout(dialogue0, 3000);
+  face.innerHTML = "[o_o]";
+  speech.innerHTML += "<br> > Hey you!";
+  setTimeout(dialogue0, 2000);
 }
 
 function dialogue0() {
-  face.innerHTML = "[o_o]";
-  speech.innerHTML += "<br> > Hey you!";
-  setTimeout(dialogue1, 2000);
+  face.innerHTML = "[>_<]";
+  speech.innerHTML += "<br> > Look what you've done!";
+  setTimeout(dialogue1, 3000);
 }
 
 function dialogue1() {
-  face.innerHTML = "[>_<]";
-  speech.innerHTML += "<br> > Look what you've done!";
-  setTimeout(dialogue2, 3000);
+  face.innerHTML = "[—_—]";
+  speech.innerHTML += "<br> > sigh...";
+  setTimeout(dialogue2, 2000);
 }
 
 function dialogue2() {
-  face.innerHTML = "[—_—]";
-  speech.innerHTML += "<br> > ...";
-  setTimeout(dialogue3, 4000);
+  face.innerHTML = "[▪_▪]";
+  speech.innerHTML += "<br> > Just... Don't break anything else ok?";
+  setTimeout(addButton, 2000, "sure?", "dialogue3()", 'sure');
 }
 
 function dialogue3() {
   face.innerHTML = "[-_-]";
-  speech.innerHTML += "<br> > I guess I have to fix this.";
+  speech.innerHTML = " > Great.";
+  ui.innerHTML = "";  //reset the ui.
   setTimeout(dialogue4, 3000);
 }
 
 function dialogue4() {
-  face.innerHTML = "[▪_▪]";
-  speech.innerHTML += "<br> > Just... Don't break anything ok?";
-  setTimeout(addButton, 2000, "sure?", "dialogue5()", 'sure');
-}
-
-function dialogue5() {
-  face.innerHTML = "[^_^]";
-  speech.innerHTML = " > Great!";
-  ui.innerHTML = "";  //reset the ui.
-  setTimeout(dialogue6, 2000);
-}
-
-function dialogue6() {
   face.innerHTML = "[___]";
   speech.innerHTML = "";
 

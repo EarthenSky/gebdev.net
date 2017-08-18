@@ -1,3 +1,5 @@
+var groundLevel = 21;
+
 function createEmptyGameWindow() {
   for(y = 0; y <= 26; y++) {  //the y row.
     if(y !== 0)
@@ -28,7 +30,6 @@ function addFloor() {
 function floorColourAnimation(colourValue) {
   colourValue += 2;
   //set the colour.
-  console.log(colourValue.toString(16));
   document.getElementById('line22').style.color = '#' + colourValue.toString(16) + colourValue.toString(16) + colourValue.toString(16);
   //check if the animation should continue.
   if(colourValue < 14) {
@@ -205,15 +206,41 @@ function increasePixelFallSpeed() {
 
 function stealPixel () {
   console.log('steal!!!');
+
+  moveRodentToStealPixel();
 }
 
-var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", "it doesn't! make! sense!"];
+//Rodent ideas : >(▪]_ ლ(▪]_ ღ(▪]_ >(▪]_  [rat]
+var rodentBody = '[rat]';
+var rodentXPos = 50 - 1;
+function moveRodentToStealPixel () {
+  //reset space.
+  for(var i = 0; i <= rodentBody.length - 1; i++) {
+    if(rodentXPos + i < 64 && rodentXPos + i > 0) {
+      removeTileAtIndex(rodentXPos + i, groundLevel);
+    }
+  }
+
+  //change pos.
+  rodentXPos--;  //TODO: add steal ai here.
+
+  //draw at new space.
+  for(var i = 0; i <= rodentBody.length - 1; i++) {
+    if(rodentXPos + i < 64 && rodentXPos + i > 0) {
+      replaceTileAtIndex(rodentXPos + i, groundLevel, rodentBody[i]);
+    }
+  }
+
+  setTimeout(moveRodentToStealPixel, 1000 / 2);  //loop
+}
+
+var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost..."];
 function randomEmotes() {
   speech.innerHTML = ("> " + emoteList[getRandomInt(0, emoteList.length)]);
 
   console.log("emote");
   setTimeout(removeEmote, 2500);
-  setTimeout(randomEmotes, getRandomInt(100, 241) * 100);  //random between 6000 and 24000
+  setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
 }
 
 function removeEmote() {
