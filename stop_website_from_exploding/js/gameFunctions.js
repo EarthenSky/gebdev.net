@@ -101,24 +101,25 @@ function spawnPixel() {
   game.onclick = undefined;
 
   pixelActive = true;
-  //Wait 5s before rodent tries to take the pixel.
-  pixelStealTimerId = setTimeout(stealPixel, 5000);
+  if(rodentsActive = true) {
+    //Wait 6s before rodent tries to take the pixel.
+    pixelStealTimerId = setTimeout(stealPixel, 6000);
+  }
 
-  randomizedXPos = getRandomInt(9, 53);
+  randomizedPixelXPos = getRandomInt(9, 53);
   setTimeout(pixelMove, pixelFallSpeed);
 }
 
 var floorIsVisible = false;
 var pixelYPos = 1;
-var randomizedXPos;
+var randomizedPixelXPos;
 //0-set pos of pixel.  1-move pixel pos. 2-goto 0.
 function pixelMove() {
   //Take away last pixel.
   if(pixelYPos > 1) {
-    removeTileAtIndex(randomizedXPos, pixelYPos - 1);
-    document.getElementById('item' + randomizedXPos + 'x' + (pixelYPos - 1)).onclick = undefined;
-    document.getElementById('item' + randomizedXPos + 'x' + (pixelYPos - 1)).style.cursor = "text";
-    console.log("Remove" +randomizedXPos+"x"+pixelYPos);
+    removeTileAtIndex(randomizedPixelXPos, pixelYPos - 1);
+    document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - 1)).onclick = undefined;
+    document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - 1)).style.cursor = "text";
   }
 
   //check if pixel has been clicked.
@@ -129,10 +130,9 @@ function pixelMove() {
   }
 
   //Add pixel and make it clickable.
-  console.log("Add" +randomizedXPos+"x"+pixelYPos);
-  replaceTileAtIndex(randomizedXPos, pixelYPos, '.');
-  document.getElementById('item' + randomizedXPos + 'x' + pixelYPos).onclick = gainPixel;
-  document.getElementById('item' + randomizedXPos + 'x' + pixelYPos).style.cursor = "pointer";
+  replaceTileAtIndex(randomizedPixelXPos, pixelYPos, '.');
+  document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).onclick = gainPixel;
+  document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).style.cursor = "pointer";
 
   //check if pixel needs to stop or keep moving.
   if (pixelYPos >= 21) {
@@ -146,25 +146,20 @@ function pixelMove() {
   else {
     //move the pixel down.
     pixelYPos += 1;
-    setTimeout(pixelMove, pixelFallSpeed, randomizedXPos);
+    setTimeout(pixelMove, pixelFallSpeed, randomizedPixelXPos);
   }
 }
 
-var pixels = 0;
 function gainPixel() {
   console.log("pixel++");
-
-  //reset the tile.
-  removeTileAtIndex(randomizedXPos, 21);
-  document.getElementById('item' + randomizedXPos + 'x' + 21).onclick = undefined;
-  document.getElementById('item' + randomizedXPos + 'x' + 21).style.cursor = "text";
-  pixelActive = false;
+  resetPixel();
 
   if(isPixelCounterActive === false) {
     addPixelCounterUI();  //Add the ui.
     isPixelCounterActive = true;
   }
-  updatePixelCounterUI(++pixels);  //Update the ui.
+
+  updatePixelCounterUI(++pixels);  //Update the ui & increment.
 
   clearTimeout(pixelStealTimerId);
 
@@ -177,19 +172,18 @@ function gainPixel() {
   setTimeout(pixelSpawnable, 200);
 }
 
+function resetPixel() {
+  //reset the tile.
+  removeTileAtIndex(randomizedPixelXPos, 21);
+  document.getElementById('item' + randomizedPixelXPos + 'x' + 21).onclick = undefined;
+  document.getElementById('item' + randomizedPixelXPos + 'x' + 21).style.cursor = "text";
+
+  pixelActive = false;
+}
+
 function pixelSpawnable() {
   game.onclick = spawnPixel;
   //window.onclick = spawnPixel;
-}
-
-var isPixelCounterActive = false;
-function addPixelCounterUI () {
-  console.log("addPixelCounterUI()");
-  ui.innerHTML += '<p id="pixelCounter"></p>';
-}
-
-function updatePixelCounterUI (pixelNum) {
-  document.getElementById('pixelCounter').innerHTML = 'Pixels: ' + pixelNum;
 }
 
 var buttton0HasExisted = false;
@@ -204,6 +198,7 @@ function increasePixelFallSpeed() {
   }
 }
 
+var rodentsActive = true;  //TODO: set to false.
 function stealPixel () {
   console.log('steal!!!');
 
@@ -212,17 +207,68 @@ function stealPixel () {
 
 //Rodent ideas : >(▪]_ ლ(▪]_ ღ(▪]_ >(▪]_  [rat]
 var rodentBody = '[rat]';
-var rodentXPos = 50 - 1;
+var rodentXPos = 65;
+var rodentHasPixel = false;
+var rodentLeaves = false;  //if active forces rodent to leave the screen.
+var stopLooping = false;
 function moveRodentToStealPixel () {
+  if(stopLooping === true) {
+    stopLooping = false;
+  }
+  console.log('0loop' + stopLooping + ' x=' + rodentXPos + ' pxGud?=' + rodentHasPixel);
   //reset space.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
     if(rodentXPos + i < 64 && rodentXPos + i > 0) {
       removeTileAtIndex(rodentXPos + i, groundLevel);
     }
   }
-
+  console.log(rodentHasPixel + ' -1')
   //change pos.
-  rodentXPos--;  //TODO: add steal ai here.
+  //TODO: add steal ai here.
+  if(rodentHasPixel === false && pixelActive === true && rodentLeaves === false) {
+    if(rodentXPos > randomizedPixelXPos + 1)  {
+      rodentXPos--;
+    }
+    else {
+      //TODO: grab animation.
+      rodentHasPixel = true;
+      resetPixel();
+    }
+  }
+  else {
+    console.log(rodentHasPixel + ' -3')
+    if(rodentHasPixel === false && rodentLeaves === false) {
+      rodentLeaves = true;
+    }
+
+    if (rodentXPos >= 64) {
+
+      if(rodentHasPixel === true) {
+        console.log(rodentHasPixel + ' 0')
+        rodentHasPixel = false;
+        console.log(rodentHasPixel + ' 1')
+        if(isDeadPixelCounterActive === false) {
+          addDeadPixelCounterUI();  //Add the ui.
+          isDeadPixelCounterActive = true;
+        }
+
+        updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
+
+        setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
+      }
+
+      console.log(rodentHasPixel + ' 2')
+      if(rodentLeaves === true) {
+        rodentLeaves = false;
+      }
+
+      stopLooping = true;
+    }
+
+
+
+    rodentXPos++;
+  }
 
   //draw at new space.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
@@ -231,7 +277,10 @@ function moveRodentToStealPixel () {
     }
   }
 
-  setTimeout(moveRodentToStealPixel, 1000 / 2);  //loop
+  console.log('1loop' + stopLooping + ' x=' + rodentXPos + ' pxActiveGud?=' + pixelActive);
+  if(stopLooping === false) {
+    rodentLoopID = setTimeout(moveRodentToStealPixel, 1000 / 8);  //loop
+  }
 }
 
 var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost..."];
