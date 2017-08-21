@@ -14,15 +14,14 @@ function createEmptyGameWindow() {
 
 function addFloor() {
   if(pixelActive === true) {
-      document.getElementById('line22').style.color = '#000';
-      for(x = 0; x <= 63; x++) {
-        if(x === 0 || x === 63)
-          replaceTileAtIndex(x, 22, ' ');
-        else
-          replaceTileAtIndex(x, 22, '‾');
+    document.getElementById('line22').style.color = '#000';
+    for(x = 0; x <= 63; x++) {
+      if((x === 0 || x === 63) === false) {
+        replaceTileAtIndex(x, 22, '‾');
       }
-      floorIsVisible = true;
-      setTimeout(floorColourAnimation, 1000 / 8, 0);
+    }
+    floorIsVisible = true;
+    setTimeout(floorColourAnimation, 1000 / 8, 0);
   }
 }
 
@@ -62,12 +61,18 @@ function addGameWindow() {
         //floor is allerady there.
       }
       else if (y >= 23) {
-        var randomNumber = getRandomInt(0, 40);
+        var randomNumber = getRandomInt(0, 80);
         if (randomNumber === 0) {
           replaceTileAtIndex(x, y, '◌');  //adds dirt speck.
         }
-        else if (randomNumber === 1) {
+        else if (randomNumber === 23) {
           replaceTileAtIndex(x, y, '○');  //adds dirt speck.
+        }
+        else if (randomNumber === 7) {
+          replaceTileAtIndex(x, y, '.');  //adds dirt speck.
+        }
+        else if (randomNumber === 3) {
+          replaceTileAtIndex(x, y, ',');  //adds dirt speck.
         }
         else {
           replaceTileAtIndex(x, y, ' ');  //adds one empty space
@@ -92,6 +97,7 @@ function addButton(txt, functToCall, id) {
   ui.innerHTML += '<button class="inverted" id="' + id + '" onclick="' + functToCall + '">' + txt + '</button>';
 }
 
+//<PixelCode Start
 var pixelFallSpeed = 1000 / 8;
 var pixelActive = false;
 var pixelStealTimerId;
@@ -101,9 +107,9 @@ function spawnPixel() {
   game.onclick = undefined;
 
   pixelActive = true;
-  if(rodentsActive = true) {
-    //Wait 6s before rodent tries to take the pixel.
-    pixelStealTimerId = setTimeout(stealPixel, 6000);
+  if(rodentsActive === true) {
+    //Wait 2s before the rodent tries to take the pixel.
+    pixelStealTimerId = setTimeout(stealPixel, 2000);
   }
 
   randomizedPixelXPos = getRandomInt(9, 53);
@@ -164,8 +170,11 @@ function gainPixel() {
   clearTimeout(pixelStealTimerId);
 
   //check if upgrades need to be shown.
-  if(pixels === 5 && buttton0HasExisted === false) {
+  if(pixels >= 5 && pixelFallSpeedButtonExists === false) {
       addButton('Increase Pixel Fall Speed [px : 5]', 'increasePixelFallSpeed()', 'pxFallSpeedUg');
+  }
+  else if (pixels >= 5 && darkPixelButtonExists === false) {
+      addButton('Create Dark Pixels [px : 5]', 'enableDarkPixels()', 'darkPxUg');
   }
 
   //make pixels spawnable again.
@@ -186,26 +195,28 @@ function pixelSpawnable() {
   //window.onclick = spawnPixel;
 }
 
-var buttton0HasExisted = false;
+var pixelFallSpeedButtonExists = false;
 function increasePixelFallSpeed() {
   if(pixels >= 5) {
      pixels -= 5;
      updatePixelCounterUI(pixels);
-     pixelFallSpeed = 1000 / 16;
-     buttton0HasExisted = true;
+     pixelFallSpeed = 1000 / 24;  //action
+     pixelFallSpeedButtonExists = true;
      var fallSpeedUgButton = document.getElementById("pxFallSpeedUg");
      fallSpeedUgButton.parentNode.removeChild(fallSpeedUgButton);
   }
 }
+//PixelCode End/>
 
-var rodentsActive = true;  //TODO: set to false.
+//<DeadPixelCode Start
+var rodentsActive = false;
 function stealPixel () {
   console.log('steal!!!');
 
   moveRodentToStealPixel();
 }
 
-//Rodent ideas : >(▪]_ ლ(▪]_ ღ(▪]_ >(▪]_  [rat]
+//Rodent : [rat]
 var rodentBody = '[rat]';
 var rodentXPos = 65;
 var rodentHasPixel = false;
@@ -215,49 +226,40 @@ function moveRodentToStealPixel () {
   if(stopLooping === true) {
     stopLooping = false;
   }
-  console.log('0loop' + stopLooping + ' x=' + rodentXPos + ' pxGud?=' + rodentHasPixel);
   //reset space.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
-    if(rodentXPos + i < 64 && rodentXPos + i > 0) {
+    if(rodentXPos + i < 63 && rodentXPos + i > 0) {
       removeTileAtIndex(rodentXPos + i, groundLevel);
     }
   }
-  console.log(rodentHasPixel + ' -1')
   //change pos.
-  //TODO: add steal ai here.
   if(rodentHasPixel === false && pixelActive === true && rodentLeaves === false) {
     if(rodentXPos > randomizedPixelXPos + 1)  {
       rodentXPos--;
     }
     else {
-      //TODO: grab animation.
       rodentHasPixel = true;
       resetPixel();
     }
   }
   else {
-    console.log(rodentHasPixel + ' -3')
     if(rodentHasPixel === false && rodentLeaves === false) {
       rodentLeaves = true;
     }
 
-    if (rodentXPos >= 64) {
-
+    if(rodentXPos >= 64) {
       if(rodentHasPixel === true) {
-        console.log(rodentHasPixel + ' 0')
         rodentHasPixel = false;
-        console.log(rodentHasPixel + ' 1')
+
         if(isDeadPixelCounterActive === false) {
           addDeadPixelCounterUI();  //Add the ui.
           isDeadPixelCounterActive = true;
         }
 
         updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
-
         setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
       }
 
-      console.log(rodentHasPixel + ' 2')
       if(rodentLeaves === true) {
         rodentLeaves = false;
       }
@@ -265,24 +267,37 @@ function moveRodentToStealPixel () {
       stopLooping = true;
     }
 
-
-
     rodentXPos++;
   }
 
   //draw at new space.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
-    if(rodentXPos + i < 64 && rodentXPos + i > 0) {
+    if(rodentXPos + i < 63 && rodentXPos + i > 0) {
       replaceTileAtIndex(rodentXPos + i, groundLevel, rodentBody[i]);
     }
   }
 
-  console.log('1loop' + stopLooping + ' x=' + rodentXPos + ' pxActiveGud?=' + pixelActive);
+  console.log('loop' + stopLooping + ' x=' + rodentXPos + ' pxActiveGud?=' + pixelActive);
   if(stopLooping === false) {
     rodentLoopID = setTimeout(moveRodentToStealPixel, 1000 / 8);  //loop
   }
 }
 
+var darkPixelButtonExists = false;
+function enableDarkPixels() {
+  if(pixels >= 5) {
+    pixels -= 5;
+    updatePixelCounterUI(pixels);
+      //
+    rodentsActive = true;  //action
+    darkPixelButtonExists = true;
+    var darkPxUgButton = document.getElementById("darkPxUg");
+    darkPxUgButton.parentNode.removeChild(darkPxUgButton);
+  }
+}
+//DeadPixelCode End/>
+
+//<Emotes Start
 var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost..."];
 function randomEmotes() {
   speech.innerHTML = ("> " + emoteList[getRandomInt(0, emoteList.length)]);
@@ -295,3 +310,4 @@ function randomEmotes() {
 function removeEmote() {
   speech.innerHTML = "";
 }
+//Emotes End/>

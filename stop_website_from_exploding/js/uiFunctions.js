@@ -7,7 +7,7 @@ function addPixelCounterUI () {
 }
 
 function updatePixelCounterUI (pixelNum) {
-  document.getElementById('pixelCounter').innerHTML = '_pixels=' + pixelNum;
+  document.getElementById('pixelCounter').innerHTML = '_px=' + pixelNum;
 }
 
 //holds amount of dead pixels.
@@ -19,5 +19,5 @@ function addDeadPixelCounterUI () {
 }
 
 function updateDeadPixelCounterUI (deadPixelNum) {
-  document.getElementById('deadPixelCounter').innerHTML = '_dead_pixels=' + deadPixelNum;
+  document.getElementById('deadPixelCounter').innerHTML = '_dead_px=' + deadPixelNum;
 }
