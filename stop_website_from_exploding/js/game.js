@@ -15,9 +15,13 @@ function start () {
   setTimeout(dialogueNeg2, 2000);
 }
 
-//Gets a unique name which holds save data on the server.
-function getSaveName() {
+function openHTML(path) {
+  window.location.href = path;
+}
 
+//Gets a unique name to send the email with.
+function getEmailName() {
+  //TODO: send email with open account but encode it.  Decode with other program / website.
 }
 
 function dialogueNeg2() {
@@ -121,5 +125,41 @@ function dialogue12() {
 
   //TODO: make these do things.
   setTimeout(addButton, 1000, "i can help!", "dialogue13()", 'iCanHelp');
-  setTimeout(addButton, 2000, "k bye.", "window.close()", 'kBye');  //remember when implementing saving to set a save before this so people don't rage.
+  setTimeout(addButton, 2000, "k bye.", "openHTML('../index.html')", 'kBye');  //remember when implementing saving to set a save before this so people don't rage.  //also maybe have this move to a new page instead of putting it back to index.
+}
+
+function dialogue13() {
+  //delete buttons
+  var kByeButton = document.getElementById("kBye");
+  kByeButton.parentNode.removeChild(kByeButton);
+  var iCanHelpButton = document.getElementById("iCanHelp");
+  iCanHelpButton.parentNode.removeChild(iCanHelpButton);
+
+  face.innerHTML = "[>ヮ<]";
+  speech.innerHTML = "<br> > pfffffffft";
+  setTimeout(dialogue14, 1000);
+}
+
+function dialogue14() {
+  face.innerHTML = "[≧w≦]";
+  speech.innerHTML += "<br> > hahahahahaha!";
+  setTimeout(dialogue15, 1000);
+}
+
+function dialogue15() {
+  face.innerHTML = "[>w<]";
+  speech.innerHTML += "<br> > lololol";
+  setTimeout(dialogue16, 1000);
+}
+
+function dialogue16() {
+  face.innerHTML = "[___]";
+  speech.innerHTML += "<br> > No you can't.";
+  setTimeout(dialogue17, 4000);
+}
+
+function dialogue17() {
+  face.innerHTML = "[・ﾍ・]？";
+  speech.innerHTML = "<br> > Wait you're serious?";
+  //setTimeout(dialogue18, 1000);
 }

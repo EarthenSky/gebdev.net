@@ -94,7 +94,7 @@ function removeTileAtIndex(x, y) {
 }
 
 function addButton(txt, functToCall, id) {
-  ui.innerHTML += '<button class="inverted" id="' + id + '" onclick="' + functToCall + '">' + txt + '</button>';
+  ui.innerHTML += '<button class="inverted margined" id="' + id + '" onclick="' + functToCall + '">' + txt + '</button>';
 }
 
 //<PixelCode Start

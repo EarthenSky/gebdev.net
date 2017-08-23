@@ -11,6 +11,10 @@ body {
   color: white;
 }
 
+.margined {
+  margin: 6px;
+}
+
 #screenObjects {
   position: absolute;
 }
