@@ -141,7 +141,7 @@ function dialogue13() {
 }
 
 function dialogue14() {
-  face.innerHTML = "[≧w≦]";
+  face.innerHTML = "[≧m≦]";
   speech.innerHTML += "<br> > hahahahahaha!";
   setTimeout(dialogue15, 1000);
 }
@@ -160,6 +160,18 @@ function dialogue16() {
 
 function dialogue17() {
   face.innerHTML = "[・ﾍ・]？";
-  speech.innerHTML = "<br> > Wait you're serious?";
+  speech.innerHTML = "<br> > Wait you're serious?";  //= or +=?
+  setTimeout(dialogue18, 2000);
+}
+
+function dialogue18() {
+  face.innerHTML = "[-m-]";
+  speech.innerHTML += "<br> > Fine how about this.";
+  setTimeout(dialogue19, 2000);
+}
+
+function dialogue19() {
+  face.innerHTML = "[-_-]";
+  speech.innerHTML += "<br> > Go find a map, then we can talk.";
   //setTimeout(dialogue18, 1000);
 }
