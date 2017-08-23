@@ -257,6 +257,12 @@ function moveRodentToStealPixel () {
         }
 
         updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
+
+        //continue naritive
+        if(deadPixels >= 1) {
+          setTimeout(dialogue5, 2000);
+        }
+
         setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
       }
 
@@ -298,13 +304,14 @@ function enableDarkPixels() {
 //DeadPixelCode End/>
 
 //<Emotes Start
-var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost..."];
+var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*bang* *bang*'];
+var emoteRepeatID;
 function randomEmotes() {
   speech.innerHTML = ("> " + emoteList[getRandomInt(0, emoteList.length)]);
 
   console.log("emote");
   setTimeout(removeEmote, 2500);
-  setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
+  emoteRepeatID = setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
 }
 
 function removeEmote() {

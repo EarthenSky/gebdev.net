@@ -15,6 +15,11 @@ function start () {
   setTimeout(dialogueNeg2, 2000);
 }
 
+//Gets a unique name which holds save data on the server.
+function getSaveName() {
+
+}
+
 function dialogueNeg2() {
   face.innerHTML = "[;_;]";
   speech.innerHTML += "";
@@ -63,4 +68,58 @@ function dialogue4() {
 
   window.onclick = spawnPixel;
   setTimeout(randomEmotes, getRandomInt(50, 100) * 100);
+}
+
+function dialogue5() {
+  removeEmote();  //remove incase an emote is active.
+  clearTimeout(emoteRepeatID);  //Stop emotes.
+
+  face.innerHTML = "[O▱O]";
+  speech.innerHTML += "<br> > ...";
+  setTimeout(dialogue6, 3000);
+}
+
+function dialogue6() {
+  face.innerHTML = "[ಠ▱ಠ]";
+  speech.innerHTML += "<br> > What is that?!";
+  setTimeout(dialogue7, 3000);
+}
+
+function dialogue7() {
+  face.innerHTML = "[-▱-]";
+  speech.innerHTML += "<br> > I said don't break anything...";
+  setTimeout(dialogue8, 3000);
+}
+
+function dialogue8() {
+  face.innerHTML = "[◉-◉]";
+  speech.innerHTML += "<br>> Dead pixles are illigal, they trade those in the black market!";
+  setTimeout(dialogue9, 5000);
+}
+
+function dialogue9() {
+  face.innerHTML = "[ಠ_ಠ]";
+  speech.innerHTML += "<br> > I am not a criminal...";
+  setTimeout(dialogue10, 3000);
+}
+
+function dialogue10() {
+  face.innerHTML = "[-_-]";
+  speech.innerHTML += "<br> > But I actually might need some of those to fix this.";
+  setTimeout(dialogue11, 4000);
+}
+
+function dialogue11() {
+  face.innerHTML = "[___]";
+  speech.innerHTML += "<br> > I'll get someone to help me tommorrow.";
+  setTimeout(dialogue12, 3000);
+}
+
+function dialogue12() {
+  face.innerHTML = "[___]";
+  speech.innerHTML += "<br> > You, just leave without breaking something else.";
+
+  //TODO: make these do things.
+  setTimeout(addButton, 1000, "i can help!", "dialogue13()", 'iCanHelp');
+  setTimeout(addButton, 2000, "k bye.", "window.close()", 'kBye');  //remember when implementing saving to set a save before this so people don't rage.
 }
