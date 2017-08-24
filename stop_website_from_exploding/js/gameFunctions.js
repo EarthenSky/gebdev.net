@@ -103,6 +103,7 @@ var pixelActive = false;
 var pixelStealTimerId;
 function spawnPixel() {
   console.log("pixel spawned");
+  window.ontouchstart = undefined;
   window.onclick = undefined;
   game.onclick = undefined;
 
@@ -192,7 +193,6 @@ function resetPixel() {
 
 function pixelSpawnable() {
   game.onclick = spawnPixel;
-  //window.onclick = spawnPixel;
 }
 
 var pixelFallSpeedButtonExists = false;

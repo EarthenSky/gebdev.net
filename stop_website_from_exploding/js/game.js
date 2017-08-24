@@ -70,6 +70,7 @@ function dialogue4() {
   //track1.loop = true;
   //track1.volume = 0.1;  //lower volume
 
+  window.ontouchstart = spawnPixel;
   window.onclick = spawnPixel;
   setTimeout(randomEmotes, getRandomInt(50, 100) * 100);
 }
