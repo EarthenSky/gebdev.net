@@ -12,6 +12,18 @@ function createEmptyGameWindow() {
   }
 }
 
+function createEmptyMapWindow() {
+  for(y = 0; y <= 26; y++) {  //the y row.
+    if(y !== 0)
+      map.innerHTML += '<l id="mapLine' + y + '"><br></l>';  //starts the line and adds the unique id.
+    else
+      map.innerHTML += '<l id="mapLine' + y + '"></l>';  //no line break.
+    for(x = 0; x <= 63; x++) {  //the x row.
+      document.getElementById('mapLine' + y).innerHTML += '<r id="mapItem' + x + 'x' + y + '">' + ' ' + '</r>';
+    }
+  }
+}
+
 function addFloor() {
   if(pixelActive === true) {
     document.getElementById('line22').style.color = '#000';
@@ -170,16 +182,23 @@ function gainPixel() {
 
   clearTimeout(pixelStealTimerId);
 
+  CheckUpgrades();
+
+  setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
+}
+
+//!Upgrades!
+function CheckUpgrades() {
   //check if upgrades need to be shown.
   if(pixels >= 5 && pixelFallSpeedButtonExists === false) {
-      addButton('Increase Pixel Fall Speed [px : 5]', 'increasePixelFallSpeed()', 'pxFallSpeedUg');
+      addButton('Increase Pixel Fall Speed [_px=5]', 'increasePixelFallSpeed()', 'pxFallSpeedUg');
   }
   else if (pixels >= 5 && darkPixelButtonExists === false) {
-      addButton('Create Dark Pixels [px : 5]', 'enableDarkPixels()', 'darkPxUg');
+      addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
   }
-
-  //make pixels spawnable again.
-  setTimeout(pixelSpawnable, 200);
+  else if (pixels >= 5 && darkPixelButtonExists === false) {
+      addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
+  }
 }
 
 function resetPixel() {
@@ -195,6 +214,7 @@ function pixelSpawnable() {
   game.onclick = spawnPixel;
 }
 
+//!Upgrades!
 var pixelFallSpeedButtonExists = false;
 function increasePixelFallSpeed() {
   if(pixels >= 5) {
@@ -289,6 +309,7 @@ function moveRodentToStealPixel () {
   }
 }
 
+//!Upgrades!
 var darkPixelButtonExists = false;
 function enableDarkPixels() {
   if(pixels >= 5) {
@@ -302,6 +323,17 @@ function enableDarkPixels() {
   }
 }
 //DeadPixelCode End/>
+
+//<MapCode Start
+var mapObtained = false;
+
+//MapCode End/>
+
+//<MapProgression Start
+function showMapCost() {
+
+}
+//MapProgression End/>
 
 //<Emotes Start
 var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*bang* *bang*'];

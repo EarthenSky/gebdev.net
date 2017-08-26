@@ -1,0 +1,7 @@
+body {
+  /*sets the background image and makes it fill the entire screen*/
+  background: url(cssResources/background.jpg);
+  background-size: cover;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}

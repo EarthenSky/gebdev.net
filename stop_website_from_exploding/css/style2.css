@@ -39,3 +39,13 @@ body {
   float: left;
   clear: left;
 }
+
+#gameWindowTxt {
+  float: left;
+  clear: left;
+}
+
+#mapWindow {
+  float: left;
+  clear: left;
+}

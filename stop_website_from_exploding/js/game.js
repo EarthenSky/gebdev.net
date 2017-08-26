@@ -1,17 +1,20 @@
 //faces// [°v°] [′_′] [*o*]
 //floor//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\
 //lvl 2//                   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-var speech = document.getElementById('txt');
+var objects = document.getElementById('screenObjects');
 var face = document.getElementById('face');
+var speech = document.getElementById('txt');
 var ui = document.getElementById('ui');
 var game = document.getElementById('gameWindow');
-var objects = document.getElementById('screenObjects');
+var gameTxt = document.getElementById('gameWindowTxt');
+var map = document.getElementById('mapWindow');
 
 var track1 = new Audio('js/jsResources/146Endless.wav');
 
 function start () {
   console.log("start()");
   createEmptyGameWindow();
+  createEmptyMapWindow();
   setTimeout(dialogueNeg2, 2000);
 }
 
@@ -124,7 +127,6 @@ function dialogue12() {
   face.innerHTML = "[___]";
   speech.innerHTML += "<br> > You, just leave without breaking something else.";
 
-  //TODO: make these do things.
   setTimeout(addButton, 1000, "i can help!", "dialogue13()", 'iCanHelp');
   setTimeout(addButton, 2000, "k bye.", "openHTML('../index.html')", 'kBye');  //remember when implementing saving to set a save before this so people don't rage.  //also maybe have this move to a new page instead of putting it back to index.
 }
@@ -137,7 +139,7 @@ function dialogue13() {
   iCanHelpButton.parentNode.removeChild(iCanHelpButton);
 
   face.innerHTML = "[>ヮ<]";
-  speech.innerHTML = "<br> > pfffffffft";
+  speech.innerHTML = "> pfffffffft";
   setTimeout(dialogue14, 1000);
 }
 
@@ -161,7 +163,7 @@ function dialogue16() {
 
 function dialogue17() {
   face.innerHTML = "[・ﾍ・]？";
-  speech.innerHTML = "<br> > Wait you're serious?";  //= or +=?
+  speech.innerHTML = "> Wait you're serious?";  //= or +=?
   setTimeout(dialogue18, 2000);
 }
 
@@ -174,5 +176,48 @@ function dialogue18() {
 function dialogue19() {
   face.innerHTML = "[-_-]";
   speech.innerHTML += "<br> > Go find a map, then we can talk.";
-  //setTimeout(dialogue18, 1000);
+  setTimeout(dialogue20, 2000);
+}
+
+function dialogue20() {
+  face.innerHTML = "[~_~]";
+  speech.innerHTML += "<br> > You're going to need one.";
+
+  setTimeout(addButton, 1000, "ok", "dialogue21()", 'kk');
+}
+
+function dialogue21() {
+  var kkButton = document.getElementById("kk");
+  kkButton.parentNode.removeChild(kkButton);
+
+  face.innerHTML = "[___]";
+  speech.innerHTML = "";
+
+  if(mapObtained === true) { //dialogue22A gets called when the map is found.
+    setTimeout(dialogue22B, 2000);
+  }
+}
+
+function dialogue22A() {
+  face.innerHTML = "[▪‿▪]";
+  speech.innerHTML = "> Hey you found one!";
+  setTimeout(dialogue23, 2000);
+}
+
+function dialogue22B() {
+  face.innerHTML = "[▪_▪]？";
+  speech.innerHTML = "> Wait, you already have one?";
+  setTimeout(dialogue22C, 2000);
+}
+
+function dialogue22C() {
+  face.innerHTML = "[=v=]";
+  speech.innerHTML += "<br> > Great.";
+  setTimeout(dialogue23, 2000);
+}
+
+function dialogue23() {
+  face.innerHTML = "[=_=]";
+  speech.innerHTML = "<br> > Now, it's business time.";
+
 }
