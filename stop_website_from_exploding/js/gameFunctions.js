@@ -109,6 +109,11 @@ function addButton(txt, functToCall, id) {
   ui.innerHTML += '<button class="inverted margined" id="' + id + '" onclick="' + functToCall + '">' + txt + '</button>';
 }
 
+function destroyTagById(id) {
+  var tag = document.getElementById(id);
+  tag.parentNode.removeChild(tag);
+}
+
 //<PixelCode Start
 var pixelFallSpeed = 1000 / 8;
 var pixelActive = false;
@@ -190,14 +195,16 @@ function gainPixel() {
 //!Upgrades!
 function CheckUpgrades() {
   //check if upgrades need to be shown.
-  if(pixels >= 5 && pixelFallSpeedButtonExists === false) {
+  if(pixelFallSpeedButtonExists === false && pixels >= 5) {
       addButton('Increase Pixel Fall Speed [_px=5]', 'increasePixelFallSpeed()', 'pxFallSpeedUg');
   }
-  else if (pixels >= 5 && darkPixelButtonExists === false) {
+  else if (darkPixelButtonExists === false && pixels >= 5) {
       addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
   }
-  else if (pixels >= 5 && darkPixelButtonExists === false) {
-      addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
+
+  //Anytime before map is found
+  if (mapObtained === false && pixels >= 50) {
+      showMapCost();
   }
 }
 
@@ -217,13 +224,19 @@ function pixelSpawnable() {
 //!Upgrades!
 var pixelFallSpeedButtonExists = false;
 function increasePixelFallSpeed() {
-  if(pixels >= 5) {
-     pixels -= 5;
+  pixelFallSpeedButtonExists = true;
+
+  var ugCost = 5;
+  if(pixels >= ugCost) {
+     pixels -= ugCost;
+
      updatePixelCounterUI(pixels);
      pixelFallSpeed = 1000 / 24;  //action
-     pixelFallSpeedButtonExists = true;
      var fallSpeedUgButton = document.getElementById("pxFallSpeedUg");
      fallSpeedUgButton.parentNode.removeChild(fallSpeedUgButton);
+  }
+  else {
+    addUiTxtLine('<br> > You need ${' + ugCost + ' - ' + pixels + '} more _px to purchase this upgrade.');
   }
 }
 //PixelCode End/>
@@ -312,14 +325,20 @@ function moveRodentToStealPixel () {
 //!Upgrades!
 var darkPixelButtonExists = false;
 function enableDarkPixels() {
-  if(pixels >= 5) {
-    pixels -= 5;
+  darkPixelButtonExists = true;
+
+  var ugCost = 5;
+  if(pixels >= ugCost) {
+    pixels -= ugCost;
+
     updatePixelCounterUI(pixels);
       //
     rodentsActive = true;  //action
-    darkPixelButtonExists = true;
     var darkPxUgButton = document.getElementById("darkPxUg");
     darkPxUgButton.parentNode.removeChild(darkPxUgButton);
+  }
+  else {
+    addUiTxtLine('<br> > You need ${' + ugCost + ' - ' + pixels + '} more _px to purchase this upgrade.');
   }
 }
 //DeadPixelCode End/>
@@ -327,26 +346,35 @@ function enableDarkPixels() {
 //<MapCode Start
 var mapObtained = false;
 
+function showMapCost() {
+  addButton('Buy Map [_px=3600]', 'enableMap()', 'mapUg');
+}
+
+//!Upgrades!
+function enableMap() {
+  var mapCost = 3600;
+  if(pixels >= mapCost) {
+    pixels -= mapCost;
+
+    updatePixelCounterUI(pixels);
+    mapObtained = true;
+    setTimeout(dialogue22A, 2000);
+    destroyTagById('mapUg');
+  }
+  else {
+    addUiTxtLine('> You need ${' + mapCost + ' - ' + pixels + '} more _px to purchase this item.');
+  }
+}
 //MapCode End/>
 
-//<MapProgression Start
-function showMapCost() {
-
-}
-//MapProgression End/>
-
 //<Emotes Start
-var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*bang* *bang*'];
+var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*smash* *bang*'];
 var emoteRepeatID;
 function randomEmotes() {
   speech.innerHTML = ("> " + emoteList[getRandomInt(0, emoteList.length)]);
 
   console.log("emote");
-  setTimeout(removeEmote, 2500);
+  setTimeout(removeEmoteById, 2500);
   emoteRepeatID = setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
-}
-
-function removeEmote() {
-  speech.innerHTML = "";
 }
 //Emotes End/>

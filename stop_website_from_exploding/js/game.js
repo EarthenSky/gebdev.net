@@ -5,6 +5,7 @@ var objects = document.getElementById('screenObjects');
 var face = document.getElementById('face');
 var speech = document.getElementById('txt');
 var ui = document.getElementById('ui');
+var uiTxt = document.getElementById('uTxt');
 var game = document.getElementById('gameWindow');
 var gameTxt = document.getElementById('gameWindowTxt');
 var map = document.getElementById('mapWindow');
@@ -13,8 +14,8 @@ var track1 = new Audio('js/jsResources/146Endless.wav');
 
 function start () {
   console.log("start()");
-  createEmptyGameWindow();
-  createEmptyMapWindow();
+  createEmptyGameWindow();  //Create the spaces that make up the game window.
+  createEmptyMapWindow();  //Create the spaces that make up the map window.
   setTimeout(dialogueNeg2, 2000);
 }
 
@@ -79,7 +80,7 @@ function dialogue4() {
 }
 
 function dialogue5() {
-  removeEmote();  //remove incase an emote is active.
+    speech.innerHTML = "";  //reset speech incase an emote is active.
   clearTimeout(emoteRepeatID);  //Stop emotes.
 
   face.innerHTML = "[O▱O]";
@@ -133,10 +134,8 @@ function dialogue12() {
 
 function dialogue13() {
   //delete buttons
-  var kByeButton = document.getElementById("kBye");
-  kByeButton.parentNode.removeChild(kByeButton);
-  var iCanHelpButton = document.getElementById("iCanHelp");
-  iCanHelpButton.parentNode.removeChild(iCanHelpButton);
+  destroyTagById('kBye');
+  destroyTagById('iCanHelp');
 
   face.innerHTML = "[>ヮ<]";
   speech.innerHTML = "> pfffffffft";
@@ -187,14 +186,17 @@ function dialogue20() {
 }
 
 function dialogue21() {
-  var kkButton = document.getElementById("kk");
-  kkButton.parentNode.removeChild(kkButton);
+  destroyTagById('kk');  //destroy button.
 
   face.innerHTML = "[___]";
   speech.innerHTML = "";
 
-  if(mapObtained === true) { //dialogue22A gets called when the map is found.
+  //dialogue22A gets called when the map is found.
+  if(mapObtained === true) {
     setTimeout(dialogue22B, 2000);
+  }
+  else {
+    showMapCost();
   }
 }
 

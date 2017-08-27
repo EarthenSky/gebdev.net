@@ -21,3 +21,19 @@ function addDeadPixelCounterUI () {
 function updateDeadPixelCounterUI (deadPixelNum) {
   document.getElementById('deadPixelCounter').innerHTML = '_dead_px=' + deadPixelNum;
 }
+
+var uiTxtLines;
+function removeTopUiTxtLine () {
+  var tag = uiTxt.firstChild(txt);
+  tag.parentNode.removeChild(tag);
+}
+
+function addUiTxtLine (line) {
+  uiTxt.innerHTML += '<p>' + line + '<p>';
+  uiTxtLines++;
+
+  if(uiTxtLines > 5) {
+    removeTopUiTxtLine();
+  }
+  setTimeout(removeTopUiTxtLine, 3000);
+}

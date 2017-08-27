@@ -8,37 +8,39 @@ Websites are probably useful.
 
 Code Sections:
 
-  -Code sections are broken up inside of a script with:
+  - Code sections are broken up inside of a script with:
 
-    ```
-    //< + nameOfSection + ' ' + Start
-    ```
+  ```
+  //< + nameOfSection + ' ' + Start
+  ```
 
-    to start a section.  ex. *//<CollisionCode Start*
+  to start a section.  ex. *//<CollisionCode Start*
 
-    ```
-    //nameOfSection + ' ' + End + />
-    ```
+  ```
+  //nameOfSection + ' ' + End + />
+  ```
 
-    to end a section.  ex. *//CollisionCode End/>*
+  to end a section.  ex. *//CollisionCode End/>*
 
-    ```
-    //!nameOfEmphasis!
-    ```
+  ```
+  //!nameOfEmphasis!
+  ```
 
-    is used to emphasize or tag a function.  ex. *//!Combat!*
+  is used to emphasize or tag a function.  ex. *//!Combat!*
 
-  -Code sections are only for reference and ease of code readability.
-  -Section starts and ends are based off of html tags.
+  - Code sections are only for reference and ease of code readability.
+  - Section starts and ends are based off of html tags.
 
 Comments:
 
-  -Comments come after a double space.
+  - Comments come after a double space.
 
   ```
-  //Hello World!
+  if(foo() === true) { foo(); }  //foo again!
   ```
+
+  - No comment punctuation or spelling.
 
 Bracket Style:  
 
-  -This code uses the K&R variant *Stroustrup*.
+  - This code uses the K&R variant *Stroustrup*.
