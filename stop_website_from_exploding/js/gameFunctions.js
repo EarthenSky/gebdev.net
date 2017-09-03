@@ -70,7 +70,7 @@ function addGameWindow() {
         replaceTileAtIndex(x, y, '‾');  //adds one floor. ("thing"...)
       }
       else if (y === 22) {
-        //floor is allerady there.
+        //floor is allready there.
       }
       else if (y >= 23) {
         var randomNumber = getRandomInt(0, 80);
@@ -195,15 +195,17 @@ function gainPixel() {
 //!Upgrades!
 function CheckUpgrades() {
   //check if upgrades need to be shown.
-  if(pixelFallSpeedButtonExists === false && pixels >= 5) {
+  if(pixelFallSpeedButtonExists === false && pixels >= 1) {
+      pixelFallSpeedButtonExists = true;
       addButton('Increase Pixel Fall Speed [_px=5]', 'increasePixelFallSpeed()', 'pxFallSpeedUg');
   }
-  else if (darkPixelButtonExists === false && pixels >= 5) {
+  else if (darkPixelButtonExists === false && pixelFallSpeedButtonIsFinished === true && pixels >= 1) {
+      darkPixelButtonExists = true;
       addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
   }
 
-  //Anytime before map is found
-  if (mapObtained === false && pixels >= 50) {
+  //Anytime before map is found  //TODO: delete this?
+  if(mapObtained === false && pixels >= 50) {
       showMapCost();
   }
 }
@@ -223,13 +225,12 @@ function pixelSpawnable() {
 
 //!Upgrades!
 var pixelFallSpeedButtonExists = false;
+var pixelFallSpeedButtonIsFinished = false;
 function increasePixelFallSpeed() {
-  pixelFallSpeedButtonExists = true;
-
   var ugCost = 5;
   if(pixels >= ugCost) {
      pixels -= ugCost;
-
+     pixelFallSpeedButtonIsFinished = true;
      updatePixelCounterUI(pixels);
      pixelFallSpeed = 1000 / 24;  //action
      var fallSpeedUgButton = document.getElementById("pxFallSpeedUg");
@@ -259,15 +260,15 @@ function moveRodentToStealPixel () {
   if(stopLooping === true) {
     stopLooping = false;
   }
-  //reset space.
+  //reset tiles that make up rat.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
     if(rodentXPos + i < 63 && rodentXPos + i > 0) {
       removeTileAtIndex(rodentXPos + i, groundLevel);
     }
   }
-  //change pos.
+  //change the position of the rat.
   if(rodentHasPixel === false && pixelActive === true && rodentLeaves === false) {
-    if(rodentXPos > randomizedPixelXPos + 1)  {
+    if(rodentXPos > randomizedPixelXPos + 1) {
       rodentXPos--;
     }
     else {
@@ -276,10 +277,18 @@ function moveRodentToStealPixel () {
     }
   }
   else {
+    if(rodentLeaves === true && pixelActive === true) {
+
+    }
+    else {
+
+    }
+
+    //case: Pixel has been picked up while the rat is on the screen.
     if(rodentHasPixel === false && rodentLeaves === false) {
       rodentLeaves = true;
     }
-
+    //TODO: make rodent stop if next pixel is in the way and pick it up.
     if(rodentXPos >= 64) {
       if(rodentHasPixel === true) {
         rodentHasPixel = false;
@@ -287,14 +296,11 @@ function moveRodentToStealPixel () {
         if(isDeadPixelCounterActive === false) {
           addDeadPixelCounterUI();  //Add the ui.
           isDeadPixelCounterActive = true;
-        }
 
-        updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
-
-        //continue naritive
-        if(deadPixels >= 1) {
+          //continue naritive on first _dead_px.
           setTimeout(dialogue5, 2000);
         }
+        updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
 
         setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
       }
@@ -302,14 +308,12 @@ function moveRodentToStealPixel () {
       if(rodentLeaves === true) {
         rodentLeaves = false;
       }
-
       stopLooping = true;
     }
-
     rodentXPos++;
   }
 
-  //draw at new space.
+  //draw rodent at new position.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
     if(rodentXPos + i < 63 && rodentXPos + i > 0) {
       replaceTileAtIndex(rodentXPos + i, groundLevel, rodentBody[i]);
@@ -325,8 +329,6 @@ function moveRodentToStealPixel () {
 //!Upgrades!
 var darkPixelButtonExists = false;
 function enableDarkPixels() {
-  darkPixelButtonExists = true;
-
   var ugCost = 5;
   if(pixels >= ugCost) {
     pixels -= ugCost;
@@ -371,10 +373,10 @@ function enableMap() {
 var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*smash* *bang*'];
 var emoteRepeatID;
 function randomEmotes() {
-  speech.innerHTML = ("> " + emoteList[getRandomInt(0, emoteList.length)]);
+  speech.innerHTML = ("<p id='emote'>> " + emoteList[getRandomInt(0, emoteList.length)] + "</p>");
 
   console.log("emote");
-  setTimeout(removeEmoteById, 2500);
+  setTimeout(destroyTagById, 2500, 'emote');
   emoteRepeatID = setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
 }
 //Emotes End/>

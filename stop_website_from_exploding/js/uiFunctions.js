@@ -22,18 +22,27 @@ function updateDeadPixelCounterUI (deadPixelNum) {
   document.getElementById('deadPixelCounter').innerHTML = '_dead_px=' + deadPixelNum;
 }
 
-var uiTxtLines;
+var uiTxtLines = 0;
 function removeTopUiTxtLine () {
-  var tag = uiTxt.firstChild(txt);
-  tag.parentNode.removeChild(tag);
+  uiTxtLines--;
+
+  //if there are no lines can be more efficient.
+  if(uiTxtLines !== 0) {
+    uiTxt.removeChild(uiTxt.childNodes[0]);
+  }
+  else {
+    uiTxt.innerHTML = '';
+  }
 }
 
 function addUiTxtLine (line) {
-  uiTxt.innerHTML += '<p>' + line + '<p>';
+  uiTxt.innerHTML += ('<p>' + line + '</p>');
   uiTxtLines++;
 
   if(uiTxtLines > 5) {
     removeTopUiTxtLine();
   }
-  setTimeout(removeTopUiTxtLine, 3000);
+  else {
+    setTimeout(removeTopUiTxtLine, 3000);
+  }
 }

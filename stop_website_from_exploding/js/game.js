@@ -5,15 +5,21 @@ var objects = document.getElementById('screenObjects');
 var face = document.getElementById('face');
 var speech = document.getElementById('txt');
 var ui = document.getElementById('ui');
-var uiTxt = document.getElementById('uTxt');
+var uiTxt = document.getElementById('uiTxt');
 var game = document.getElementById('gameWindow');
 var gameTxt = document.getElementById('gameWindowTxt');
 var map = document.getElementById('mapWindow');
 
 var track1 = new Audio('js/jsResources/146Endless.wav');
 
+function debug () {
+  //addUiTxtLine('Welp :: x => {_x=4};');
+}
+
 function start () {
   console.log("start()");
+  //face.onclick = debug;
+
   createEmptyGameWindow();  //Create the spaces that make up the game window.
   createEmptyMapWindow();  //Create the spaces that make up the map window.
   setTimeout(dialogueNeg2, 2000);
@@ -80,7 +86,7 @@ function dialogue4() {
 }
 
 function dialogue5() {
-    speech.innerHTML = "";  //reset speech incase an emote is active.
+  speech.innerHTML = "";  //reset speech incase an emote is active.
   clearTimeout(emoteRepeatID);  //Stop emotes.
 
   face.innerHTML = "[O▱O]";
@@ -156,13 +162,13 @@ function dialogue15() {
 
 function dialogue16() {
   face.innerHTML = "[___]";
-  speech.innerHTML += "<br> > No you can't.";
+  speech.innerHTML += "<br> > Naaaaaahh";
   setTimeout(dialogue17, 4000);
 }
 
 function dialogue17() {
   face.innerHTML = "[・ﾍ・]？";
-  speech.innerHTML = "> Wait you're serious?";  //= or +=?
+  speech.innerHTML = "> Wait you're serious?";  //= or += and <br>?
   setTimeout(dialogue18, 2000);
 }
 
@@ -174,7 +180,7 @@ function dialogue18() {
 
 function dialogue19() {
   face.innerHTML = "[-_-]";
-  speech.innerHTML += "<br> > Go find a map, then we can talk.";
+  speech.innerHTML += "<br> > Go buy a map, then we can talk.";
   setTimeout(dialogue20, 2000);
 }
 

@@ -38,6 +38,13 @@ body {
   clear: left;
 }
 
+#uiTxt {
+  float: left;
+  clear: left;
+  color: #aaa;
+  margin: 0;
+}
+
 #gameWindow {
   float: left;
   clear: left;
