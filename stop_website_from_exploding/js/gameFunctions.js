@@ -136,32 +136,33 @@ function spawnPixel() {
 
 var floorIsVisible = false;
 var pixelYPos = 1;
+var pixelPosOffset;
 var randomizedPixelXPos;
 //0-set pos of pixel.  1-move pixel pos. 2-goto 0.
 function pixelMove() {
-  //Take away last pixel.
+  //remove last pixel.
   if(pixelYPos > 1) {
     removeTileAtIndex(randomizedPixelXPos, pixelYPos - 1);
     document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - 1)).onclick = undefined;
     document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - 1)).style.cursor = "text";
   }
 
-  //check if pixel has been clicked.
+  //check if pixel has been clicked mid air.
   if (pixelActive === false) {
     //stop moving.
-    pixelYPos = 1;
     return;
   }
 
-  //Add pixel and make it clickable.
+  //draw pixel and make it clickable.
   replaceTileAtIndex(randomizedPixelXPos, pixelYPos, '.');
   document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).onclick = gainPixel;
   document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).style.cursor = "pointer";
+  pixelPosOffset = 0;
 
   //check if pixel needs to stop or keep moving.
   if (pixelYPos >= 21) {
     //stop moving.
-    pixelYPos = 1;
+    //pixelYPos = 1;  //TODO: take this away
     if(floorIsVisible === false) {
       addFloor();
       floorIsVisible = true;
@@ -170,6 +171,7 @@ function pixelMove() {
   else {
     //move the pixel down.
     pixelYPos += 1;
+    pixelPosOffset = 1;
     setTimeout(pixelMove, pixelFallSpeed, randomizedPixelXPos);
   }
 }
@@ -201,7 +203,7 @@ function CheckUpgrades() {
   }
   else if (darkPixelButtonExists === false && pixelFallSpeedButtonIsFinished === true && pixels >= 1) {
       darkPixelButtonExists = true;
-      addButton('Spawn **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
+      addButton('Start Spawning **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
   }
 
   //Anytime before map is found  //TODO: delete this?
@@ -212,11 +214,19 @@ function CheckUpgrades() {
 
 function resetPixel() {
   //reset the tile.
-  removeTileAtIndex(randomizedPixelXPos, 21);
-  document.getElementById('item' + randomizedPixelXPos + 'x' + 21).onclick = undefined;
-  document.getElementById('item' + randomizedPixelXPos + 'x' + 21).style.cursor = "text";
+  if(pixelYPos === 21) {
+    removeTileAtIndex(randomizedPixelXPos, pixelYPos);
+    document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).onclick = undefined;
+    document.getElementById('item' + randomizedPixelXPos + 'x' + pixelYPos).style.cursor = "text";
+  }
+  else {
+    removeTileAtIndex(randomizedPixelXPos, pixelYPos - pixelPosOffset);
+    document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - pixelPosOffset)).onclick = undefined;
+    document.getElementById('item' + randomizedPixelXPos + 'x' + (pixelYPos - pixelPosOffset)).style.cursor = "text";
+  }
 
   pixelActive = false;
+  pixelYPos = 1;
 }
 
 function pixelSpawnable() {
@@ -256,61 +266,82 @@ var rodentXPos = 65;
 var rodentHasPixel = false;
 var rodentLeaves = false;  //if active forces rodent to leave the screen.
 var stopLooping = false;
+var stopMoving = false;
 function moveRodentToStealPixel () {
   if(stopLooping === true) {
     stopLooping = false;
   }
-  //reset tiles that make up rat.
+
+  //remove tiles that make up rat.
   for(var i = 0; i <= rodentBody.length - 1; i++) {
     if(rodentXPos + i < 63 && rodentXPos + i > 0) {
       removeTileAtIndex(rodentXPos + i, groundLevel);
     }
   }
+
   //change the position of the rat.
   if(rodentHasPixel === false && pixelActive === true && rodentLeaves === false) {
     if(rodentXPos > randomizedPixelXPos + 1) {
       rodentXPos--;
     }
     else {
+      //rodent picks up pixel.
       rodentHasPixel = true;
       resetPixel();
     }
   }
-  else {
-    if(rodentLeaves === true && pixelActive === true) {
-
-    }
-    else {
-
+  else {  //TODO: make rodent stop if next pixel is in the way and pick it up.
+    //this makes the rat pause while grabbing the pixel.
+    if(stopMoving === true) {
+      stopMoving = false;
     }
 
-    //case: Pixel has been picked up while the rat is on the screen.
-    if(rodentHasPixel === false && rodentLeaves === false) {
-      rodentLeaves = true;
-    }
-    //TODO: make rodent stop if next pixel is in the way and pick it up.
-    if(rodentXPos >= 64) {
-      if(rodentHasPixel === true) {
-        rodentHasPixel = false;
+    //case: pixel has been dropped while rat is going back.
+    if(rodentLeaves === true && pixelActive === true && rodentHasPixel === false) {
+      if(randomizedPixelXPos === rodentXPos + rodentBody.length){
+        stopMoving = true;
+        if(pixelYPos === 21) {
+          //rodent picks up pixel.
+          rodentHasPixel = true;
+          resetPixel();
 
-        if(isDeadPixelCounterActive === false) {
-          addDeadPixelCounterUI();  //Add the ui.
-          isDeadPixelCounterActive = true;
-
-          //continue naritive on first _dead_px.
-          setTimeout(dialogue5, 2000);
+          rodentLeaves = false;
         }
-        updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
-
-        setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
       }
-
-      if(rodentLeaves === true) {
-        rodentLeaves = false;
-      }
-      stopLooping = true;
     }
-    rodentXPos++;
+
+    if(stopMoving === false) {
+      //case: pixel has been picked up by player while the rat is on the screen.
+      if(rodentHasPixel === false && rodentLeaves === false) {
+        rodentLeaves = true;
+      }
+
+      //case: rodent is off the screen.
+      if(rodentXPos >= 64) {
+        if(rodentHasPixel === true) {
+          rodentHasPixel = false;
+
+          //case: _dead_px are not yet active
+          if(isDeadPixelCounterActive === false) {
+            addDeadPixelCounterUI();  //Add the ui.
+            isDeadPixelCounterActive = true;
+
+            //continue naritive on first _dead_px gain.
+            setTimeout(dialogue5, 2000);
+          }
+          updateDeadPixelCounterUI(++deadPixels);  //update the ui & increment.
+
+          setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
+        }
+
+        if(rodentLeaves === true) {
+          rodentLeaves = false;
+        }
+        stopLooping = true;
+      }
+
+      rodentXPos++;
+    }
   }
 
   //draw rodent at new position.
@@ -320,9 +351,8 @@ function moveRodentToStealPixel () {
     }
   }
 
-  console.log('loop' + stopLooping + ' x=' + rodentXPos + ' pxActiveGud?=' + pixelActive);
   if(stopLooping === false) {
-    rodentLoopID = setTimeout(moveRodentToStealPixel, 1000 / 8);  //loop
+    setTimeout(moveRodentToStealPixel, 1000 / 8);  //1000 / 8 is move speed
   }
 }
 
@@ -340,7 +370,7 @@ function enableDarkPixels() {
     darkPxUgButton.parentNode.removeChild(darkPxUgButton);
   }
   else {
-    addUiTxtLine('<br> > You need ${' + ugCost + ' - ' + pixels + '} more _px to purchase this upgrade.');
+    addUiTxtLine('<br> > You need ${' + ugCost + '-' + pixels + '} more _px to purchase this upgrade.');
   }
 }
 //DeadPixelCode End/>
@@ -372,11 +402,12 @@ function enableMap() {
 //<Emotes Start
 var emoteList = ["hmmm", "...", "sigh...", "whyyyy", "almost...", '*smash* *bang*'];
 var emoteRepeatID;
+var emoteDestroyID;
 function randomEmotes() {
   speech.innerHTML = ("<p id='emote'>> " + emoteList[getRandomInt(0, emoteList.length)] + "</p>");
 
   console.log("emote");
-  setTimeout(destroyTagById, 2500, 'emote');
+  emoteDestroyID = setTimeout(destroyTagById, 2500, 'emote');
   emoteRepeatID = setTimeout(randomEmotes, getRandomInt(100, 2401) * 100);  //random between 6000 and 240000
 }
 //Emotes End/>

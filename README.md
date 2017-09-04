@@ -8,42 +8,42 @@ Websites are probably useful.
 
 Code Sections:
 
-  - Code sections are broken up inside of a script with:
+  - Code sections are broken up and named inside of a script in a few main ways:
+
+    Starting a code section.  
 
   ```
   //< + nameOfSection + ' ' + Start
-  ex.
+  //ex.
   //<CollisionCode Start
   ```
 
-  to start a section.  
+    Ending a code section.
 
   ```
   //nameOfSection + ' ' + End + />
-  ex.
+  //ex.
   //CollisionCode End/>
   ```
 
-  to end a section.  
+    Emphasizing or tagging a function.
 
   ```
   //!nameOfEmphasis!
-  ex.
+  //ex.
   //!Combat!
   ```
 
-  is used to emphasize or tag a function.    
+    Noting when statements would be activated.  
 
   ```
-  //case: situation that calls a statement
-  ex.
-  //case: player has been hit with an electric weapon.
-  if(weapon === true && weaponType === 'electric' && playerIsHit == true) {
-    foo();
+  //case: situation that would activate a statement
+  //ex.
+  //case: player has been hit with an electric weapon and doesn't die.
+  if(enemyHasWeapon === true && weaponType === 'electric' && playerIsHit == true && playerHealth > 0) {
+    addShockedDebuff('player');
   }
   ```
-
-  is used to say when a statement would be activated.  
 
   - Code sections are only for reference and ease of code readability.
   - Section starts and ends are based off of html tags.

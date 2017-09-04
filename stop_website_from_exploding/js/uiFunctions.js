@@ -36,7 +36,7 @@ function removeTopUiTxtLine () {
 }
 
 function addUiTxtLine (line) {
-  uiTxt.innerHTML += ('<p>' + line + '</p>');
+  uiTxt.innerHTML += ('<p class="zeroMargin">' + line + '</p>');
   uiTxtLines++;
 
   if(uiTxtLines > 5) {

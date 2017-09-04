@@ -18,6 +18,10 @@ body {
   margin: 6px;
 }
 
+.zeroMargin {
+  margin: 0;
+}
+
 #screenObjects {
   position: absolute;
 }

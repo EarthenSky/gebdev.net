@@ -13,12 +13,12 @@ var map = document.getElementById('mapWindow');
 var track1 = new Audio('js/jsResources/146Endless.wav');
 
 function debug () {
-  //addUiTxtLine('Welp :: x => {_x=4};');
+  updatePixelCounterUI(++pixels);  //Update the ui & increment.
 }
 
 function start () {
   console.log("start()");
-  //face.onclick = debug;
+  face.onclick = debug;
 
   createEmptyGameWindow();  //Create the spaces that make up the game window.
   createEmptyMapWindow();  //Create the spaces that make up the map window.
@@ -36,13 +36,13 @@ function getEmailName() {
 
 function dialogueNeg2() {
   face.innerHTML = "[;_;]";
-  speech.innerHTML += "";
+  speech.innerHTML = "";
   setTimeout(dialogueNeg1, 2000);
 }
 
 function dialogueNeg1() {
   face.innerHTML = "[o_o]";
-  speech.innerHTML += "<br> > Hey you!";
+  speech.innerHTML += "> Hey you!";
   setTimeout(dialogue0, 2000);
 }
 
@@ -88,6 +88,7 @@ function dialogue4() {
 function dialogue5() {
   speech.innerHTML = "";  //reset speech incase an emote is active.
   clearTimeout(emoteRepeatID);  //Stop emotes.
+  clearTimeout(emoteDestroyID);  //Stop allready destroyed emotes from being destroyed.
 
   face.innerHTML = "[O▱O]";
   speech.innerHTML += "<br> > ...";
@@ -162,7 +163,7 @@ function dialogue15() {
 
 function dialogue16() {
   face.innerHTML = "[___]";
-  speech.innerHTML += "<br> > Naaaaaahh";
+  speech.innerHTML += "<br> > Naaaaaah";
   setTimeout(dialogue17, 4000);
 }
 
