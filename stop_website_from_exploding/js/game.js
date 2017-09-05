@@ -187,7 +187,7 @@ function dialogue19() {
 
 function dialogue20() {
   face.innerHTML = "[~_~]";
-  speech.innerHTML += "<br> > You're going to need one.";
+  speech.innerHTML += "<br> > It might take some time.";
 
   setTimeout(addButton, 1000, "ok", "dialogue21()", 'kk');
 }
@@ -199,29 +199,12 @@ function dialogue21() {
   speech.innerHTML = "";
 
   //dialogue22A gets called when the map is found.
-  if(mapObtained === true) {
-    setTimeout(dialogue22B, 2000);
-  }
-  else {
-    showMapCost();
-  }
+  showMapCost();
 }
 
 function dialogue22A() {
   face.innerHTML = "[▪‿▪]";
-  speech.innerHTML = "> Hey you found one!";
-  setTimeout(dialogue23, 2000);
-}
-
-function dialogue22B() {
-  face.innerHTML = "[▪_▪]？";
-  speech.innerHTML = "> Wait, you already have one?";
-  setTimeout(dialogue22C, 2000);
-}
-
-function dialogue22C() {
-  face.innerHTML = "[=v=]";
-  speech.innerHTML += "<br> > Great.";
+  speech.innerHTML = "> Hey you got one!";
   setTimeout(dialogue23, 2000);
 }
 

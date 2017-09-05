@@ -51,7 +51,10 @@ function floorColourAnimation(colourValue) {
   }
 }
 
+var blackMarketGuy = '{=▨益▨=}'; //TEMP: 27 in. '{=▨益▨=}'{=▪益▪=}
+var blackMarketSign = '[BM Shop]';
 function addGameWindow() {
+  //create window
   for(y = 0; y <= 26; y++) {
     for(x = 0; x <= 63; x++) {  //the x row.
       if ((x === 0 || x === 63) && y === 26) {
@@ -94,6 +97,19 @@ function addGameWindow() {
         replaceTileAtIndex(x, y, ' ');  //adds one empty space
       }
     }
+  }
+
+  //create face
+  for(i = 0; i < blackMarketGuy.length; i++) {  //TODO: make the characters fit right.
+    replaceTileAtIndex(i + 29, 22, blackMarketGuy[i]);
+  }
+  replaceTileAtIndex(4, 22, '');
+  replaceTileAtIndex(5, 22, '');
+
+  //create sign
+  for(i = 0; i < blackMarketSign.length; i++) {
+    replaceTileAtIndex(i + 27, 23, blackMarketSign[i]);
+    document.getElementById('item' + (i + 27) + 'x23').style.color = '#e00';
   }
 }
 
@@ -162,7 +178,6 @@ function pixelMove() {
   //check if pixel needs to stop or keep moving.
   if (pixelYPos >= 21) {
     //stop moving.
-    //pixelYPos = 1;  //TODO: take this away
     if(floorIsVisible === false) {
       addFloor();
       floorIsVisible = true;
@@ -189,7 +204,9 @@ function gainPixel() {
 
   clearTimeout(pixelStealTimerId);
 
+  //story progression is often triggered by pixel gains.
   CheckUpgrades();
+  CheckInteractions();
 
   setTimeout(pixelSpawnable, 200);  //make pixels spawnable again.
 }
@@ -205,10 +222,12 @@ function CheckUpgrades() {
       darkPixelButtonExists = true;
       addButton('Start Spawning **Dark** Pixels [_px=5]', 'enableDarkPixels()', 'darkPxUg');
   }
+}
 
-  //Anytime before map is found  //TODO: delete this?
-  if(mapObtained === false && pixels >= 50) {
-      showMapCost();
+function CheckInteractions() {
+  //case: map cost has been shown and you grabbed one pixel.
+  if(mapShown === true && pixels >= 1) {
+    setTimeout(blackmarket0, 2000);
   }
 }
 
@@ -378,8 +397,10 @@ function enableDarkPixels() {
 //<MapCode Start
 var mapObtained = false;
 
+var mapShown = false;
 function showMapCost() {
   addButton('Buy Map [_px=3600]', 'enableMap()', 'mapUg');
+  mapShown = true;
 }
 
 //!Upgrades!
