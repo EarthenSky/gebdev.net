@@ -1,4 +1,6 @@
+var blackMarketOpen = false;
 function blackMarket0 () {
+  blackMarketOpen = true;
   gameTxt.innerHTML = '> pssssst!';
   setTimeout(blackMarket1, 2000);
 }
@@ -12,7 +14,7 @@ function blackMarket2A () {
   addGameWindow();  //TODO: real
   gameTxt.innerHTML += '<br> > Lookin\' to \'buy\' some upgrades?';
   ui.innerHTML += '<br>';
-  setTimeout(addButton, 2000, "Yeah!", "blackMarket3B()", 'yeah');
+  setTimeout(addButton, 2000, "Yeah!", "blackMarket2B()", 'yeah');
   setTimeout(addButton, 2000, "Who are you?", "blackMarket2C()", 'who');
 }
 
@@ -52,4 +54,11 @@ function blackMarket5 () {
     destroyTagById('wut');
   }
   gameTxt.innerHTML = '> It\'s all set up, go for it buddy!';
+
+  if(yahPath === true) {
+    setTimeout(addButton, 3000, "Nice!", "blackMarket6()", 'nice');
+  }
+  else {
+    setTimeout(addButton, 3000, "Umm, ok?", "blackMarket6()", 'um');
+  }
 }

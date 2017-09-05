@@ -101,15 +101,15 @@ function addGameWindow() {
 
   //create face
   for(i = 0; i < blackMarketGuy.length; i++) {  //TODO: make the characters fit right.
-    replaceTileAtIndex(i + 29, 22, blackMarketGuy[i]);
+    replaceTileAtIndex(i + 29, 23, blackMarketGuy[i]);
   }
-  replaceTileAtIndex(4, 22, '');
-  replaceTileAtIndex(5, 22, '');
+  replaceTileAtIndex(4, 23, '');
+  replaceTileAtIndex(5, 23, '');
 
   //create sign
   for(i = 0; i < blackMarketSign.length; i++) {
-    replaceTileAtIndex(i + 27, 23, blackMarketSign[i]);
-    document.getElementById('item' + (i + 27) + 'x23').style.color = '#e00';
+    replaceTileAtIndex(i + 27, 24, blackMarketSign[i]);
+    document.getElementById('item' + (i + 27) + 'x24').style.color = '#e00';
   }
 }
 
@@ -226,8 +226,8 @@ function CheckUpgrades() {
 
 function CheckInteractions() {
   //case: map cost has been shown and you grabbed one pixel.
-  if(mapShown === true && pixels >= 1) {
-    setTimeout(blackmarket0, 2000);
+  if(mapShown === true && pixels >== 1 && blackMarketOpen === false) {
+    setTimeout(blackMarket0, 2000);
   }
 }
 
