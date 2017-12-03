@@ -9,19 +9,29 @@ body {
   font-variant: normal;
   font-weight: 100;
 
-  /*auto text color*/
+  /*auto colours*/
   color: #eee;
-
-  /*sets the background image and makes it fill the entire screen
-  background: url(cssResources/background.jpg);
-  background-size: cover;
-  background-repeat: repeat;
-  background-attachment: fixed;*/
-
-  /*keeps the positioning of the elements the same at small screen sizes
-  min-width: 960px;*/
+  background: #222;
+  text-shadow: 4px 4px 8px black;
 
   overflow-y: hidden;
+}
+
+#header {
+  width: 100vw;
+  height: 80px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#content {
+  width: 100vw;
+  height: calc(100% - 80px);
+
+  position: absolute;
+  bottom: 0;
 }
 
 .centered {
