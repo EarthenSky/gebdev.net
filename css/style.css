@@ -1,37 +1,58 @@
-html * {
-
-}
-
 body {
   /*auto text font*/
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   font-style: normal;
   font-variant: normal;
-  font-weight: 100;
+  /*font-weight: 100;*/
 
   /*auto colours*/
   color: #eee;
   background: #222;
-  text-shadow: 4px 4px 8px black;
 
-  overflow-y: hidden;
+  margin: 0em;
+
+  /*overflow-y: hidden;*/
 }
 
 #header {
   width: 100vw;
-  height: 80px;
+  height: 3.25em;
 
   position: absolute;
+
   top: 0;
   left: 0;
+
+  display: inline;
+}
+
+#title {
+  margin: 0.2em 1em 0 1em;  /*0.24em is sort of magic*/
+  text-shadow: 2px 2px 4px black;
 }
 
 #content {
   width: 100vw;
-  height: calc(100% - 80px);
+  height: calc(100% - 3.25em);  /*magin number?*/
 
   position: absolute;
+
   bottom: 0;
+}
+
+#form-box {
+  font-size: 1.5em;
+  background-color: #555;
+  padding: 1em;
+  text-align: center;
+}
+
+#factor-button {
+  font-size: 0.8em;
+  width: 8em;
+  height: 2.5em;
+
+  border-radius: 2em;
 }
 
 .centered {
@@ -40,6 +61,13 @@ body {
   left: 50%;
   /*bring your own prefixes*/
   transform: translate(-50%, -50%);
+}
+
+.centered-x {
+  position: fixed;
+  left: 50%;
+  /*bring your own prefixes*/
+  transform: translate(-50%, 0);
 }
 
 .noselect {
