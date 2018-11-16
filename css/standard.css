@@ -3,15 +3,24 @@ body {
   font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   font-style: normal;
   font-variant: normal;
-  /*font-weight: 100;*/
 
   /*auto colours*/
   color: #eee;
   background: #222;
 
   margin: 0em;
+}
 
-  /*overflow-y: hidden;*/
+a {
+  color: #6af;
+}
+
+a:hover {
+  color: #8ef;
+}
+
+a:active {
+  color: #37f;
 }
 
 #header {
@@ -27,32 +36,36 @@ body {
 }
 
 #title {
-  margin: 0.2em 1em 0 1em;  /*0.24em is sort of magic*/
+  margin: 0.2em 1em 0 1em;  /*0.2em is sort of magic*/
   text-shadow: 2px 2px 4px black;
 }
 
 #content {
   width: 100vw;
-  height: calc(100% - 3.25em);  /*magin number?*/
+  height: calc(100% - 3.25em);  /*magic number?*/
 
   position: absolute;
 
   bottom: 0;
 }
 
-#form-box {
+#main-box {
+  font-size: 1.5em;
+  background-color: #555;
+  padding: 1em;
+  /*text-align: center;*/
+}
+
+/*Centers body text*/
+#main-box-center {
   font-size: 1.5em;
   background-color: #555;
   padding: 1em;
   text-align: center;
 }
 
-#factor-button {
-  font-size: 0.8em;
-  width: 8em;
-  height: 2.5em;
-
-  border-radius: 2em;
+.small-text {
+  font-size: 0.7em;
 }
 
 .centered {
