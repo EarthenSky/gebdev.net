@@ -64,6 +64,22 @@ a:active {
   text-align: center;
 }
 
+.button {
+  width: 12em;
+  height: 4em;
+
+  color: #eee;
+  background: #222;
+  border-color: #444;
+
+  padding: 1em;
+}
+
+audio {
+  width: 16em;
+  display: block;
+}
+
 .small-text {
   font-size: 0.7em;
 }
