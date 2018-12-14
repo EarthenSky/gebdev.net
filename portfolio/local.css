@@ -1,0 +1,35 @@
+audio {
+  width: 16em;
+  display: block;
+  /*margin: 1em;
+  margin-left: 1em;
+  transform: translate(0, 0);
+  float: left;*/
+}
+
+table, th, td {
+  border: 2px solid #111;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 0.2em 0.2em 0.2em 0.2em;
+}
+
+td {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+#main-box {
+  font-size: 1.25em;
+}
+
+.small-txt {
+  font-size: 0.8em;
+}
+
+.small-audio {
+  width: 8em;
+}

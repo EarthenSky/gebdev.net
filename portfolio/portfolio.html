@@ -3,6 +3,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="../css/standard.css"/>
+        <link rel="stylesheet" href="local.css"/>
         <title>Music Portfolio</title>
     </head>
 
@@ -15,21 +16,48 @@
             <div id="main-box">
                 <p>This is my music portfolio it has a bunch of my songs on it...</p>
 
-                <h2 style="margin:0;">Example Songs:</h2> <!-- TODO: Play songs here. -->
+                <h2 style="margin: 0.25em">Completed Songs:</h2>
 
-                <br>
+                <table style="">
+                    <tr> <th>Title</th> <th>Music</th> <th>Description</th> </tr>
+                    <tr>
+                        <td>Comfy Nighttime</td>
+                        <td> <audio src="music/comfyNighttime.mp3" controls="controls">!!!</audio> </td>
+                        <td class="small-txt">I wrote this song to convey the image of autumn at night.  I tried to use a lot of delay effect to give the song a dreamy atmosphere.</td>
+                    </tr>
+                    <tr>
+                        <td>Sommeil</td>
+                        <td> <audio src="music/sommeil.mp3" controls="controls">!!!</audio> </td>
+                        <td class="small-txt">I wrote this song without an image or story in mind, instead using the feeling of just being tired or sleepy.  I primarily chose instruments that had an airy feel to them to fit with the "feeling" of the song.</td>
+                    </tr>
+                    <tr>
+                        <td>Phase Caverns</td>
+                        <td> ... </td>
+                        <td class="small-txt">Incomplete</td>
+                    </tr>
+                    <tr>
+                        <td>Xylophone Song?</td>
+                        <td> ... </td>
+                        <td class="small-txt">Incomplete</td>
+                    </tr>
+                    <tr>
+                        <td>Presentation Song Examples</td>
 
-                <audio style="margin-left: 1em; transform: translate(0, 0); float: left;" src="music/ComfyNighttime.mp3" controls="controls">!!!</audio>
-                <p style="margin: 0.5em;">&nbsp;&nbsp;-&nbsp;&nbsp;Comfy Nighttime</p>
+                        <td>
+                            <audio id="au0" class="small-audio" src="music/sommeil.mp3">!!!</audio>
+                            <button id="auCtrl">play</button>
+                            <button id="reset">↺</button>
+                        </td>
+                        <td class="small-txt">Incomplete</td>
 
-                <br>
-
-                <audio style= "margin-left: 1em; transform: translate(0, 0); float: left;" src="music/ComfyNighttime.mp3" controls="controls">!!!</audio>
-                <p style="margin: 0.5em;">&nbsp;&nbsp;-&nbsp;&nbsp;Example</p>
+                    </tr>
+                </table>
 
                 <br> <a class="small-text" href="../index.html">Return to main page</a>
             </div>
         </div>
+
+        <script type="text/javascript" lang="javascript" src="local.js"></script>
     </body>
 
 </html>
