@@ -1,3 +1,1 @@
-function onStart() {
-    console.log("Start!");
-}
+console.log("Start!");
