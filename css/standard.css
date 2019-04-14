@@ -1,6 +1,7 @@
 body {
   /*auto text font*/
-  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  /*font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;*/
+  font-family: monospace;
   font-style: normal;
   font-variant: normal;
 
