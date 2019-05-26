@@ -3,11 +3,10 @@
 <html>
     <head>
         <link rel="stylesheet" href="../../css/standard.css"/>
-        <link rel="stylesheet" href="local.css"/>
         <title>Earthen Sky - Neural Network Tests</title>
     </head>
 
-    <body ontouchstart="" onload="onStart()">
+    <body ontouchstart="">
         <div id="header">
             <h1 id="title" class="noselect">Earthen Sky - Neural Network Tests</h1>
         </div>
@@ -15,21 +14,46 @@
         <div id="content">
             <div id="main-box">
                 <small>I don't know how to do anything crazy but I just want to find some cool words. Ok?</small>
+                <br> <br>
+
+                <small>significant iterations before stopping : </small> <input id="sig-iter" value="50"/>
                 <br>
+                <small>(or) change in cost function before stopping : </small> <input id="change-cost" value=""/>
+                <br> <br>
+
+                <div style="width: 90%; margin: 1em 5% 1em 5%; padding: 0.5em; background: #666;">
+                    <small>hidden layer size (neuron count) : </small> <input id="hls" value="2"/> <br>
+                    <small>hidden layer depth (layers) : </small> <input id="hld" value="2"/> <br>
+                    <div style="width:46%; height: 16em; margin: 0; padding: 0.25em; display: inline-block; border: 3px inset #ccc ">
+                        <small for="test-words">'\n' delimited list of words to choose from. <br>ex: english language<br><br>word-bank:</small>
+                        <br>
+                        <input id="word-bank-upload" type="file"/>
+                    </div>
+                    <div style="width:46%; height: 16em; margin: 0; padding: 0.25em; display: inline-block; border: 3px inset #ccc; float: right;">
+                        <small>test words and values<br>word : value\n<br><br>test words:</small>
+                        <br>
+                        <textarea id="test-words" style="height: calc(100% - 7em); width: calc(100% - 0.25em); resize: none;">alchemic : 1</textarea>
+                    </div>
+                </div>
+
+                <button onclick="main();" style="width: 12em; height: 4em; margin-left: 50%; transform: translate(-50%, 0);">train network</button>
                 <br>
 
-                <small>significant iterations before stopping : </small> <input id="sig-iter"/>
-                <br>
-                <br>
-
-                <button onclick="main">train network</button>
-                <br>
+                <div style="width: 90%; margin: 1em 5% 1em 5%; padding: 0.5em; background: #666;">
+                    <div style="width:46%; height: 16em; margin: 0; padding: 0.25em; display: inline-block; border: 3px inset #ccc ">
+                        <small id="tout">Training Output: <br></small>
+                    </div>
+                    <div style="width:46%; height: 16em; margin: 0; padding: 0.25em; display: inline-block; border: 3px inset #ccc; float: right;">
+                        <small id="tout">Dataset Result:</small> <br>
+                        <textarea name="test-words" style="height: calc(100% - 7em); width: calc(100% - 0.25em); resize: none;"></textarea>
+                    </div>
+                </div>
 
                 <br><br> <a class="small-text" href="../directory.html">Return to directory page</a>
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>  <!-- This includes the tensorflow.js library -->
+        <!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>  <!-- This includes the tensorflow.js library -->
         <script type="text/javascript" lang="javascript" src="local.js"></script>
     </body>
 
