@@ -39,18 +39,18 @@ let OUTPUT_NODES = 1;  // output neurons
 
 // This is called when the network activate button is pressed. "train network"
 function main() {
-    // Setup network.s
+    // Setup network.
     if (isFileLoaded() == 1) {
         alert ("file not loaded");
         return;
     }
 
     // Interperet test data. (process into usable form)
-    let testDataLines = document.getElementById('test-words').value.split("\n")
-    let testData = []  // will be 2d array.
+    let testDataLines = document.getElementById('test-words').value.split("\n");
+    let testData = [];  // will be 2d array.
     for (i=0; i<testDataLines.length; i++) {
         values = testDataLines[i].split(" : ");  // [word, intended value] ex: [car, 1]
-        testData.push(values)
+        testData.push(values);
     }
 
     // --------------------------------------------------------------------- //
@@ -61,14 +61,15 @@ function main() {
     let HIDDEN_LAYER_DEPTH = parseInt(document.getElementById('hld').value);
     let OUTPUT_NODES = 1;  // outputss
 
-    let so1 = [0.5];  // the initial value of this is the input node count
+    // TODO: do i need to pass these down?
+    let so1 = [];  // the initial value of this is the input node count  //stack out #1
     let so2 = [];
 
     let wSize = 0;
     for (i=0; i<HIDDEN_LAYER_DEPTH+1; i++) {
         // predicted size sets of perceptrons.
         let s2len = (i==HIDDEN_LAYER_DEPTH ? OUTPUT_NODES : HIDDEN_LAYER_SIZE);
-        let s1len = (i==0 ? so1.length : HIDDEN_LAYER_SIZE);
+        let s1len = (i==0 ? INPUT_NODES : HIDDEN_LAYER_SIZE);
         wSize += s1len * s2len;
     }
     let wt = [...Array(wSize).keys()].map(i => 0);
@@ -103,6 +104,21 @@ function main() {
     // --------------------------------------------------------------------- //
 
     // Evaluate Network on large dataset and get output in multiline input.
+    let wordBankDict = {};  // Save data in a dictionary.
+    for(k=0; k<wordBankList.length; k++) {
+        //TOOO: this!!!!!!!!!1
+        wordBankDict[wordBankList[k]] = runNetwork(wordToList(wordBankList[k]), so2, wt, b)[0];
+    }
+
+    // sort items.
+    wordBankDict.sort();
+
+    for(k=0; k<wordBankList.length; k++) {
+        //TOOO: this!!!!!!!!!1
+        document.getElementById('tout').innerHTML += "word : value \n";
+    }
+
+    // send output.
 
 }
 
@@ -148,16 +164,32 @@ function findTotalCost(testData, so1, so2, wt, b) {
         console.log(h + "--");
         // findCost(...) must be positive b/c is sum of abs(n),
         // therefore no need to do: abs(findCosts(...))
-        totalAvgCost += findCost(testData[i][1], so1, so2, wt, b);
+        totalAvgCost += findCost(testData[i][1], wordToList(testData[i][0]), so2, wt, b);
     }
     return totalAvgCost/testData.length;
 }
 
-// ivs stands for Intended VALues. (size of ivs is output neuron count.)
+// This function implements 'INPUT_NODES'.
+function wordToList(str) {
+    outlist = [];
+    if (str.length > 32) { console.log("length error: string greater than 32 characters") }
+    for (a=0; a<INPUT_NODES; a++) {
+        if (a >= str.length) {
+            outlist.push(-1); // fill all other characters with -1.
+        } else {
+            outlist.push(str.charCodeAt(a)/256);  // Keeps value between [0, 1) ?
+        }
+    }
+    return outlist;
+}
+
+// ivs stands for Intended ValueS. (size of ivs is output neuron count.)
 // (for this implementation ivs will be a list of a single variable)
 /// This function returns a single variable no matter what.
 function findCost(ivs, so1, so2, wt, b) {
-    cvs = runNetwork(so1, so2, wt, b);  // cvs stands for CALCulated VALues.
+    cvs = runNetwork(so1, so2, wt, b);  // cvs stands for Calculated ValueS.
+
+    //TODO: SOMETHING IS WRONG HERE!!!!!!!!!!!
 
     // Get sum of absolute value of variance from intended outputs.
     let cost = 0
@@ -192,8 +224,8 @@ function runNetwork(so1, so2, wt, b) {
         }
 
         // Move to next layer
-        so1 = so2
-        so2 = []
+        so1 = so2;
+        so2 = [];
     }
 
     return so1;
