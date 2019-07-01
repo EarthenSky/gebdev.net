@@ -61,10 +61,6 @@ function main() {
     let HIDDEN_LAYER_DEPTH = parseInt(document.getElementById('hld').value);
     let OUTPUT_NODES = 1;  // outputss
 
-    // TODO: do i need to pass these down?
-    let so1 = [];  // the initial value of this is the input node count  //stack out #1
-    let so2 = [];
-
     let wSize = 0;
     for (i=0; i<HIDDEN_LAYER_DEPTH+1; i++) {
         // predicted size sets of perceptrons.
@@ -81,12 +77,12 @@ function main() {
     // Each item is randomly initialized over the range (-1, 1).
     randomizeVariables(wt, b);
 
-    // TODO: make sure these dont get randomized a second time.
-    let wtOld = wt;
-    let bOld = b;
+    // TODO: make sure these dont get randomized a second time. (values should be copied)
+    let wtOld = [...wt];
+    let bOld = [...b];
 
     // Calculate initial cost value.
-    let totalCost = [findTotalCost(testData, so1, so2, wt, b)];  // [] so totalCost can pass by reference.
+    let totalCost = [findTotalCost(testData, wt, b)];  // [] so totalCost can pass by reference.
 
     // This is to prepare the data for looping, so that the next cost value
     // will be different thus a change in cost can be calculated.
@@ -97,32 +93,36 @@ function main() {
     // Train network. (aka: "Gradient Descent")
     let interations = parseInt(document.getElementById('sig-iter').value);
     for(j=0; j<interations; j++) {
-        updateVariables(totalCost, testData, so1, so2, wt, b);  // Update weights and biases
+        updateVariables(totalCost, testData, wt, b);  // Update weights and biases.
         document.getElementById('tout').innerHTML += "totalCost=${totalCost} @ iter=${j} <br>";
     }
 
     // --------------------------------------------------------------------- //
 
     // Evaluate Network on large dataset and get output in multiline input.
-    let wordBankDict = {};  // Save data in a dictionary.
-    for(k=0; k<wordBankList.length; k++) {
-        //TOOO: this!!!!!!!!!1
-        wordBankDict[wordBankList[k]] = runNetwork(wordToList(wordBankList[k]), so2, wt, b)[0];
+    let wordBankResults = [];  // Save data in a dictionary.
+    for(k=0; k<wordBankResults.length; k++) {
+        // wordBankResults is a list of : [name, value]
+        wordBankResults.append([wordBankList[k], runNetwork(wordToList(wordBankList[k]), wt, b)[0]]);
     }
 
-    // sort items.
-    wordBankDict.sort();
-
-    for(k=0; k<wordBankList.length; k++) {
-        //TOOO: this!!!!!!!!!1
-        document.getElementById('tout').innerHTML += "word : value \n";
-    }
+    // sort by values.
+    console.log("start sort");
+    wordBankResults.sort(function sortFunc(a, b) {
+        if (a[0] === b[0]) { return 0; }
+        else { return (a[0] < b[0]) ? -1 : 1; }
+    });
+    console.log("end sort");
 
     // send output.
+    for(k=0; k<wordBankResults.length; k++) {
+        document.getElementById('tout').innerHTML += "${wordBankResults[k][0]} : ${wordBankResults[k][1]} \n";
+    }
 
+    // HAHA, this monstrosity is done !!!
 }
 
-// For this implementation, output is how good a word is: 1=best, 0=worst
+/// For this implementation, output is how good a word is: 1=best, 0=worst ///
 
 // inc/dec the values of wt and b by '+-1'
 function randomizeVariables(wt, b) {
@@ -130,26 +130,25 @@ function randomizeVariables(wt, b) {
     b = b.map(i => i + (Math.random()*2)-1);
 }
 
-
-// find the change in cost over all test data.
-function updateVariables(cost, testData, so1, so2, wt, b, wtOld, bOld) {
-    let newCost = [findTotalCost(testData, so1, so2, wt, b)];
-    let dCost = cost - newCost;
-    let cost[0] = newCost[0];  // these are both objects so therefore cost is affected.
+// find the change in cost over all test data and update weights and biases.
+let GRADIENT_COEFFICIENT = 0.5;  // This value scales the gradient for each weight. (step size towards minimum.)
+function updateVariables(totalCost, testData, wt, b, wtOld, bOld) {  ///////////////////////////////////////////////////// TODO: error somewhere here!!!
+    let newCost = [findTotalCost(testData, wt, b)];
+    let dCost = newCost - totalCost;  //d=f-is
+    totalCost = newCost;  // These are both objects, totalCost is reference.
 
     let wtNew = [];
     let bNew = [];
 
-    //calculate gradients of wt and b.
-    for(a=0; a< ; a++) {
-        wtNew[a] = wtOld[a] - wt[a]
+    // Calculate gradients of wt and b.
+    for(a=0; a<wt.length; a++) {
+        wtNew[a] = wt[a] - (dCost/(wt[a] - wtOld[a]))*GRADIENT_COEFFICIENT;
+    }
+    for(a=0; a<b.length; a++) {
+        bNew[a] = b[a] - (dCost/(b[a] - bOld[a]))*GRADIENT_COEFFICIENT;
     }
 
-    for(b=0; b< ; b++) {
-        bNew[a] = btOld[a]
-    }
-
-    //update variable containers.
+    // Update variable containers.
     wtOld = wt;
     bOld = b;
     wt = wtNew;
@@ -157,27 +156,29 @@ function updateVariables(cost, testData, so1, so2, wt, b, wtOld, bOld) {
 }
 
 // run network for each so1 (word) in the multiline input and find average of all of them.
-function findTotalCost(testData, so1, so2, wt, b) {
+function findTotalCost(testData, wt, b) {
     let totalAvgCost = 0  // an average over all test data.
     console.log("testdata length: " + testData.length);
     for(h=0; h<testData.length; h++) {
         console.log(h + "--");
         // findCost(...) must be positive b/c is sum of abs(n),
         // therefore no need to do: abs(findCosts(...))
-        totalAvgCost += findCost(testData[i][1], wordToList(testData[i][0]), so2, wt, b);
+        totalAvgCost += findCost(testData[h][1], wordToList(testData[h][0]), wt, b);
     }
     return totalAvgCost/testData.length;
 }
 
 // This function implements 'INPUT_NODES'.
+// This function converts a string into an input layer ready array.
+let EMPTY_CHAR = -1;  // This is the value of an input node that doesn't corespond to a character.
 function wordToList(str) {
     outlist = [];
-    if (str.length > 32) { console.log("length error: string greater than 32 characters") }
+    if (str.length > INPUT_NODES) { console.log("length error: string greater than 32 characters") }  // TODO: omit this for performance.
     for (a=0; a<INPUT_NODES; a++) {
         if (a >= str.length) {
-            outlist.push(-1); // fill all other characters with -1.
+            outlist.push(EMPTY_CHAR); // fill all other characters with -1.
         } else {
-            outlist.push(str.charCodeAt(a)/256);  // Keeps value between [0, 1) ?
+            outlist.push(str.charCodeAt(a)/256);  // Keeps value between [0, 1)
         }
     }
     return outlist;
@@ -186,15 +187,13 @@ function wordToList(str) {
 // ivs stands for Intended ValueS. (size of ivs is output neuron count.)
 // (for this implementation ivs will be a list of a single variable)
 /// This function returns a single variable no matter what.
-function findCost(ivs, so1, so2, wt, b) {
-    cvs = runNetwork(so1, so2, wt, b);  // cvs stands for Calculated ValueS.
-
-    //TODO: SOMETHING IS WRONG HERE!!!!!!!!!!!
+function findCost(ivs, so1, wt, b) {
+    cvs = runNetwork(so1, wt, b);  // cvs stands for Calculated ValueS. (cvs == so1)
 
     // Get sum of absolute value of variance from intended outputs.
     let cost = 0
-    for(j=0; j<so1.length; j++) {
-        cost += Math.abs(ivs[j] - so1[j]);  // Find variance from intended output.
+    for(c=0; c<so1.length; c++) {
+        cost += Math.abs(ivs[c] - cvs[c]);  // Find variance from intended output.
     }
 
     return cost/so1.length;  // avgCost -> must be positive b/c sum of abs(n)
@@ -202,11 +201,12 @@ function findCost(ivs, so1, so2, wt, b) {
 
 // this is the only place the activation function is called.
 // this function returns an array of all the output neuron values.
-function runNetwork(so1, so2, wt, b) {
+function runNetwork(so1, wt, b) {
     let rep = HIDDEN_LAYER_DEPTH+1;  // repetitions
 
     let wi = 0;  // weight index -- weights passed
     let bi = 0;  // bias index -- biases passed
+    let so2 = []; // This is the second output layer array.
     for (i=0; i<rep; i++) {
         // predicted size of next set of perceptrons.
         let s2len = (i==rep-1 ? OUTPUT_NODES : HIDDEN_LAYER_SIZE);
@@ -265,7 +265,7 @@ aura : 1
 chaotic : 1
 cartography : 1
 relic : 1
-swordsman : 1s
+swordsman : 1
 deeps : 1
 bologna : 0
 lugubrious : 0
