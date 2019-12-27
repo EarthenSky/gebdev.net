@@ -1,7 +1,7 @@
 #sub-box {
-  width: 64em; 
-  margin: 0em auto 0em auto;
-  padding: 0.5em; 
+  width: 64rem; 
+  margin: 0 auto 0 auto;
+  padding: 0.5rem; 
   
   background: #666;
 }
@@ -21,11 +21,29 @@
 
 .code-box {
   transform: scale(0.8, 0.8);
-  margin-left: -4em;
+  
+  margin-left: -3em;
   width: 48em;
 }
 
+.code-box-long {
+  transform: scale(0.8, 0.8);
 
+  margin-left: -6em;
+  width: 78em;
+}
+
+h2 {
+  margin: 0.4em 0 0.4em 0;
+}
+
+h3 {
+  margin: 0.4em 0 0.4em 1em;
+}
+
+p, ul {
+  margin: 0.1em 0 0.1em 2em;
+}
 
 
         

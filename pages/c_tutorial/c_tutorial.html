@@ -17,15 +17,102 @@
 <div id="main-box">
 <div id="sub-box">
     
-<h2>Header</h2>
-        
-<p>ooh look at this code block</p>
+<h2>Check List</h2>
+<p>Okay these are the basic things you'll end up learning:</p>
+<ul>
+    <li>code blocks</li>
+    <li>data types</li>
+    <li>functions</li>
+    <li>loop syntax</li>
+    <li>pointers</li>
+    <li>structs</li>
+    <li>...</li>
+    <li>some other stuff</li>
+</ul>
+<br>
 
-<div class="code-box"><pre class="line-numbers"><code class="language-clike">int main() { 
-    printf("Hello world\n");
+<h2>Basics</h2>
+<p>Usually I'd just say go to a site like this <a href="https://www.tutorialspoint.com/cprogramming/index.htm">https://www.tutorialspoint.com/cprogramming/index.htm</a>, but they overcomplicate everything so instead I made this which is smaller.</p>
+<br>
+
+<h3>Hello World</h3>
+<p>It's a hello world program, guess what it does. (sarcasm)</p>
+<div class="code-box"><pre style="margin: 0; margin-top: -1em; margin-bottom: -1em;" class="line-numbers"><code class="language-clike">#include<"stdio.h"> // stdio -> standard input / output
+
+// comments in c are double slash
+int main() { 
+    printf("Hello world!\n");
     return 0;
 }
 </code></pre></div>
+<p>
+Interesting things about this code? <br>
+&nbsp;&nbsp;1. code starts from the main() function <br>
+&nbsp;&nbsp;2. main has to have <span style="color: #f71">int</span> in front of it <br>
+&nbsp;&nbsp;3. what does <span style="color: #f71">int</span> mean? integer. <span style="color: #f71">int</span> is a type of variable. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>extra:</b> <span style="color: #19f"></span>float</span> is a type of variable (means decimals). string is not a type of variable (cause c is old & bad).<br>
+&nbsp;&nbsp;4. <span style="color: #f71">int</span> before function means function returns an integer. <br>
+&nbsp;&nbsp;5. what is "\n" in the string? \n means newline. Also printf() doesn't go to next line after printing. <br>
+&nbsp;&nbsp;6. yeah that's it. <br>
+</p>
+<br> <br>
+
+<h3>Crazy Complicated Progam</h3>
+<p>oh man this one is really scary, watch out. Also imma just put notes in the code from now on.</p>
+<div class="code-box-long"><pre style="margin: 0; margin-top: -3em; margin-bottom: -3em;" class="line-numbers"><code class="language-clike">#include<"stdio.h">  // just write this before litterally every program
+    
+int main() { 
+    int i = 0;  // i'm making an int variable. Variable needs type.
+    int end;  // Oh yeah, end lines of code with semicolons.
+    end = 10;  // when you're doing an action give semicolon. When doing a loop or if or something, don't.
+
+    // Technically I don't need to do these nice indentations but otherwise it looks... bad.
+    // The curly open and close brackets {} make a block. You put code in it and don't do a semicolon after.
+    while(i < end) {
+        printf("%d ");  // This line has a semicolon, wow!
+        i++;  // this is c shorthand for i = i + 1; or i += 1; // i goes up one.
+    }
+    printf("\n");  // called newline
+
+    // zero means the program was all good, 1 means that everything has gone to shit.
+    // we're lying to the computer right now.
+    return 1;  
+}
+
+// output: 0 1 2 3 4 5 6 7 8 9 
+</code></pre></div>
+<p>Does it make enough sense?</p>
+<br>
+
+<p>Here's without comments & made a little nicer:</p>
+<div class="code-box"><pre style="margin: 0; margin-top: -2em; margin-bottom: -2em;" class="line-numbers"><code class="language-clike">#include<"stdio.h">
+    
+int main() { 
+    int i = 0;
+    int end = 10;
+
+    while(i < end) {
+        printf("%d ");
+        i++;
+    }
+    printf("\n");
+
+    return 1;  
+}
+
+// output: 0 1 2 3 4 5 6 7 8 9 
+</code></pre></div>
+<br> <br>
+
+... todo: some more
+
+<h2>Differences from python</h2>
+<h2>Basics</h2>
+<h2>Functions</h2>
+<h2>Pointers</h2>
+<h2>Structs</h2>
+<h2>Some interesting code</h2>
+<h2>Coding challenges (from easy to hard)</h2>
     
 <br> <a class="small-text" href="../directory.html">Return to directory page</a>
 
@@ -35,7 +122,6 @@
 
 <script src="../../js/prism.js"></script><!-- To use prism code blocks: https://prismjs.com -->
 </body>
-
 </html>
 
         
