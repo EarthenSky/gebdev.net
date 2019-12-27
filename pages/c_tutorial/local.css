@@ -1,0 +1,31 @@
+#sub-box {
+  width: 64em; 
+  margin: 0em 0 0em calc(50% - 32em); 
+  padding: 0.5em; 
+  
+  background: #666;
+}
+
+#main-box {
+  font-size: 1.2em;
+  padding: 0em; 
+
+  background: #444;
+
+  min-height: 100%;
+}
+
+.small-text {
+  font-size: 0.9em;
+}
+
+/*
+
+ <pre><code class="language-c line-numbers">int main() { 
+            printf("Hello world\n");
+            return 0;
+        }
+        </code></pre>
+        
+        <br> <a class="small-text" href="../../index.html">Return to main page</a>
+        */
