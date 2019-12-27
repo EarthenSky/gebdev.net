@@ -1,6 +1,6 @@
 #sub-box {
   width: 64em; 
-  margin: 0em 0 0em calc(50% - 32em); 
+  margin: 0em auto 0em auto;
   padding: 0.5em; 
   
   background: #666;
@@ -19,13 +19,13 @@
   font-size: 0.9em;
 }
 
-/*
+.code-box {
+  transform: scale(0.8, 0.8);
+  margin-left: -4em;
+  width: 48em;
+}
 
- <pre><code class="language-c line-numbers">int main() { 
-            printf("Hello world\n");
-            return 0;
-        }
-        </code></pre>
+
+
+
         
-        <br> <a class="small-text" href="../../index.html">Return to main page</a>
-        */
