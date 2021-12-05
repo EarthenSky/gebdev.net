@@ -1,12 +1,8 @@
 # earthensky.github.io
-The ultimate multi-platform
-
-*Feel free to take anything and reference me!*
-
-Here's a clickable link btw: https://earthensky.github.io/
+websites are pretty cool https://earthensky.github.io/
 
 # Info:
-This site is made with *zola*, a great ssg written in rust! 
+This site is made with a custom ssg called 
 Individual web apps are made with various languages, such as Elm for example.
 
 ### TODO: 
