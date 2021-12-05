@@ -1,3 +1,5 @@
+//TODO: get NN library
+
 // Check for the various File API support.
 if ((window.File && window.FileReader && window.FileList) == false) {
     alert('The File APIs are not fully supported in this browser!');
