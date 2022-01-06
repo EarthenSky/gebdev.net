@@ -1,0 +1,25 @@
+.move-down {
+    margin-top: 1em;
+}
+
+.custom-title {
+    margin-bottom: calc(var(--typography-spacing-vertical) / 2);
+}
+
+.custom-header {
+    padding-bottom: calc(var(--block-spacing-vertical) / 2);
+}
+
+.custom-main {
+    padding-top: calc(var(--block-spacing-vertical) / 2);
+}
+
+.svg-icon {
+    width: 18px; height: 18px; 
+    margin-top: 2px; margin-bottom: -2px;
+}
+
+.svg-logo {
+    width: 72px; height: 72px; 
+    margin-top: -10px; margin-bottom: 10px;
+}
