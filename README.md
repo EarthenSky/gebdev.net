@@ -1,6 +1,11 @@
 # earthensky.github.io
 websites are pretty cool https://earthensky.github.io/
 
+# TODO (MAIN):
+- create simple space for blog
+- delete zola site & docs around that
+- 
+
 # Info:
 This site is made with a custom ssg called 
 Individual web apps are made with various languages, such as Elm for example.
