@@ -1,7 +1,26 @@
-@title What a cool world
+#title making picd
+#subtitle a simple custom markdown language
+#date 2022, 01, 06
+#tags lang, project, picd
 
-@h1 words & words & stuff
+@h what is picd?
 
-just talking like normal
+picd (short for pico-down) is a minimal markdown language, custom made for writing nice looking blog posts easily.
 
-@img <link>
+@h what can picd do?
+ 
+aside from meta data:
+- lists
+- **bold**, *italicized*, or _underlined_ text
+- #f11{red}, #1f1{green}, or #11f{blue} text (#abc{any} #ff3{colors} #4ee{actually})
+- @rainbow{rainbow} colored text
+- and it can also inline images with descriptions
+
+@img posts/images/blue-flowers.jpg
+@desc blue flowers are pretty cool
+
+@h use
+
+Picd is currently implemented in js for easy use in static webpages. In order to use picd, simply pass in an address to a picd file to `picdParseHeader()` or `picdParseFull()` and it returns the needed metadata or dom object respectively.
+
+Check out its github page for more details at @link{https://github.com/EarthenSky/picd}
