@@ -6,6 +6,10 @@ websites are pretty cool https://earthensky.github.io/
 - delete zola site & docs around that
 - 
 
+# Resources:
+- some svg icons from https://github.com/yne/picon#readme
+- 
+
 # Info:
 This site is made with a custom ssg called 
 Individual web apps are made with various languages, such as Elm for example.

@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-theme="auto">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,18 +17,96 @@
           <h2 class="custom-title">&nbsp;Earthen Sky Code</h2>
         </div>
         <div class="grid move-down">
-          <a style="text-align:center" href="" data-tooltip="the main page"><b>home</b></a>
+          <a style="text-align:center" href="#" data-tooltip="the main page"><b>home</b></a>
           <a style="text-align:center" href="#blog" data-tooltip="ranting"><b>blog</b></a>
           <a style="text-align:center" href="#projects" data-tooltip="cool things I'm working on"><b>projects</b></a>
-          <a style="text-align:center" href="https://github.com/EarthenSky" data-tooltip="you know... 'the place'"> <nobr><span class="svg-icon" style="content: url(res/github.svg);"></span> <b>github</b></nobr> </a>
+          <a style="text-align:center" href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" data-tooltip="you know... 'the place'"> <nobr><img class="svg-icon" src="res/github.svg"></img> <b>github</b></nobr> </a>
           <a style="text-align:center" href="#todo" data-tooltip="things i gotta fix"><b>todo</b></a>
         </div>
       </div>
       <hr>
+      <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a>
     </header>
 
-    <main class="container custom-main">
-      <p>lots of talking lots of talking lots of talking lots of talking lots of talking lots of talkinglots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talkinglots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking lots of talking</p>
+    <main id="home" class="container custom-main">
+      <section id="desc"> 
+        <h3 id="hiya">Hiya — ᕕ(ᐛ)ᕗ</h3>
+        <p>I make all sorts of cool things!</p> 
+        <p>I'm currently working on way too many projects to count, however I keep a weekly blog of things I'm working on. If you want to ask any questions, or even contribute to any of the projects, feel free to do so through my github <a href="https://github.com/EarthenSky">github</a>.</p>
+      </section>
+
+      <section>
+        <h3 id="">Projects</h3>
+
+      </section>
+
+      <section>
+        <h3 id="">Recent Blog Posts</h3>
+        
+      </section>
     </main>
+
+    <main id="blog" class="container custom-main" hidden>
+      <article class="thin-article grid"> 
+        <h6 class="custom-title">sort by: </h6>
+        <a href="#blog" class=" short-button">Date (newest)</a>
+        <a href="#blog" class=" short-button">Date (oldest)</a>
+        <a href="#blog" class=" short-button">Title (smallest)</a>
+        <a href="#blog" class=" short-button">Title (largest)</a>
+      </article>
+      
+      <br>
+      
+      <section id="posts"> 
+        <h3 class="custom-title">Posts</h3>
+        <hr>
+        <div id="post-list">
+
+        </div>
+      </section>
+    </main>
+
+    <main id="projects" class="container custom-main" hidden>
+      <section> 
+        <h3>Projects</h3>
+        <p>currently nothing super cool to show off yet...</p>
+      </section>
+
+      <article> 
+        <h3>Game Jams</h3>
+        <p>I have made a few interesting games for jams however~!</p>
+        <aside class="container">
+          <iframe src="https://itch.io/embed/1221271" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/mossmoon">Moss Moon by EarthenSky</a></iframe>
+          <br>
+          <br>
+          <iframe src="https://itch.io/embed/1081748" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/skeletied">Skeletied by EarthenSky</a></iframe>
+          <br>
+          <br>
+          <iframe src="https://itch.io/embed/247585" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/text-tower-defense">Text Tower Defense by EarthenSky</a></iframe>
+          <br>
+          <br>
+          <iframe src="https://itch.io/embed/178471" height="167" width="552" frameborder="0"><a href="https://tehgamedev.itch.io/record-rage">Record Rage by Harsh Gupta, EarthenSky, Alex, christoph3225</a></iframe>
+        </aside>
+      </article>
+
+    </main>
+
+    <main id="todo" class="container custom-main" hidden>
+      <section> 
+        <h3>TODO:</h3>
+        <ul>
+          <li>add color & responsitivity to the nav bar & titles</li>
+          <li>make darkmode picker look nicer</li>
+          <li>add blog sorting & search bar</li>
+          <li>add blog post markdown language</li>
+        </ul>
+      </section>
+    </main>
+
+    <script src="scripts/theme-switcher.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/parse.js"></script>
   </body>
 </html>
