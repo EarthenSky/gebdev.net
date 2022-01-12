@@ -1,0 +1,135 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <link rel="stylesheet" href="../../style/main.css">
+    <title>Earthen Sky Code</title>
+  </head>
+
+  <body>
+    <header class="container custom-header">
+      <div class="grid">
+        <div style="display: flex;">
+          <span class="svg-logo" style="content: url(../../res/mylogo.svg);"></span>
+          <h2 class="custom-title">&nbsp;Earthen Sky Code</h2>
+        </div>
+        <div class="grid move-down">
+          <a style="text-align:center" href="https://earthensky.github.io/" data-tooltip="the main page"><b>home</b></a>
+          <a style="text-align:center" href="https://earthensky.github.io/#blog" data-tooltip="ranting"><b>blog</b></a>
+          <a style="text-align:center" href="https://earthensky.github.io/#projects" data-tooltip="cool things I'm working on"><b>projects</b></a>
+          <a style="text-align:center" href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" data-tooltip="you know... 'the place'"> <nobr><img class="svg-icon" src="../../res/github.svg"></img> <b>github</b></nobr> </a>
+          <a style="text-align:center" href="https://earthensky.github.io/#todo" data-tooltip="things i gotta fix"><b>todo</b></a>
+        </div>
+      </div>
+      <hr>
+      <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a>
+    </header>
+
+    <main id="main" class="container custom-main">
+      <article style="margin-top: calc(var(--block-spacing-vertical) /4);">
+        <header class="thin-article" style="margin-bottom: calc(var(--block-spacing-vertical) / 4);">
+          <img src="../images/gps433.png" class="pixelart" style="width: 100%;"></img>          
+        </header>
+        
+        <section id="desc"> 
+          <h2 class="custom-title" style="float: left;">GPS 433</h2>
+          <p style="float: right; margin-top: 0.9rem;"><em>Jan 11th, 2022</em></p>
+  
+          <br>
+          
+          <hr style="margin-top: calc(var(--typography-spacing-vertical));">
+          <br>
+
+          <p>Today is the first day of <em>GPS 433</em>, a self taught independent studies course, counting for a total of 0 credits. This course is designed to help me personally survive until the end of my degree. If you feel like you haven’t been productive recently, or have too many ideas that you never get to try out then I encourage you to give this curriculum a try!</p>
+
+          <br>
+          <h3 class="custom-title">(1) What is GPS 433?</h3>
+          <hr>
+          <br>
+
+          <p class="custom-title">GPS 433 is a small set of rules to help you work on projects that you're interested in. It's comprised of one 90 minute class for each day of the week, which you spend working on any kind of project you want. Every week you write a small blog post (either to the world, or just yourself) detailing the following:</p>
+          <ol style="margin-left: var(--grid-spacing-horizontal);">
+            <li>What you did over the last 5 classes</li>
+            <li>What went well / poorly during those classes</li>
+            <li>What your goals are for the next 5 classes</li>
+          </ol>
+          <p>Being conscious of these 3 simple quantities on a weekly basis enables you to more easily reflect on a relatively short timescale, while also giving you the space to give up if you decide what you're doing isn't working out. Though, this is only after you've put in a few days worth of effort trying to get it to work first.</p>
+          
+          <p>In addition, I reccomend that you throw whatever you're working at out into the world. The more people you get to read it, the more reasons you have to actually get stuff done!</p>
+
+          <br>
+          <h3 class="custom-title">(2) History</h3>
+          <hr>
+          <br>
+
+          <p>In highschool, my computer science teacher proposed that I take an independent studies (IDS) course. They offered me a space to work, and that they would act as my advisor. This opportunity wasn’t because I was particularly gifted at programming, but because I had a strong interest that couldn’t be fulfilled by the existing curriculum. Now that I’m nearing the end of post secondary, I find myself in a similar situation. My brain is getting better at coming up with ideas, but my time is best invested in school in order to understand the more complicated topcis.</p>
+
+          <p>During the IDS courses I took in highscool, I messed around with various technologies that at the time were sometimes both interesting yet terrifying to me. Playing with Win32 api's macros, C# bindings for OpenGL, or just trying to get SDL2 to work nicely with Visual Studios. Looking back at this experience now, I notice that the reason I was able to get so much done was due to the structure of the course my professor had set for me. I made the most tangible daily progress during these short classes than any period after highschool, because every week I was being actively encouraged to "just do something interesting", and not to worry about whether its feasible or not.</p>
+
+          <br>
+          <h3 class="custom-title">(3) A Theme</h3>
+          <hr>
+          <br>
+the next semester, I’m giving myself a theme for <em>GPS 433</em>, in order to help set myself up for success. In the past, projects I start in my free time tend to be based upon ridiculous combinations of programming languages and frameworks that sound like they'll be so much better than C++, or Java, or whatever the popular framework is in that area. The kinds of claims these new tools make bias my judgment, making me think I can get things done quicker than it ends up being. I would say this is my primary reason for getting bored of projects and never finishing.</p>
+
+          <p>As such, my focus over the next few months will be to “use known tools”. This means using the boring (yet powerful!) tools and programming languages I have experience with, rather than trendy new frameworks that "solve every problem."</p>
+
+          <br>
+          <h3 class="custom-title">(4) My Project</h3>
+          <hr>
+          <br>
+
+          <p>I have a lot of potential projects I’m interested in, however the first one I plan to work on will be a simple vst synth in rust. This fits with my theme, as I have quite a bit of experience with rust and rust gui libraries, and no experience with any vst or audio libraries, which makes this as good a place to start as any. Especially considering how easy cargo is to use when managing dependencies.</p>
+
+          <p>The idea for this synth is to make a tool that enables designing different parts of the frequency spectrum separately, then combining them in a flexible way. For example, you could have a synth with a pitch bend effect, but only in the high frequency information. In addition, I want the gui to be easy to understand. My pet peeve is instruments or effects that don't have a cohesive ordering scheme for knobs and just throw them all over the place. In the end, I want the synth to be intuitive enough to be learned by watching a 15-20s video. (Hard limit)</p>
+
+          <p>Following is a small first iteration mockup of what I would like the gui to be laid out as:</p>
+          <img src="../images/synth-1-mock.png" class="pixelart" style="width: 100%;"></img>
+          <br>
+          <br>
+
+          <p>The most important characteristic here is the path that sound takes: each sound grain starts at an osc -> percolate upwards as they pass through built-in effects & filters -> all trickle downwards as they're combined. This is a natural movement (like the arc of an object thrown in the air) and so should be easy enough for musicians to wrap their heads around.</p>
+
+          <p class="custom-title">My specific goals over the next week are as follows:</p>
+          <ul style="margin-left: var(--grid-spacing-horizontal);">
+            <li>write a simple, mostly static gui</li>
+            <li>make the synth capable of generating the 4 simple polyphonic waveforms (square, triangle, sin, saw)</li>
+            <li>add a master pitch & volume knob that can both be automated through conventional daws</li>
+          </ul>
+          <br>
+
+          <p class="custom-title">Goals for further weeks include:</p>
+          <ul style="margin-left: var(--grid-spacing-horizontal);">
+            <li>add a 3 mode (highpass, bandpass, lowpass) filter</li>
+            <li>Enable internal combination of multiple instances of the synth</li>
+            <li>Add a builtin (instance local) compressor</li>
+            <li>Add the ability to loop a simple sound file instead of a waveform</li>
+            <li>Simple asdr for dynamics</li>
+            <li>More complicated dynamics controls. (possibly granular?)</li>
+          </ul>
+          <br>
+          
+          <p>With that, I'll be back in 7 days!</p>
+
+          <br>
+          <hr>
+          <br>
+
+          <p>I'd like to thank anyone who's taken the time to read through my ramblings, hopefully you were able to gain something from it at the least!</p>
+      
+        </section>
+        
+        <footer class="thin-article">
+          <a href="https://earthensky.github.io/#blog">other blog posts</a>
+        </footer>
+      </article>
+    </main>
+
+    <script src="../../scripts/theme-switcher.js"></script>
+  </body>
+</html>

@@ -39,3 +39,21 @@
 .thin-p {
     margin-bottom: calc(var(--typography-spacing-vertical) / 4);
 }
+
+.red {
+    color: #f67;
+}
+
+.medium-text {
+    font-size: 1rem;
+    font-weight: 450;
+}
+
+.pixelart {
+    image-rendering: optimizeSpeed;             
+    image-rendering: -moz-crisp-edges;        
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;           
+    image-rendering: pixelated !important;  
+    -ms-interpolation-mode: nearest-neighbor;  
+}

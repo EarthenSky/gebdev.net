@@ -3,7 +3,6 @@ websites are pretty cool https://earthensky.github.io/
 
 # Resources:
 - some svg icons from https://github.com/yne/picon#readme
-- 
 
 ### TODO: 
 - elm changing logo w/ tiny physics simulation
