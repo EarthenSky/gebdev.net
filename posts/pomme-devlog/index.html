@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <link rel="stylesheet" href="../../style/main.css?v0.1">
+    <title>Earthen Sky Code</title>
+  </head>
+
+  <body>
+    <header class="container custom-header">
+      <div class="grid">
+        <div style="display: flex;">
+          <span class="svg-logo" style="content: url(../../res/mylogo.svg);"></span>
+          <h2 class="custom-title">&nbsp;Earthen Sky Code</h2>
+        </div>
+        <div class="grid move-down">
+          <a style="text-align:center" href="https://earthensky.github.io/" data-tooltip="the main page"><b>home</b></a>
+          <a style="text-align:center" href="https://earthensky.github.io/#blog" data-tooltip="ranting"><b>blog</b></a>
+          <a style="text-align:center" href="https://earthensky.github.io/#projects" data-tooltip="cool things I'm working on"><b>projects</b></a>
+          <a style="text-align:center" href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" data-tooltip="you know... 'the place'"> <nobr><img class="svg-icon" src="../../res/github.svg"></img> <b>github</b></nobr> </a>
+          <a style="text-align:center" href="https://earthensky.github.io/#todo" data-tooltip="things i gotta fix"><b>todo</b></a>
+        </div>
+      </div>
+      <hr>
+      <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
+      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a>
+    </header>
+
+    <main id="main" class="container custom-main">
+      <article style="margin-top: calc(var(--block-spacing-vertical) /4);">
+        <header class="thin-article" style="margin-bottom: calc(var(--block-spacing-vertical) / 4);">
+          <img src="../images/pomme-devlog.png" class="pixelart" style="width: 100%;"></img>          
+        </header>
+        
+        <section id="desc"> 
+          <h2 class="custom-title" style="float: left;">Pomme Devlog</h2>
+          <p style="float: right; margin-top: 0.9rem;"><em>Jan 20th, 2022</em></p>
+  
+          <br>
+          <hr style="margin-top: calc(var(--typography-spacing-vertical));">
+          
+          <h5>Table of Contents:</h5>
+          <ul>
+            <li><a href="#update-1">Jump to devlog 1 - Jan 20th</a></li>
+          </ul>
+          
+          <hr style="margin-top: calc(var(--typography-spacing-vertical));">
+          <br>
+
+          <p>This is my devlog for Pomme (on <a href="https://github.com/EarthenSky/pomme-synth">github</a>) for the made up course <a href="https://earthensky.github.io/posts/gps433/">GPS 433</a>. As such, I'll be updating this page about once every week with my progress.</p>
+
+          <br>
+          <h3 class="custom-title">(1) My Theme</h3>
+          <hr>
+          <br>
+          <p>I gave myself a theme for <em>GPS 433</em>, which is to “use known tools”. This means using the boring (yet powerful!) tools and programming languages I have experience with, rather than trendy new frameworks that claim to "solve every problem."</p>
+
+          <br>
+          <h3 class="custom-title">(2) What is Pomme?</h3>
+          <hr>
+          <br>
+
+          <p>Pomme is simple vst synth made with rust. More specifically, it's a subtractive synth designed around frequency spectrum composition.</p>
+
+          <p>The idea is to make a tool that enables designing different parts of the frequency spectrum separately, then combining them in a flexible way. For example, you could have a synth with a pitch bend effect, but only in the high frequency details. This situation is possible to engineer in DAWs, however it is difficult, high friction, and non-intuitive.</p> 
+          <p>In addition, I want the gui to be easy to understand. My pet peeve is instruments or effects that don't have a cohesive ordering scheme for knobs and just throw them all over the place. In the end, I want the synth to be intuitive enough to be learned by watching a 15-20s video. (Hard limit)</p>
+
+          <p>Following is a small first iteration mockup of what I would like the gui to be laid out as:</p>
+          <img src="../images/synth-1-mock.png" class="pixelart" style="width: 100%;"></img>
+          <br>
+          <br>
+
+          <p class="custom-title">The most important characteristic here is the path that sound takes:</p>
+          <ul style="margin-left: var(--grid-spacing-horizontal);">
+            <li>each sound grain starts at an osc</li>
+            <li>percolates upwards as they pass through built-in effects & filters</li>
+            <li>all trickle downwards as they're combined.</li> 
+          </ul>
+          <p>This is a natural movement (like the arc of an object thrown in the air) and so should be easy enough for anyone to intuit.</p>
+          
+          <br>
+          <h3 id="update-1" class="custom-title">(3) Update 1</h3>
+          <hr>
+          <br>
+
+          <p>Without further adieu, here's the first update:</p>
+          
+          <h5>1. What did you do over the last week?</h5>
+          <p>I managed to get a vst plugin running in hosts using the rust <a href="https://crates.io/crates/vst">vst crate</a>, a gui working using <a href="https://github.com/RustAudio/baseview">baseview</a>, and got egui to render over baseview using an existing <a href="https://crates.io/crates/egui-baseview">wrapper crate</a>.</p>
+          
+          <p>In addition, the plugin consists of a single polyphonic square oscillator, which I used to compose the following basic song in fl studio using nothing else except a limiter, which shows it works properly.</p>
+          
+          <blockquote style="display: flex; width: 65%;">
+            <p style="margin-bottom: 0;"><em>dance of the penguins:&nbsp;&nbsp;</em></p>
+            <audio style="width: 100%;" controls>
+              <source src="../assets/dance-of-the-penguins-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+            </audio>
+          </blockquote>
+          
+          
+          <h5>2. What went well / poorly last week?</h5>
+          <p>Unfortunately, I didn't get quite as much done as I had wanted, however it was surprisingly difficult to get the gui up & vst integration working. It took me a while, but I was able to find <a href="https://www.octasine.com/">octasine</a> which helped me setup a lot of the infastructure. Octasine is an fm vst synthesizer written in rust. In addition to being good proof that what I'm trying to do is possible, it also helped me understand the behaviour of certain functions when documentation on any of the crates was sparse.</p>
+
+          <p>Even before development however, I felt myself falling into the pattern of searching for the perfect library for the job again, rather that sticking with something I already know. In this case, it's chosing egui instead of iced. I picked this because the developer of octasine mentioned their intention to use egui rather than iced in the future, notably because iced suffers in performance. However, I do have experience using an imgui library, so egui luckily isn't completely new to me.</p>
+
+          <p>I also made a small mistake with improper handling of note lifetimes that caused tiny errors in the square wave at the end of every block. It was a bit subtle, but I was luckily able to hear the difference, then find it in audacity. This is a good time to mention that I'm primarily using <a href="https://www.hermannseib.com/english/vsthost.htm">vsthost</a> for testing, and I'm finding it very helpful.</p>
+
+          <p>I'm also happy with the current structure of Pomme's codebase, as it's quite easy to get the hang of what's happening & how it's laid out.</p>
+
+          <h5>3. What are your goals for the next week?</h5>
+          <p>This week I spent most of my time fighting with the compiler & learning the tools. Over the next week I'd like to start with getting the gui in a usable state and add some basic features including a filter, a compressor, and multiple oscillators. I'd also like to test out automation of parameters.</p>
+
+          <br>
+          <hr>
+          <br>
+
+          <p>Again, I'd like to thank anyone who's taken the time to read through my ramblings. Hopefully you were able to learn something at the least!</p>
+      
+        </section>
+        
+        <footer class="thin-article">
+          <a href="https://earthensky.github.io/#blog">other blog posts</a>
+        </footer>
+      </article>
+    </main>
+
+    <script src="../../scripts/theme-switcher.js"></script>
+  </body>
+</html>
