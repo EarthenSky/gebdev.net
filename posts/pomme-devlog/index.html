@@ -106,14 +106,14 @@
           <h5>2. What went well / poorly last week?</h5>
           <p>Unfortunately, I didn't get quite as much done as I had wanted, however it was surprisingly difficult to get the gui up & vst integration working. It took me a while, but I was able to find <a href="https://www.octasine.com/">octasine</a> which helped me setup a lot of the infastructure. Octasine is an fm vst synthesizer written in rust. In addition to being good proof that what I'm trying to do is possible, it also helped me understand the behaviour of certain functions when documentation on any of the crates was sparse.</p>
 
-          <p>Even before development however, I felt myself falling into the pattern of searching for the perfect library for the job again, rather that sticking with something I already know. In this case, it's chosing egui instead of iced. I picked this because the developer of octasine mentioned their intention to use egui rather than iced in the future, notably because iced suffers in performance. However, I do have experience using an imgui library, so egui luckily isn't completely new to me.</p>
+          <p>Even before development however, I felt myself falling into the pattern of searching for the perfect library for the job again, rather than sticking with something I already know. In this case, it's chosing <em>egui</em> instead of <em>iced</em>. I picked egui because the developer of octasine intends to use egui in the future rather than iced, notably because iced suffers in performance. However, I do have experience using an imgui library, so egui luckily isn't completely new to me.</p>
 
-          <p>I also made a small mistake with improper handling of note lifetimes that caused tiny errors in the square wave at the end of every block. It was a bit subtle, but I was luckily able to hear the difference, then find it in audacity. This is a good time to mention that I'm primarily using <a href="https://www.hermannseib.com/english/vsthost.htm">vsthost</a> for testing, and I'm finding it very helpful.</p>
+          <p>I made a small mistake with improper handling of note lenth that caused tiny errors in the square wave at the end of every block. It was a bit subtle, but I was luckily able to hear the difference, then find it in Audacity. This is a good time to mention that I'm primarily using <a href="https://www.hermannseib.com/english/vsthost.htm">vsthost</a> for testing, and finding it very helpful since you can just drag in a .dll, then choose where you want the inputs & outputs to go. You can also easily record audio to look for errors in more detail.</p>
 
           <p>I'm also happy with the current structure of Pomme's codebase, as it's quite easy to get the hang of what's happening & how it's laid out.</p>
 
           <h5>3. What are your goals for the next week?</h5>
-          <p>This week I spent most of my time fighting with the compiler & learning the tools. Over the next week I'd like to start with getting the gui in a usable state and add some basic features including a filter, a compressor, and multiple oscillators. I'd also like to test out automation of parameters.</p>
+          <p>This week I spent most of my time fighting with the compiler & learning how the vst2.4 api works. Over the next week I'd like to start with getting the gui in a usable state and add some basic features including a filter, a compressor, and multiple oscillators. I'd also like to test out automation of a few simple parameters such as global volume.</p>
 
           <br>
           <hr>
