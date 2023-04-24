@@ -1,127 +1,56 @@
 <!doctype html>
 
 <html lang="en" data-theme="auto">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <link rel="stylesheet" href="style/main.css?v0.1">
-    <title>Earthen Sky Code</title>
-  </head>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="style/main.css?v0.00">
+      <title>Geb Dev Web Dev</title>
+    </head>
 
-  <body>
-    <header class="container custom-header">
-      <div class="grid">
-        <div style="display: flex;">
-          <span class="svg-logo" style="content: url(res/mylogo.svg);"></span>
-          <h2 class="custom-title">&nbsp;Earthen Sky Code</h2>
+    <body>
+        <div id="column-container">
+            <header>
+                <h2>geb dev web dev</h2>
+                <div>
+                    <a style="text-align:center" href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
+                    / <a style="text-align:center" href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
+                    | <a style="text-align:center" href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
+                    | <a style="text-align:center" href="https://earthensky.github.io/things" title="things are cool in general"><b>things</b></a>
+                    | <a style="text-align:center" href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                </div>
+                <hr>
+            </header>
+
+            <article>
+                <h2># Home</h2>
+
+                <p>hemlo, this is indeed a website</p>
+
+                <h2># Cool Things</h2>
+                <div style="display:flex">
+                    <div style="width: 200px; height: 200px; background-color: #ccc; margin:20px;"> </div>
+                    <div style="width: 200px; height: 200px; background-color: #ccc; margin:20px;"> </div>
+                    <div style="width: 200px; height: 200px; background-color: #ccc; margin:20px;"> </div>
+                </div>
+
+                <h2># Recent Posts</h2>
+                <div class="posts">
+                    <p>Devlog 1 - <a href="">A new programming language called Umbrella</a> (coming soon) &nbsp;<em class="date-item">March 15th, 2023</em></p>
+                    <div> </div>
+                    <div style="height: 100px; background-color: #ccc; margin:10px;"> </div>
+                    <div style="height: 100px; background-color: #ccc; margin:10px;"> </div>
+                </div>
+            </article>
+
+            <footer style="text-align: center; font-size: small;">
+                <p><em style="color: #43436a;">i have lots of things on </em> <a href="https://github.com/umbrella-lang">github</a></p>
+                <!-- TODO: add lil dark mode picker here
+                    <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
+                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
+                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a> 
+                -->
+            </footer>
         </div>
-        <div class="grid move-down">
-          <a style="text-align:center" href="#" data-tooltip="the main page"><b>home</b></a>
-          <a style="text-align:center" href="#blog" data-tooltip="ranting"><b>blog</b></a>
-          <a style="text-align:center" href="#projects" data-tooltip="cool things I'm working on"><b>projects</b></a>
-          <a style="text-align:center" href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" data-tooltip="you know... 'the place'"> <nobr><img class="svg-icon" src="res/github.svg"></img> <b>github</b></nobr> </a>
-          <a style="text-align:center" href="#todo" data-tooltip="things i gotta fix"><b>todo</b></a>
-        </div>
-      </div>
-      <hr>
-      <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
-      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
-      <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a>
-    </header>
-
-    <main id="home" class="container custom-main">
-      <section id="desc"> 
-        <h3 id="hiya">Hiya — ᕕ(ᐛ)ᕗ</h3>
-        <p>I make all sorts of cool things!</p> 
-        <p>I'm currently working on way too many projects to count, however I keep a weekly blog of things I'm working on. If you want to ask any questions, or even contribute to any of the projects, feel free to do so through my github <a href="https://github.com/EarthenSky">github</a>.</p>
-      </section>
-
-      <article class="thin-article">
-        <h2 class="custom-title">NOTE</h2>
-        <p>This website is currently under construction, so be mindful of incomplete sections!</p>
-      </article>
-
-      <!--<section>
-        <h3 id="">Projects</h3>
-
-      </section>
-
-      <section>
-        <h3 id="">Recent Blog Posts</h3>
-        
-      </section>-->
-    </main>
-
-    <main id="blog" class="container custom-main" hidden>
-      <!-- <article class="thin-article grid"> 
-        <h6 class="custom-title">sort by: </h6>
-        <a href="#blog" class=" short-button">Date (newest)</a>
-        <a href="#blog" class=" short-button">Date (oldest)</a>
-        <a href="#blog" class=" short-button">Title (smallest)</a>
-        <a href="#blog" class=" short-button">Title (largest)</a>
-      </article> -->
-      
-      <br>
-      
-      <section id="posts"> 
-
-        <h4 class="custom-title">Temporary List of Posts:</h4>
-        <ul>
-          <li>first post: <a href="https://earthensky.github.io/posts/gps433/">GPS 433</a></li>
-          <li>second post: <a href="https://earthensky.github.io/posts/pomme-devlog/">Pomme Devlog</a> (recieving weekly updates)</li>
-        </ul>
-        <hr>
-
-        <h3 class="custom-title">Posts <span class="red small medium-text">(not ready yet)</span></h3>
-        <hr>
-        
-        <div id="post-list">
-
-        </div>
-      </section>
-    </main>
-
-    <main id="projects" class="container custom-main" hidden>
-      <section> 
-        <h3>Projects</h3>
-        <p>currently nothing super cool to show off yet...</p>
-      </section>
-
-      <article> 
-        <h3>Game Jams</h3>
-        <p>I have made a few interesting games for jams however~!</p>
-        <aside class="container">
-          <iframe src="https://itch.io/embed/1221271" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/mossmoon">Moss Moon by EarthenSky</a></iframe>
-          <br>
-          <br>
-          <iframe src="https://itch.io/embed/1081748" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/skeletied">Skeletied by EarthenSky</a></iframe>
-          <br>
-          <br>
-          <iframe src="https://itch.io/embed/247585" height="167" width="552" frameborder="0"><a href="https://earthensky.itch.io/text-tower-defense">Text Tower Defense by EarthenSky</a></iframe>
-          <br>
-          <br>
-          <iframe src="https://itch.io/embed/178471" height="167" width="552" frameborder="0"><a href="https://tehgamedev.itch.io/record-rage">Record Rage by Harsh Gupta, EarthenSky, Alex, christoph3225</a></iframe>
-        </aside>
-      </article>
-
-    </main>
-
-    <main id="todo" class="container custom-main" hidden>
-      <section> 
-        <h3>TODO:</h3>
-        <ul>
-          <li>add color & responsitivity to the nav bar & titles</li>
-          <li>make darkmode picker look nicer</li>
-          <li>add blog sorting & search bar</li>
-          <li>add blog post markdown language</li>
-          <li>consolidate to a single page (so that hashes make sense)</li>
-        </ul>
-      </section>
-    </main>
-
-    <script src="scripts/theme-switcher.js"></script>
-    <script src="scripts/main.js"></script>
-    <script src="scripts/parse.js"></script>
-  </body>
+    </body>
 </html>

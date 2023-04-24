@@ -1,48 +1,176 @@
-.move-down {
-    margin-top: 1em;
-}
-
-.custom-title {
-    margin-bottom: calc(var(--typography-spacing-vertical) / 2);
-}
-
-.custom-header {
-    padding-bottom: calc(var(--block-spacing-vertical) / 4);
-}
-
-.custom-main {
-    padding-top: calc(var(--block-spacing-vertical) / 4);
-}
-
-.close-margin {
-    margin: calc(var(--typography-spacing-vertical) / 2) 0;
-}
-
-.svg-icon {
-    width: 18px; height: 18px; 
-    /*margin-top: 2px; margin-bottom: -2px;*/
-}
-
-.svg-logo {
-    width: 72px; height: 72px; 
-    margin-top: -10px; margin-bottom: 10px;
-}
-
-.short-button {
-    padding: calc(var(--form-element-spacing-vertical) / 4) calc(var(--form-element-spacing-horizontal) / 2) !important;
-}
-
-.thin-article {
-    padding: calc(var(--block-spacing-vertical) / 4) calc(var(--block-spacing-horizontal) / 2);
-}
-
-.thin-p {
-    margin-bottom: calc(var(--typography-spacing-vertical) / 4);
-}
-
 .red {
-    color: #f67;
+    color: #b45252;
 }
+
+.orange {
+    color: #d3a068;
+}
+
+.cyan {
+    color: #68c2d3;
+}
+
+.blue {
+    color: #4b80ca;
+}
+
+.lightgreen {
+    color: #c2d368;
+}
+
+.green {
+    color: #8ab060;
+}
+
+.almostwhite {
+    color: #f2f0e5;
+}
+
+.white {
+    color: #fff;
+}
+
+/* ---------- */
+
+/* this CSS inspired by https://wren.io/ and http://journal.stuffwithstuff.com/ */
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, code, ol, ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    /*font-size: 100%;
+    font: inherit;
+    vertical-align: baseline; */
+}
+
+/*
+header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 24px;
+}
+
+header h1 {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font: 48px Georgia, serif;
+    font-weight: 600;
+    padding-top: 56px;
+    padding-bottom: 8px;
+}
+
+header sub {
+    display: table-cell;
+    vertical-align: bottom;
+    text-align: left;
+    font: 22px "ASAP", Georgia, serif;
+    font-weight: 600;
+    color: #c2d368;
+    font-style: italic;
+}
+*/
+
+body {
+    color: #212123;
+    background-color: #45444f;
+    font: 16px/24px "PT Serif", Georgia, serif;
+}
+
+header {
+    background-color: #fff;
+    padding: 12px 48px 12px 48px;
+}
+header > h2 {
+    color: #352b42;
+}
+
+article {
+    background-color: #fff;
+    padding: 12px 48px 12px 48px;
+}
+article ol, article ul {
+    margin-left: 24px;
+}
+
+footer {
+    background-color: #fff;
+    padding: 12px 48px 12px 48px;
+}
+
+/*
+#info {
+    font: 14px Georgia, serif;
+    color: #b2b47e;
+    border-bottom: solid 1px #b2b47e;
+    margin-bottom: 8px;
+    padding: 2px;
+}
+*/
+
+/*
+.column {
+    margin: 0 auto;
+    max-width: max(60%, 350px);
+}*/
+
+#column-container {
+    margin: 0 auto;
+    max-width: 950px;
+    background-color: #b8b5b9;
+    min-height: 100vh;
+}
+
+#posts {
+    display: flex;
+    flex-direction: column;
+}
+#posts > * {
+    height: 100px;
+    background-color: #ccc; 
+    margin:10px;
+}
+
+.date-item {
+    color: #4b80ca; 
+    font-size: small; 
+    float: right;
+}
+
+/* ----- simple stuff ----- */
+
+p {
+    padding: 8px 0;
+}
+
+h1 {
+    padding: 24px 0 12px 0;
+    font-weight: 700;
+}
+
+h2 {
+    padding: 24px 0 12px 0;
+    font-weight: 700;
+    color: #a77b5b;
+}
+
+h3 {
+    padding: 24px 0 12px 0;
+    font-weight: 700;
+}
+
+/* links */
+a {
+    text-decoration: none;
+    color: #4b80ca;
+}
+a:hover {
+    color: #80493a;
+}
+
+/* ----- classes ----- */
 
 .medium-text {
     font-size: 1rem;
