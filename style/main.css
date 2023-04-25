@@ -1,3 +1,8 @@
+/* 
+    https://lospec.com/palette-list/cc-29 
+    https://lospec.com/palette-list/mulfok32
+*/
+
 .red {
     color: #b45252;
 }
@@ -28,6 +33,73 @@
 
 .white {
     color: #fff;
+}
+
+/* ----- animations ----- */
+
+#title > * {
+    display: inline-block;
+    position:relative; 
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease-in-out, color 0.5s ease-in-out; 
+}
+#title:hover > span1 {
+    transition-delay: 0.1s;
+    transform: translate3d(1px, -8px, 0px);
+    color: #8ab060;
+    transition: transform 0.35s ease-in-out, color 0.5s ease-in-out; 
+}
+#title:hover > span2 {
+    transition-delay: 0.05s;
+    transform: translate3d(0px, -8px, 0px);
+    color: #c2d368;
+}
+#title:hover > span3 {
+    transition-delay: 0.15s;
+    transform: translate3d(2px, -8px, 0px);
+    color: #68c2d3;
+}
+#title:hover > span4 {
+    transition-delay: 0.25s;
+    transform: translate3d(3px, -8px, 0px);
+    color: #d3a068;
+}
+
+a {
+    transform-style: preserve-3d;
+    display: inline-block;
+    transition: transform 0.15s ease-out, color 0.15s ease-in-out;
+}
+a:hover {
+    transform: translate3d(0, 1px, 0);
+}
+
+#circle {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin 20s linear infinite;
+    animation-play-state: running, paused;
+}
+#circle:hover {
+    animation-play-state: paused;
+}
+#circle > div {
+    position: absolute;
+    transform-style: preserve-3d;
+}
+#circle > div > div {
+    animation: un-spin 20s linear infinite;
+}
+#circle:hover > div > div {
+    animation-play-state: paused;
+}
+@keyframes spin {
+    from { transform: rotateZ(0turn); }
+    to { transform: rotateZ(1turn); }
+}
+@keyframes un-spin {
+    from { transform: rotateZ(0turn); }
+    to { transform: rotateZ(-1turn); }
 }
 
 /* ---------- */
@@ -146,6 +218,16 @@ p {
 }
 
 h1 {
+    /* from browser's h2 */
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+
+    margin: 0;
+
     padding: 24px 0 12px 0;
     font-weight: 700;
 }
