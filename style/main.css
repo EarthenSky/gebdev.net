@@ -3,19 +3,23 @@
     https://lospec.com/palette-list/mulfok32
 */
 
-.red {
+.red, red {
     color: #b45252;
 }
 
-.orange {
+.brightred, brightred {
+    color: #cc425e;
+}
+
+.orange, orange {
     color: #d3a068;
 }
 
-.cyan {
+.cyan, cyan {
     color: #68c2d3;
 }
 
-.blue {
+.blue, blue {
     color: #4b80ca;
 }
 
@@ -23,15 +27,15 @@
     color: #c2d368;
 }
 
-.green {
+.green, green {
     color: #8ab060;
 }
 
-.almostwhite {
+.almostwhite, almostwhite {
     color: #f2f0e5;
 }
 
-.white {
+.white, white {
     color: #fff;
 }
 
@@ -115,36 +119,6 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, code, ol, ul, li {
     vertical-align: baseline; */
 }
 
-/*
-header {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding-bottom: 24px;
-}
-
-header h1 {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    font: 48px Georgia, serif;
-    font-weight: 600;
-    padding-top: 56px;
-    padding-bottom: 8px;
-}
-
-header sub {
-    display: table-cell;
-    vertical-align: bottom;
-    text-align: left;
-    font: 22px "ASAP", Georgia, serif;
-    font-weight: 600;
-    color: #c2d368;
-    font-style: italic;
-}
-*/
-
 body {
     color: #212123;
     background-color: #45444f;
@@ -180,12 +154,6 @@ footer {
     padding: 2px;
 }
 
-/*
-.column {
-    margin: 0 auto;
-    max-width: max(60%, 350px);
-}*/
-
 #column-container {
     margin: 0 auto;
     max-width: 950px;
@@ -207,6 +175,60 @@ footer {
     color: #4b80ca; 
     font-size: small; 
     float: right;
+}
+
+.tooltip {
+    position: relative;
+    cursor: pointer; 
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 240px;
+    color: #000;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+}
+
+/* ----- code block ----- */
+
+code {
+    font-family: monospace;
+    font-size: inherit;
+}
+
+span > code,
+p > code,
+li > code,
+dd > code,
+td > code {
+    background: #e5ceb4;
+    word-wrap: break-word;
+    box-decoration-break: clone;
+    padding: .1rem .3rem .2rem;
+    border-radius: .2rem;
+}
+
+pre code {
+    display: block;
+    background: none;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
+    max-width: 100%;
+    min-width: 100px;
+    padding: 0;
 }
 
 /* ----- simple stuff ----- */
@@ -264,4 +286,14 @@ a:hover {
     image-rendering: -o-crisp-edges;           
     image-rendering: pixelated !important;  
     -ms-interpolation-mode: nearest-neighbor;  
+}
+
+.img-desc {
+    margin: auto;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    font-size: 0.7em;
+    font-family: monospace;
+    padding: 0;
 }
