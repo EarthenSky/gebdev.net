@@ -30,13 +30,15 @@
 
                 <h3 id="motivation">Motivation</h3>
 
-                <p>I've often toyed around writing scripts to generate random images from google images. I thought it would be an interesting screensaver, since you never know what you're going to get! Google images doesn't have a very good <a href="https://developers.google.com/custom-search/v1/overview#pricing">free API</a>, despite the fact that anyone can make requests to google images from our browser for free. As such, the obvious approach I take would be to shoddily "reverse engineer" the google search bar to <code>https://www.google.com/search?<span style="color: #c71515;">q=your+search+query+here</span>&tbm=isch</code> <a class="tooltip">[1]<span class="tooltip-text">That last part <code>&tbm=isch</code> tells google to only search images.</span></a>, then make an HTTP request & hope for the best. This approach typically ends in a buggy tool that mostly generates poor quality images.</p>
+                <p>I've often toyed around writing scripts to generate random images from google images. I thought it would be an interesting screensaver, since you never know what you're going to get!</p>
+                <p>Google images doesn't have a very good <a href="https://developers.google.com/custom-search/v1/overview#pricing">free API</a>, despite the fact that anyone can make requests to google images from our browser for free. As such, the obvious approach I take would be to shoddily "reverse engineer" the google search bar to <code>https://www.google.com/search?<span style="color: #c71515;">q=your+search+query+here</span>&tbm=isch</code> <a class="tooltip">[1]<span class="tooltip-text">That last part <code>&tbm=isch</code> tells google to only search images.</span></a>, then make an HTTP request & hope for the best. This approach typically ends in a buggy tool that mostly generates poor quality images.</p>
                 <p>This time around, in order to beat both issues, I decided to look into <a href="https://pixabay.com/">Pixabay</a>. Pixabay is a nice website for finding free photos submitted by users, most of which are quite high quality given that they're forced to go through a layer of <a href="https://pixabay.com/images/tools/quality_rating/">community voting</a> first. It just so happens that Pixabay has a really nice <a href="https://pixabay.com/service/about/api/">free API</a> that fit my purposes!</p>
                 <br>
                 
-                <h3 id="purpose">Purpose</h3>
+                <h3 id="what-is-it">What is it?</h3>
 
                 <p>Many Pictures is a screensaver website that uses Pixabay's public API in order to automatically scroll through images.</p>
+                <p>The entire purpose of Many Pictures is to act as a screensaver for when you have a computer that's sitting idle. The current version of Many Pictures scrolls through images in chronological order, and never repeats!</p>
                 <br>
 
                 <div style="width: 50%; margin-left: 25%;">
@@ -45,7 +47,8 @@
                 </div>
                 <br>
 
-                <p>The entire purpose of Many Pictures is to act as a screensaver for when you have a computer that's sitting idle. The current version of Many Pictures scrolls through images in chronological order, and never repeats!</p>
+                <h3 id="problems">Problems</h3>
+
                 <p>Pixabay's free API key has a limit of 100 requests per minute. If the scroll speed ever loads images faster than once per <code>600ms</code>, Many Pictures will detect it using a geometric average and throttle the scroll speed accordingly.</p>
                 <br>
 
@@ -58,7 +61,7 @@
                 <p>You can see in the above chart that the geometric average helps rough out any accidental speedups / slowdowns. When recording this data, I only ever increased the scroll speed, while the algorithm slowed it down. A nice side-effect of this approach is that all slowdowns are somewhat smooth, and typically occur all at once.</p>
                 <br>
 
-                <h3>Usage</h3>
+                <h3 id="usage">Usage</h3>
                 <p>In order to use Many Pictures you need your own API key. 100 images per minute is too shallow of a limit for more than a few people to use at a time, but luckily Pixabay API keys are free! Use the following rules to grab your own key & plug it into Many Pictures.</p>
                 <ul>
                     <li>Go to <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a></li>
