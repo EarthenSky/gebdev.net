@@ -2,39 +2,64 @@
 
 <html lang="en" data-theme="auto">
     <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="../../style/main.css?v0.00">
-      <title>Geb Dev Web Dev</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  
+        <link rel="stylesheet" href="../../res/style/main.css?v0.00">
+        <link rel="stylesheet" href="../../res/style/who.css?v0.00">
+
+        <title>geb dev - Posts</title>
     </head>
 
     <body>
         <div id="column-container">
             <header>
-                <h1 id="title" height="12px"><span1>geb</span1> <span2>dev</span2> <span3>web</span3> <span4>dev</span4></h1>
-                <div>
-                    <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
-                    / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
-                    | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
-                    | <a href="https://earthensky.github.io/things" title="things are cool in general"><b>things</b></a>
-                    | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                <div id="header" style="width: 100%; height: 120px; background-color: var(--back);"> 
+                    <canvas id="headerCanvas"></canvas>
+                </div>
+                
+                <div style="padding-top: 16px; display: flex; justify-content: space-between;">
+                    <h1 id="title"><span1>Gabe Stang</span1> <span2>(</span2> <span3>geb dev</span3> <span4>)</span4></h1>
+                    <div style="display: inline-block; align-self: flex-end;">
+                        <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
+                        / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
+                        | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
+                        | <a href="https://earthensky.github.io/things" title="things are usually cool"><b>things</b></a>
+                        | <a href="https://earthensky.github.io/art" title="<3"><b>🎝 art</b></a>
+                        | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                    </div>
                 </div>
                 <hr>
             </header>
 
             <article>
-                <p>You are unfortunately lost</p>
+                <p>Unfortunately, you are lost</p>
                 <a href="..">go back</a>
             </article>
 
-            <footer style="text-align: center; font-size: small;">
-                <p><em style="color: #43436a;">i have lots of things on </em> <a href="https://github.com/EarthenSky">github</a></p>
-                <!-- TODO: add lil dark mode picker here
-                    <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a> 
-                -->
+            <footer>
+                <p>▲◐◇</p>
+                <p>
+                    colours: 
+                    <a id="select-forest" title="swaying of trees">
+                        <span class="progress-bar"></span>
+                        forest
+                    </a> | 
+                    <a id="select-ocean" title="a slight salty taste">
+                        <span class="progress-bar"></span>
+                        ocean
+                    </a>
+                </p>
+
+                <br> <br> <br>
             </footer>
         </div>
     </body>
+
+    <script src="../scripts/colours.js"></script>
+    <script src="../scripts/header_canvas.js"></script>
 </html>
