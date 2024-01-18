@@ -16,7 +16,6 @@
 
     /* Georgia, serif */
     /* -apple-system, BlinkMacSystemFont */
-    /* "Alte Haas Grotesk 2" */
     --body: "Segoe UI","Open Sans",sans-serif;
 }
 
@@ -278,11 +277,4 @@ pre code {
     transition-delay: 0.025s;
     transform: translate3d(12px, 0, 0);
     color: var(--color2-low);
-}
-
-/* ----- fonts ----- */
-
-@font-face {
-    font-family: "Alte Haas Grotesk 2";
-    src: url('../fonts/AlteHaasGroteskRegular.ttf')  format('truetype'),
 }
