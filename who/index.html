@@ -2,14 +2,22 @@
 
 <html lang="en" data-theme="auto">
     <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="../style/main.css?v0.00">
-      <title>Geb Dev Web Dev</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  
+        <link rel="stylesheet" href="../res/style/main.css?v0.00">
+        <link rel="stylesheet" href="../res/style/who.css?v0.00">
+
+        <title>Gabe Stang - Who</title>
     </head>
 
     <body>
         <div id="column-container">
+            <!-- NOTE: i still kinda like this header format
             <header>
                 <h1 id="title" height="12px"><span1>geb</span1> <span2>dev</span2> <span3>web</span3> <span4>dev</span4></h1>
                 <div>
@@ -21,15 +29,36 @@
                 </div>
                 <hr>
             </header>
+            -->
+
+            <header>
+                <div id="header" style="width: 100%; height: 120px; background-color: var(--back);"> 
+                    <canvas id="headerCanvas"></canvas>
+                </div>
+                
+                <div style="padding-top: 16px; display: flex; justify-content: space-between;">
+                    <h1 id="title"><span1>Gabe Stang</span1> <span2>(</span2> <span3>geb dev</span3> <span4>)</span4></h1>
+                    <div style="display: inline-block; align-self: flex-end;">
+                        <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
+                        / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
+                        | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
+                        | <a href="https://earthensky.github.io/things" title="things are usually cool"><b>things</b></a>
+                        | <a href="https://earthensky.github.io/art" title="<3"><b>🎝 art</b></a>
+                        | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                    </div>
+                </div>
+                <hr>
+            </header>
 
             <article>
                 <section id="desc"> 
                     <h3 id="hiya">Hi — ᕕ(ᐛ)ᕗ</h3>
                     <p>I'm Gabe, and I make all sorts of cool things!</p> 
-                    <p>I'm currently working on way too many projects to count, however I keep a weekly blog of things I'm working on. If you'd like to ask any questions, or even contribute to any of the projects, feel free to do so through my <a href="https://github.com/EarthenSky">github</a>.</p>
+                    <p>I'm currently working on all sorts of unfinished projects, but my main interest is in graphics! If you'd like to ask any questions, or even contribute to any of the projects, feel free to do so through my <a href="https://github.com/EarthenSky">github</a>.</p>
+                    <p>I'm also sometimes referred to affectionately as <em>geb dev web dev</em>, despite not doing much web development?</p>
                 </section>
                 
-                <div id="circle" style="display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 12px; font-weight: 900;" title="geb dev web dev">
+                <div id="circle" style="display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 12px; font-weight: 600;" title="geb dev web dev">
                     <div style="transform: translate3d(calc( 64px + 64px * cos(-115deg) ), calc( 64px + 64px * sin(-115deg) ), 0);"><div>G</div></div>
                     <div style="transform: translate3d(calc( 64px + 64px * cos(-90deg) ), calc( 64px + 64px * sin(-90deg) ), 0);"><div>E</div></div>
                     <div style="transform: translate3d(calc( 64px + 64px * cos(-65deg) ), calc( 64px + 64px * sin(-65deg) ), 0)"><div>B</div></div>
@@ -48,14 +77,23 @@
                 </div>
             </article>
             
-            <footer style="text-align: center; font-size: small;">
-                <p><em style="color: #43436a;">i have lots of things on </em> <a href="https://github.com/EarthenSky">github</a></p>
-                <!-- TODO: add lil dark mode picker here
-                    <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a> 
-                -->
+            <footer>
+                <p>▲◐◇</p>
+                <p>
+                    colours: 
+                    <a id="select-forest" title="swaying of trees">
+                        <span class="progress-bar"></span>
+                        forest
+                    </a> | 
+                    <a id="select-ocean" title="a slight salty taste">
+                        <span class="progress-bar"></span>
+                        ocean
+                    </a>
+                </p>
             </footer>
         </div>
     </body>
+
+    <script src="../scripts/colours.js"></script>
+    <script src="../scripts/header_canvas.js"></script>
 </html>
