@@ -4,55 +4,80 @@
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="style/main.css?v0.00">
+    
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+      <link rel="stylesheet" href="res/style/main.css?v0.00">
+
       <title>Geb Dev Web Dev</title>
     </head>
 
     <body>
         <div id="column-container">
             <header>
-                <h1 id="title" height="12px"><span1>geb</span1> <span2>dev</span2> <span3>web</span3> <span4>dev</span4></h1>
-                <div>
-                    <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
-                    / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
-                    | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
-                    | <a href="https://earthensky.github.io/things" title="things are cool in general"><b>things</b></a>
-                    | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                <!-- TODO: add a lil interactive header image right here-->
+                <div id="header" style="width: 100%; height: 120px; background-color: var(--back);"> 
+                    <canvas id="headerCanvas"></canvas>
+                </div>
+                
+                <div style="padding-top: 16px; display: flex; justify-content: space-between;">
+                    <h1 id="title"><span1>Gabe Stang</span1> <span2>(</span2> <span3>geb dev</span3> <span4>)</span4></h1>
+                    <div style="display: inline-block; align-self: flex-end;">
+                        <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
+                        / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
+                        | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
+                        | <a href="https://earthensky.github.io/things" title="things are usually cool"><b>things</b></a>
+                        | <a href="https://earthensky.github.io/art" title="<3"><b>🎝 art</b></a>
+                        | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                    </div>
                 </div>
                 <hr>
             </header>
 
             <article>
-                <h2># Home</h2>
-
-                <p>henlo, this is indeed a website</p>
-
-                <h2># Cool Things</h2>
+                <p>Hey! This is definitely a website, it's just a little empty</p>
+                <br>
+                
+                <h2>Projects</h2>
                 <div style="display:flex">
-                    <div style="width: calc(200px - 32px); height: calc(200px - 32px); background-color: #ddd; margin:20px; padding: 16px;"> 
-                        <p><a href="https://earthensky.github.io/things/many-pictures/" style="border-bottom: solid 1px #4b80ca;">Many Pictures</a> - A screensaver website that uses Pixabay's public API in order to automatically scroll through images</p>
-                    </div>
-                    <div style="width: 200px; height: 200px; background-color: #ddd; margin:20px;"> </div>
-                    <div style="width: 200px; height: 200px; background-color: #ddd; margin:20px;"> </div>
+                    <p style="padding-left: 32px;">
+                        <a href="https://earthensky.github.io/things/many-pictures/">Many Pictures</a>
+                        is a screensaver webpage that uses Pixabay's public API to display random photos
+                    </p>
                 </div>
+                <br>
 
-                <h2># Recent Posts</h2>
+                <h2>Blog</h2>
                 <div class="posts">
-                    <p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> (coming soon) &nbsp;<em class="date-item">March 15th, 2023</em></p>
-                    <div> </div>
-                    <div style="height: 100px; background-color: #ddd; margin:10px;"> </div>
-                    <div style="height: 100px; background-color: #ddd; margin:10px;"> </div>
+                    <p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">date TBD</em></p>
                 </div>
+                <br>
+            
             </article>
 
-            <footer style="text-align: center; font-size: small;">
-                <p><em style="color: #43436a;">i have lots of things on </em> <a href="https://github.com/EarthenSky">github</a></p>
-                <!-- TODO: add lil dark mode picker here
-                    <a class="outline secondary short-button" role="button" href="#" data-theme-switcher="auto">Auto</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="light">Light</a>
-                    <a role="button" href="#" class="outline secondary short-button" data-theme-switcher="dark">Dark</a> 
-                -->
+            <footer>
+                <p>▲◐◇</p> <!-- 🎝 -->
+                <p>
+                    colours: 
+                    <a id="select-forest" title="swaying of trees">
+                        <span class="progress-bar"></span>
+                        forest
+                    </a> | 
+                    <!-- <a id="select-amber">amber</a> | -->
+                    <a id="select-ocean" title="a slight salty taste">
+                        <span class="progress-bar"></span>
+                        ocean
+                    </a> | 
+                    <!--<a id="select-golden">golden</a> | -->
+                    <!--<a id="select-taiji">taiji</a> -->
+                </p>
+                <!-- <p>© 2024</p> -->
             </footer>
         </div>
     </body>
+
+    <script src="scripts/colours.js"></script>
+    <script src="scripts/header_canvas.js"></script>
 </html>
