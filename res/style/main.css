@@ -58,7 +58,7 @@ body {
     color: var(--front-hard);
     background-color: /*black;*/ var(--back);
     
-    font: 19px/1.5 var(--body);
+    font: 18px/1.5 var(--body);
 }
 
 p {
@@ -152,7 +152,6 @@ footer {
     display: flex;
     flex-direction: column;
 }
-.posts > * { }
 
 .date-item {
     color: var(--color1-low); 
