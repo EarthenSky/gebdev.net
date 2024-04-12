@@ -230,6 +230,8 @@ function oceanRevertBar() {
     }
 }
 
+// TODO: rethink this implementation as a regular light/dark mode, not too fancy of one
+/*
 document.getElementById("select-ocean").addEventListener("mousedown", (event) => {
     triggerForestRevertBar();
     clearInterval(oceanTimer);
@@ -239,4 +241,4 @@ document.getElementById("select-ocean").addEventListener("mousedown", (event) =>
     
     oceanTimer = setInterval(oceanUpdate, 20);
 });
-
+*/

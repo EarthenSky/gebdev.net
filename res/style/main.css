@@ -56,7 +56,7 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, code, ol, ul, li {
 
 body {
     color: var(--front-hard);
-    background-color: var(--back);
+    background-color: /*black;*/ var(--back);
     
     font: 18px/1.5 var(--body);
 }
@@ -145,6 +145,7 @@ footer {
     margin: 0 auto;
     max-width: 900px;
     min-height: 100vh;
+    background-color: darkslategrey; /*var(--back);*/ 
 }
 
 .posts {
