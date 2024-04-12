@@ -58,7 +58,7 @@ body {
     color: var(--front-hard);
     background-color: /*black;*/ var(--back);
     
-    font: 18px/1.5 var(--body);
+    font: 19px/1.5 var(--body);
 }
 
 p {
@@ -116,10 +116,10 @@ hr {
 /* ----- custom tags & stuff ----- */
 
 header {
-    padding: 12px 50px 12px 50px;
+    padding: 44px 60px 24px 60px;
 }
 article {
-    padding: 12px 50px 12px 50px;
+    padding: 12px 60px 12px 60px;
 }
 article ol, article ul {
     margin-left: 24px;
@@ -143,18 +143,16 @@ footer {
 
 #column-container {
     margin: 0 auto;
-    max-width: 900px;
+    max-width: 820px;
     min-height: 100vh;
-    background-color: darkslategrey; /*var(--back);*/ 
+    background-color: var(--back); /* darkslategrey; */ 
 }
 
 .posts {
     display: flex;
     flex-direction: column;
 }
-.posts > * {
-    padding-left: 32px;
-}
+.posts > * { }
 
 .date-item {
     color: var(--color1-low); 
