@@ -1,0 +1,445 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  
+        <link rel="stylesheet" href="../../../res/style/main.css?v0.00">
+        <link rel="stylesheet" href="../../../res/style/who.css?v0.00">
+
+        <link rel="icon" type="image/x-icon" href="../../res/gebdev-1.ico">
+        <title>geb dev - Slant (1/?)</title>
+    </head>
+
+    <body>
+        <div id="column-container">
+            <header>
+                <!--
+                <div id="header" style="width: 100%; height: 120px; background-color: var(--back);"> 
+                    <canvas id="headerCanvas"></canvas>
+                </div>
+                -->
+                
+                <div style="display: flex; justify-content: space-between;">
+                    <h1 id="title"><span1>Gabe Stang</span1> <span2>(</span2> <span3>geb dev</span3> <span4>)</span4></h1>
+                    <div style="display: inline-block; align-self: flex-end;">
+                        <a href="https://earthensky.github.io" data-tooltip="the main page"><b>home</b></a>
+                        / <a href="https://earthensky.github.io/who" title="hello"><b>who</b></a>
+                        | <a href="https://earthensky.github.io/blog" title="ranting"><b>blog</b></a>
+                        | <a href="https://earthensky.github.io/things" title="things are usually cool"><b>things</b></a>
+                        | <a href="https://earthensky.github.io/art" title="<3"><b>🎝 art</b></a>
+                        | <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a>
+                    </div>
+                </div>
+            </header>
+
+            <article>
+                <h2>Slant ( 1 / ? )</h2>
+
+                <p>
+                    Slant is a cool game which you can play <a href="https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/slant.html">here</a> if you're interested. 
+                    The rules are as follows:
+                </p>
+                
+                <blockquote>
+                    Fill in a diagonal line in every grid square so that there are no loops in the grid, and so that every numbered point has that 
+                    many lines meeting at it.
+                </blockquote>
+                
+                <p>
+                    This is the first post in a blog series about slant, where we analyze the game and try to learn more about how challenging it is, and how to
+                    solve these puzzles efficiently.
+                </p>
+                
+                <br>
+                <div style="background-color: var(--back-darker); padding: 16px; border-radius: 6px;">
+                    <label>Contents</label>
+                    <ul>
+                        <li><a href="#intro-to-rules">A. Intro to Rules</a></li>
+                        <li><a href="#brute-forcing-slant">B. Brute Forcing Slant</a></li>
+                        <li><a href="#next-time">C. Next Time</a></li>
+                    </ul>
+                </div>
+
+                <br> <br>
+                <h3 id="intro-to-rules">A. Intro to Rules</h3>
+
+                <p>
+                    As you start playing the game, you'll start to notice simple rules you can take advantage of. You can often prove a 
+                    square must contain a left or right slant. One common example is the following, where two (1) numbered
+                    points are orthogonally adjacent. If one of the lines above or below the pattern was incident to either of the (1)s, 
+                    it would result in a inconsistent state, where the other (1) has more than 1 incident lines.
+                </p>
+
+                <br>
+                <monospace>
+-------------
+|   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+--  +  (1) --
+|   |   |   |
+--  +  (1) --
+|   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+-------------
+                </monospace>
+
+                <br>
+                <p>
+                    Clearly, slant is a super cool game, but how hard is it? To be honest, I'm not yet sure if slant is as hard as sudoku (NP complete), 
+                    but my guess is that it's much easier. And so, our goal through the rest of this page is to figure out exactly how hard slant really is!
+                </p>
+
+                <br> <br>
+                <h3 id="brute-forcing-slant">B. Brute Forcing Slant</h3>
+
+                <p>How many slant rules can we find by brute force?</p>
+
+                <p>
+                    A 3x3 grid, can contain 4 numbered points in the middle 2x2 locations. There are only 4 non-trivial kinds of numbered points: 
+                    (1), (2), (3), and empty (or no-constraint). This means there are 256 unique combinations of numbered points.
+
+                    <br> <br>
+
+                    We start by checking every possible permutation of the 9 tiles for a specific set of 4 numbered points. Each permutation will either solve the 
+                    puzzle or break one of the rules, leaving it inconsistent. If a set of numbered points doesn't have any permutations that solves the puzzle, then 
+                    that puzzle is unsolvable. Going through all combinations we find only the following 10 sets of numbered points are unsolvable.
+
+                    <br> <br>
+                    
+                    If you're playing a valid slant puzzle, you'll never see these combinations.
+                </p>
+
+                <br>
+                <monospace>
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (1) (1) -- -- (1) (1) -- -- (1) (2) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (1) (2) -- -- (2) (1) -- -- (1) (1) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (2) (1) -- -- (2) (3) -- -- (3) (2) -- -- (3) (3) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (3) (3) -- -- (3) (3) -- -- (2) (3) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- -------------
+|   |   |   | |   |   |   |
+-- (3) (3) -- -- (3) (3) --
+|   |   |   | |   |   |   |
+-- (3) (2) -- -- (3) (3) --
+|   |   |   | |   |   |   |
+------------- -------------
+                </monospace>
+                <br>
+
+                <p>
+                    If a set of 4 numbered points has multiple solutions, then we can look through them all and see if there are any diagonals which are the 
+                    same throughout every pattern. This would mean that we can place those diagonals regardless of the numbered points around our 2x2 square of 
+                    numbered points.
+
+                    <br> <br>
+
+                    The following 96 patterns are those which have at least one solution & imply a diagonal can be placed. 
+                </p>
+                
+                <br>
+                <monospace style="max-height: 630px; overflow-y: scroll;">
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+--  +   +  -- --  +   +  -- --  +  (1) -- --  +  (1) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> |
+-- (1) (1) -- -- (3) (3) -- --  +  (1) -- -- (1) (1) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   |   |   |
+--  +  (1) -- --  +  (1) -- --  +  (1) -- --  +  (2) --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (2) (1) -- -- (3) (1) -- -- (3) (3) -- -- (1) (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+--  +  (2) -- --  +  (3) -- --  +  (3) -- --  +  (3) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+-- (3) (3) -- --  +  (3) -- -- (1) (1) -- -- (1) (3) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   |
+--  +  (3) -- --  +  (3) -- -- (1)  +  -- -- (1)  +  --
+|   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> |   | |   |   |   |
+-- (2) (3) -- -- (3) (3) -- --  +  (1) -- -- (1)  +  --
+|   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | |   |   |   |
+-- (1)  +  -- -- (1)  +  -- -- (1)  +  -- -- (1)  +  --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> |   |
+-- (1) (1) -- -- (1) (2) -- -- (1) (3) -- -- (2) (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+-- (1)  +  -- -- (1)  +  -- -- (1) (1) -- -- (1) (1) --
+|   | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> |
+-- (3) (1) -- -- (3) (3) -- --  +   +  -- --  +  (1) --
+|   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> |
+-- (1) (1) -- -- (1) (1) -- -- (1) (1) -- -- (1) (1) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+--  +  (2) -- --  +  (3) -- -- (1)  +  -- -- (1) (3) --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (1) (1) -- -- (1) (1) -- -- (1) (1) -- -- (1) (1) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (2)  +  -- -- (2) (2) -- -- (2) (3) -- -- (3)  +  --
+|   |   |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+-- (1) (1) -- -- (1) (1) -- -- (1) (1) -- -- (1) (2) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> |   |
+-- (3) (1) -- -- (3) (2) -- -- (3) (3) -- --  +  (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (1) (2) -- -- (1) (2) -- -- (1) (2) -- -- (1) (2) --
+|   |   |   | |   |   |   | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> |   |
+-- (1)  +  -- -- (1) (2) -- -- (1) (3) -- -- (2) (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+-- (1) (2) -- -- (1) (2) -- -- (1) (3) -- -- (1) (3) --
+|   | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> |   | |   |   |   |
+-- (3) (1) -- -- (3) (3) -- --  +  (1) -- --  +  (3) --
+|   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+-- (1) (3) -- -- (1) (3) -- -- (1) (3) -- -- (1) (3) --
+|   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   |   |   |
+-- (1)  +  -- -- (1) (1) -- -- (1) (2) -- -- (1) (3) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+-- (1) (3) -- -- (1) (3) -- -- (1) (3) -- -- (1) (3) --
+|   | <span style="color: var(--color1-high)">/</span> |   | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> |
+-- (2) (1) -- -- (2) (3) -- -- (3) (1) -- -- (3) (3) --
+|   |   |   | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (2)  +  -- -- (2)  +  -- -- (2) (1) -- -- (2) (1) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (3) (3) -- --  +  (1) -- -- (1) (2) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (2) (1) -- -- (2) (1) -- -- (2) (1) -- -- (2) (2) --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (2) (1) -- -- (3) (1) -- -- (3) (3) -- -- (1) (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+-- (2) (2) -- -- (2) (3) -- -- (2) (3) -- -- (2) (3) --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+-- (3) (3) -- --  +  (3) -- -- (1) (1) -- -- (1) (3) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   |
+-- (2) (3) -- -- (2) (3) -- -- (3)  +  -- -- (3)  +  --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+-- (2) (3) -- -- (3) (2) -- -- (1) (1) -- -- (3)  +  --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+-- (3)  +  -- -- (3)  +  -- -- (3)  +  -- -- (3) (1) --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   |
+-- (3) (1) -- -- (3) (2) -- -- (3) (3) -- --  +  (1) --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+-- (3) (1) -- -- (3) (1) -- -- (3) (1) -- -- (3) (1) --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (2) (1) -- -- (3)  +  -- -- (3) (1) --
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (3) (1) -- -- (3) (1) -- -- (3) (2) -- -- (3) (2) --
+|   |   |   | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+-- (3) (2) -- -- (3) (3) -- -- (1) (1) -- -- (2) (3) --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (3) (2) -- -- (3) (2) -- -- (3) (2) -- -- (3) (3) --
+|   |   |   | |   |   |   | |   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (3)  +  -- -- (3) (1) -- -- (3) (2) -- --  +   +  --
+| <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (3) (3) -- -- (3) (3) -- -- (3) (3) -- -- (3) (3) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+--  +  (1) -- --  +  (2) -- --  +  (3) -- -- (1)  +  --
+|   |   |   | |   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (3) (3) -- -- (3) (3) -- -- (3) (3) -- -- (3) (3) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-- (1) (1) -- -- (1) (2) -- -- (1) (3) -- -- (2)  +  --
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | |   |   |   | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | |   |   |   |
+------------- ------------- ------------- -------------
+
+------------- ------------- ------------- -------------
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> |
+-- (3) (3) -- -- (3) (3) -- -- (3) (3) -- -- (3) (3) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
+-- (2) (1) -- -- (2) (2) -- -- (3)  +  -- -- (3) (1) --
+|   |   |   | | <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> | | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">\</span> |
+------------- ------------- ------------- -------------
+                </monospace>
+                <br>
+
+                <p>
+                    Most of these patterns are ones which are somewhat obvious, as they involve orthogonal (1)s or (3)s. However, there was a single pattern 
+                    I didn't know about before (including all symmetries, of course), and that's the following!
+
+                    <br> <br>
+
+                    It's a quite regular extension of the orthogonal (3)s pattern, and one I was highly expecting, as there's a slant which can be implied
+                    between two diagonally adjacent (1)s.
+                </p>
+
+                <br>
+
+                <monospace>
+-------------
+| <span style="color: var(--color1-high)">\</span> |   | <span style="color: var(--color1-high)">/</span> |
+-- (2) (3) --
+|   |   |   |
+-- (3) (2) --
+| <span style="color: var(--color1-high)">/</span> |   | <span style="color: var(--color1-high)">\</span> |
+-------------
+                </monospace>
+
+                <br>
+
+                <p>
+                    This pattern makes sense because placing the opposite slant in any of the grid tiles results in a contradiction. However, what's interesting 
+                    to me is the diagonals touching the (2)s. The only way to figure out these is to place multiple slants and determine that only placements where
+                    the top right tile in a left slant is valid.
+
+                    <br> <br>
+
+                    This begs the questions
+                    
+                    <blockquote>
+                        How could we logically determine this rule without brute forcing?
+                    </blockquote>
+                    
+                    <blockquote>
+                        Are there rules that we can't find efficiently without brute forcing?
+                    </blockquote>
+
+                    Or even
+                                        
+                    <blockquote>
+                        What's the most efficient way to solve slant puzzles?
+                    </blockquote>
+
+                </p>
+
+                <br>
+                <h3 id="next-time">C. Next Time</h3>
+
+                <p>
+                    In the future, I want to spend some time figuring out if slant is really NP complete, how to design the hardest puzzles, and 
+                    how to use deduction to learn slant rules instead of brute force.
+
+                    <br> <br>
+
+                    Slant is mathematically interesting, and it'll work as a great punching bag to learn when to apply techniques from different fields or not!
+                </p>
+
+                <br> <br> 
+                <hr>
+
+                <p>
+                    <span style="color: var(--front-soft)">The next article in this series is not out yet!
+                    <a style="float: right;" href="https://earthensky.github.io" data-tooltip="the main page">back to home</a>
+                </p>
+
+                <br> 
+
+            </article>
+
+            <footer>
+                <p>▲◐◇</p>
+                <p>
+                    colours: 
+                    <a id="select-forest" title="swaying of trees">
+                        <span class="progress-bar"></span>
+                        forest
+                    </a> | 
+                    <a id="select-ocean" title="a slight salty taste">
+                        <span class="progress-bar"></span>
+                        ocean
+                    </a>
+                </p>
+
+                <br> <br> <br>
+            </footer>
+        </div>
+    </body>
+
+    <script src="../../scripts/colours.js"></script>
+    <script src="../../scripts/header_canvas.js"></script>
+</html>
