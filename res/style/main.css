@@ -57,7 +57,7 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, code, ol, ul, li {
 
 body {
     color: var(--front-hard);
-    background-color: /*black;*/ var(--back);
+    background-color: /*black;*/ var(--back-darker);
     
     font: 18px/1.4 var(--body);
 }
@@ -138,6 +138,9 @@ footer {
 monospace {
     display: block;
     padding: 8px 0;
+
+    max-height: 630px; 
+    overflow-y:auto;
 
     font-family: monospace;
     white-space:pre;
