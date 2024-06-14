@@ -1,4 +1,4 @@
-# earthensky.github.io
+# gebdev.net
 websites are pretty cool https://gebdev.net/
 
 # Resources:
