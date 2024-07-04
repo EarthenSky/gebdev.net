@@ -1,0 +1,57 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} home {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="/style/who.css?v0.00">
+{% endblock style %}
+
+{% block content %}
+<article>
+    <section id="desc">
+        <div style="display: flex; flex-wrap: wrap; align-content: center; justify-content: center; margin-bottom: 24px;">
+            <h3 id="hiya">Hi — ᕕ(ᐛ)ᕗ</h3>
+            <div style="display: flex; align-items: center; margin-left: 12px; color: var(--front-soft)">
+                <b>I'm <span style="color: var(--front-hard);">Gabe</span>, and I make all sorts of cool things!</b>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-content: center; justify-content: center;">
+            <p style="width: 70%; min-width: 400px;">
+                I'm currently working on all sorts of unfinished projects, but my main interest is in graphics! 
+                If you'd like to chat, or contribute to any of the projects, feel free to do so through my
+                <a href="https://github.com/EarthenSky">github</a>.
+                
+                <br> <br>
+
+                I'm also sometimes referred to affectionately as <em>geb dev web dev</em>, <s style="color: var(--front-soft);">despite not doing much</s>
+                for doing too much web development...
+            </p>
+            <div id="circle" style="display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 24px; margin-bottom: 24px; font-weight: 800; color: #777" title="geb dev web dev">
+                <div style="transform: translate3d(calc( 64px + 64px * cos(-115deg) ), calc( 64px + 64px * sin(-115deg) ), 0);"><div>G</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(-90deg) ), calc( 64px + 64px * sin(-90deg) ), 0);"><div>E</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(-65deg) ), calc( 64px + 64px * sin(-65deg) ), 0)"><div>B</div></div>
+            
+                <div style="transform: translate3d(calc( 64px + 64px * cos(-25deg) ), calc( 64px + 64px * sin(-25deg) ), 0)"><div>D</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(0deg) ), calc( 64px + 64px * sin(0deg) ), 0)"><div>E</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(25deg) ), calc( 64px + 64px * sin(25deg) ), 0)"><div>V</div></div>
+            
+                <div style="transform: translate3d(calc( 64px + 64px * cos(65deg) ), calc( 64px + 64px * sin(65deg) ), 0)"><div>W</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(90deg) ), calc( 64px + 64px * sin(90deg) ), 0)"><div>E</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(115deg) ), calc( 64px + 64px * sin(115deg) ), 0)"><div>B</div></div>
+            
+                <div style="transform: translate3d(calc( 64px + 64px * cos(155deg) ), calc( 64px + 64px * sin(155deg) ), 0)"><div>D</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(180deg) ), calc( 64px + 64px * sin(180deg) ), 0)"><div>E</div></div>
+                <div style="transform: translate3d(calc( 64px + 64px * cos(205deg) ), calc( 64px + 64px * sin(205deg) ), 0)"><div>V</div></div>
+            </div>    
+        </div>
+    </section>
+
+    <h2>Now, what to do here?</h2>
+    <ul>
+        <li>I work on lots of cool <a href="/projects">projects</a></li>
+        <li>I have a <a href="/blog">blog</a> where I talk about cool math & computer science things</li>
+    </ul>
+
+</article>
+{% endblock content %}
