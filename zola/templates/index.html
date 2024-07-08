@@ -47,11 +47,37 @@
         </div>
     </section>
 
-    <h2>Now, what to do here?</h2>
+    <h2>What's here?</h2>
     <ul>
         <li>I work on lots of cool <a href="/projects">projects</a></li>
         <li>I have a <a href="/blog">blog</a> where I talk about cool math & computer science things</li>
     </ul>
 
+    <div style="display: flex; flex-wrap: wrap;">
+        <div style="width: 50%; min-width: 16rem;">
+            <h2>My Favourite Blog Posts</h2>
+            <ul>
+                <li>
+                    <a href="https://wordsandbuttons.online/the_real_cpp_killers.html">The Real C++ Killers (Not You, Rust)</a> 
+                    | <a href="https://news.ycombinator.com/item?id=39770467">hn</a>
+                </li>
+            </ul>
+        </div>
+        <div style="width: 50%; min-width: 16rem;">
+            <!--<h3>?</h2>
+            <ul>
+                <li>A list of stuff?</li>
+            </ul>-->
+        </div>
+    </div>
+
+    <br>
+
 </article>
 {% endblock content %}
+
+{% block scripts %}
+
+<script src="scripts/header_canvas.js"></script>
+
+{% endblock scripts %}
