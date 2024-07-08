@@ -1,0 +1,27 @@
+#circle {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin 20s linear infinite;
+    animation-play-state: running, paused;
+}
+#circle:hover {
+    animation-play-state: paused;
+}
+#circle > div {
+    position: absolute;
+    transform-style: preserve-3d;
+}
+#circle > div > div {
+    animation: un-spin 20s linear infinite;
+}
+#circle:hover > div > div {
+    animation-play-state: paused;
+}
+@keyframes spin {
+    from { transform: rotateZ(0turn); }
+    to { transform: rotateZ(1turn); }
+}
+@keyframes un-spin {
+    from { transform: rotateZ(0turn); }
+    to { transform: rotateZ(-1turn); }
+}
