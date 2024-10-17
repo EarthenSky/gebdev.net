@@ -47,21 +47,24 @@
             {% block content %} {% endblock %}
 
             <footer>
-                <p>▲◐◇</p> <!-- 🎝 -->
+                <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
                 <p>
-                    colours: 
+                    selected palette: 
                     <a id="select-forest" title="swaying of trees">
                         <span class="progress-bar"></span>
                         forest
-                    </a> | 
+                    </a>
                     <!-- <a id="select-amber">amber</a> | -->
-                    <a id="select-ocean" title="a slight salty taste">
+                    <!-- <a id="select-ocean" title="a slight salty taste">
                         <span class="progress-bar"></span>
                         ocean
-                    </a> 
+                    </a> -->
                     <!--<a id="select-golden">golden</a> | -->
                     <!--<a id="select-taiji">taiji</a> -->
                 </p>
+                <em id="after-selected-color" style="padding: 0; color: var(--front-softer);">
+                    swaying of trees
+                </em>
                 <!-- <p>© 2024</p> -->
 
                 <br> <br> <br>
@@ -69,7 +72,7 @@
         </div>
     </body>
 
-    <script src="scripts/colours.js"></script>
+    <!-- TODO: simplify this ... <script src="scripts/colours.js"></script> -->
 
     {% block scripts %} {% endblock %}
 

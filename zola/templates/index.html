@@ -17,7 +17,7 @@
         </div>
 
         <div style="display: flex; flex-wrap: wrap; align-content: center; justify-content: center;">
-            <p style="width: 70%; min-width: 400px;">
+            <p style="width: calc(70% - 12px); min-width: 400px;">
                 I'm currently working on all sorts of unfinished projects, but my main interest is in graphics! 
                 If you'd like to chat, or contribute to any of the projects, feel free to do so through my
                 <a href="https://github.com/EarthenSky">github</a>.
@@ -27,31 +27,45 @@
                 I'm also sometimes referred to affectionately as <em>geb dev web dev</em>, <s style="color: var(--front-soft);">despite not doing much</s>
                 for doing too much web development...
             </p>
-            <div id="circle" style="display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 24px; margin-bottom: 24px; font-weight: 800; color: #777" title="geb dev web dev">
-                <div style="transform: translate3d(calc( 64px + 64px * cos(-115deg) ), calc( 64px + 64px * sin(-115deg) ), 0);"><div>G</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(-90deg) ), calc( 64px + 64px * sin(-90deg) ), 0);"><div>E</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(-65deg) ), calc( 64px + 64px * sin(-65deg) ), 0)"><div>B</div></div>
             
-                <div style="transform: translate3d(calc( 64px + 64px * cos(-25deg) ), calc( 64px + 64px * sin(-25deg) ), 0)"><div>D</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(0deg) ), calc( 64px + 64px * sin(0deg) ), 0)"><div>E</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(25deg) ), calc( 64px + 64px * sin(25deg) ), 0)"><div>V</div></div>
-            
-                <div style="transform: translate3d(calc( 64px + 64px * cos(65deg) ), calc( 64px + 64px * sin(65deg) ), 0)"><div>W</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(90deg) ), calc( 64px + 64px * sin(90deg) ), 0)"><div>E</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(115deg) ), calc( 64px + 64px * sin(115deg) ), 0)"><div>B</div></div>
-            
-                <div style="transform: translate3d(calc( 64px + 64px * cos(155deg) ), calc( 64px + 64px * sin(155deg) ), 0)"><div>D</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(180deg) ), calc( 64px + 64px * sin(180deg) ), 0)"><div>E</div></div>
-                <div style="transform: translate3d(calc( 64px + 64px * cos(205deg) ), calc( 64px + 64px * sin(205deg) ), 0)"><div>V</div></div>
-            </div>    
+            <div style="width: 12px;"> </div>
+
+            <div>
+                <div
+                    id="circle"
+                    style="position: relative; display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 24px; margin-bottom: 24px; font-weight: 800;"
+                    title="geb dev web dev"
+                >
+                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-115deg) ), calc( 64px + 64px * sin(-115deg) ), 0);"><div>G</div></div>
+                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-90deg) ), calc( 64px + 64px * sin(-90deg) ), 0);"><div>E</div></div>
+                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-65deg) ), calc( 64px + 64px * sin(-65deg) ), 0)"><div>B</div></div>
+
+                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(-25deg) ), calc( 64px + 64px * sin(-25deg) ), 0)"><div>D</div></div>
+                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(0deg) ), calc( 64px + 64px * sin(0deg) ), 0)"><div>E</div></div>
+                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(25deg) ), calc( 64px + 64px * sin(25deg) ), 0)"><div>V</div></div>
+
+                    <div style="color: var(--color1-mid); transform: translate3d(calc( 64px + 64px * cos(65deg) ), calc( 64px + 64px * sin(65deg) ), 0)"><div>W</div></div>
+                    <div style="color: var(--color1-low); transform: translate3d(calc( 64px + 64px * cos(90deg) ), calc( 64px + 64px * sin(90deg) ), 0)"><div>E</div></div>
+                    <div style="color: var(--color1-low); transform: translate3d(calc( 64px + 64px * cos(115deg) ), calc( 64px + 64px * sin(115deg) ), 0)"><div>B</div></div>
+
+                    <div style="color: var(--color2-low); transform: translate3d(calc( 64px + 64px * cos(155deg) ), calc( 64px + 64px * sin(155deg) ), 0)"><div>D</div></div>
+                    <div style="color: var(--color2-low); transform: translate3d(calc( 64px + 64px * cos(180deg) ), calc( 64px + 64px * sin(180deg) ), 0)"><div>E</div></div>
+                    <div style="color: var(--color2-mid); transform: translate3d(calc( 64px + 64px * cos(205deg) ), calc( 64px + 64px * sin(205deg) ), 0)"><div>V</div></div>
+                <img src="images/misc/simple-geb-transparent.png" style="width: calc(128px + 12px); height: calc(128px + 12px); margin-top: 6px;">
+                </div>
+            </div>
         </div>
     </section>
+
+    <br>
 
     <h2>What's here?</h2>
     <ul>
         <li>I work on lots of cool <a href="/projects">projects</a></li>
-        <li>I have a <a href="/blog">blog</a> where I talk about cool math & computer science things</li>
+        <li>I have a <a href="/blog">blog</a> where I talk about math & computer things</li>
     </ul>
+
+    <br>
 
     <div style="display: flex; flex-wrap: wrap;">
         <div style="width: 50%; min-width: 16rem;">
@@ -81,6 +95,6 @@
 
 {% block scripts %}
 
-<script src="scripts/header_canvas.js"></script>
+<!-- TODO: remove this ... <script src="scripts/header_canvas.js"></script> -->
 
 {% endblock scripts %}
