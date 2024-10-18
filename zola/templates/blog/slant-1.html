@@ -26,14 +26,14 @@
     </blockquote>
     
     <p>
-        Clearly, slant is a <a href="https://www.gamedeveloper.com/design/juicy-a-useful-game-design-term-">superior puzzle</a> when compared against 
-        something like sudoku, as it's easy to get into and revolves around taking a large number of actions, each with satisfying feedback. 
-        But how hard is slant really? Honestly, I'm not sure yet. Slant might be as hard as sudoku (<a href="https://en.wikipedia.org/wiki/NP-completeness">NP complete</a>), 
+        I like to think that slant is a <em><a href="https://www.gamedeveloper.com/design/juicy-a-useful-game-design-term-">superior puzzle</a></em> when compared against 
+        something like sudoku, as it's easy to get into and requires many actions. More actions means more satisfying feedback! Thinking about how fun slant is begs
+        an interesting question, how hard is it? It might be as hard as sudoku (<a href="https://en.wikipedia.org/wiki/NP-completeness">NP complete</a>), 
         or it might be much easier (polynomial time).
 
         <br> <br>
 
-        This is the first post in a blog series about slant, where our goal will be to analyze the game, figure out how challenging it is, and learn how 
+        This is the first post in a series about slant, where our goal is analyzing the game, figuring out how challenging it is, and learning how 
         to solve these puzzles efficiently.
     </p>
     
@@ -50,15 +50,18 @@
     <br> <br>
     <h3 id="intro-to-rules">A. Intro to Rules</h3>
 
-    <p>
-        As you start playing slant, you'll notice <b>simple rules</b> you can take advantage of. Often, it's possible to prove a 
-        tile must contain either a left or right slant. One common example is the following 3x3 grid, where two (1) numbered
-        points are orthogonally adjacent. If any of the lines shown were flipped to be touching a (1), it would result in a inconsistent state, 
-        where the two lines must be touching the other (1).
-    </p>
+    <div style="display: flex; align-items: center;">
+        <p style="width: 60%;">
+            As you start playing slant, you'll notice a few <b>simple rules</b> you can take advantage of.
+            Often, it's possible to prove a tile must contain either a left or right slant.
 
-    <br>
-    <monospace>
+            <br> <br>
+
+            One common example is the following 3x3 grid, where two (1) numbered
+            points are adjacent. If any of the slants were flipped to be touching either (1), it would result in a inconsistent state, 
+            where more than two lines must be touching the other (1)!
+        </p>
+        <monospace style="width: calc(40% - 1rem); height: calc(40% - 1rem); margin-left: 1rem;">
 -------------
 |   | <span style="color: var(--color1-high)">/</span> | <span style="color: var(--color1-high)">\</span> |
 --  +  (1) --
@@ -66,7 +69,8 @@
 --  +  (1) --
 |   | <span style="color: var(--color1-high)">\</span> | <span style="color: var(--color1-high)">/</span> |
 -------------
-    </monospace>
+        </monospace>
+    </div>
 
     <br> <br>
     <h3 id="brute-forcing-slant">B. Brute Forcing Slant</h3>
@@ -81,8 +85,8 @@
 
         A 3x3 grid can contain 4 numbered points in the middle 2x2 locations. In addition, there are only 4 non-trivial kinds of numbered points: 
         (1), (2), (3), and empty (or no-constraint). This means there are <b>256 unique permutations</b> of numbered points. However, since all 
-        slant rules are actually the same rule if rotated and/or flipped, there are actually only <b>55 unique combinations</b>, and that's not event taking 
-        into account the underlying rule.
+        slant rules are actually the same rule if rotated and/or flipped, there are actually only <b>55 unique combinations</b>, and that's not even
+        taking into account the underlying rules.
 
         <br> <br>
 
