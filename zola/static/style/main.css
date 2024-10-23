@@ -150,8 +150,7 @@ blockquote {
     display: inline-block;
     align-self: flex-end;
 }
-@media only screen and (max-width: 625px),
-       only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+@media only screen and (max-width: 625px) {
     #nav-menu {
         display: flex;
         flex-direction: column;
@@ -159,13 +158,14 @@ blockquote {
         align-items: baseline;
     }
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 3), 
-       only screen and (-min--moz-device-pixel-ratio: 3), 
-       only screen and (-o-min-device-pixel-ratio: 3/1), 
-       only screen and (min-device-pixel-ratio: 3)
-{ 
+@media (-webkit-min-device-pixel-ratio: 3) { 
     header {
         background-color: red;
+    }
+}
+@media (max-width: 1000px) { 
+    header {
+        color: green;
     }
 }
 
