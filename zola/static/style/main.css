@@ -67,7 +67,8 @@ footer {
     color: var(--front-soft);
 }
 
-@media (max-width:600px) {
+@media only screen and (max-width:600px),
+       only screen and (max-device-width: 825px) and (min-resolution: 3dppx) and (orientation: portrait) {
     header {
         padding: 33px 30px 24px 30px;
     }
@@ -149,7 +150,8 @@ blockquote {
     display: inline-block;
     align-self: flex-end;
 }
-@media (max-width:625px){
+@media only screen and (max-width: 625px),
+       only screen and (max-device-width: 825px) and (min-resolution: 3dppx) and (orientation: portrait) {
     #nav-menu {
         display: flex;
         flex-direction: column;
