@@ -68,6 +68,13 @@ a:hover {
     color: var(--color2-low);
 }
 
+.dark-link {
+    color: var(--color1-low);
+}
+.dark-link:hover {
+    color: var(--color2-low);
+}
+
 hr {
     border-color: var(--front-soft);
 }

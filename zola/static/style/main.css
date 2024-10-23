@@ -58,13 +58,25 @@ article ol, article ul {
     margin-left: 24px;
 }
 footer {
-    padding: 12px 50px 12px 50px;
+    padding: 12px 60px 12px 60px;
 
     text-align: center; 
     font-size: small;
     line-height: 0.9;
 
     color: var(--front-soft);
+}
+
+@media (max-width:600px) {
+    header {
+        padding: 33px 30px 24px 30px;
+    }
+    article {
+        padding: 24px 30px 12px 30px;
+    }
+    footer {
+        padding: 12px 30px 12px 30px;
+    }
 }
 
 monospace {
@@ -133,6 +145,18 @@ blockquote {
     visibility: visible;
 }
 
+#nav-menu {
+    display: inline-block;
+    align-self: flex-end;
+}
+@media (max-width:625px){
+    #nav-menu {
+        display: flex;
+        flex-direction: column;
+        align-self: flex-end;
+        align-items: baseline;
+    }
+}
 /* ----- misc ----- */
 
 .medium-text {
