@@ -151,7 +151,7 @@ blockquote {
     align-self: flex-end;
 }
 @media only screen and (max-width: 625px),
-       only screen and (-webkit-min-device-pixel-ratio: 3) and (orientation: portrait) {
+       only screen and (-webkit-min-device-pixel-ratio: 1.5) {
     #nav-menu {
         display: flex;
         flex-direction: column;
@@ -159,6 +159,16 @@ blockquote {
         align-items: baseline;
     }
 }
+@media only screen and (-webkit-min-device-pixel-ratio: 3), 
+       only screen and (-min--moz-device-pixel-ratio: 3), 
+       only screen and (-o-min-device-pixel-ratio: 3/1), 
+       only screen and (min-device-pixel-ratio: 3)
+{ 
+    header {
+        background-color: red;
+    }
+}
+
 /* ----- misc ----- */
 
 .medium-text {
