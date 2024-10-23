@@ -50,6 +50,7 @@
 
 header {
     padding: 44px 60px 24px 60px;
+    color: blue;
 }
 article {
     padding: 24px 60px 12px 60px;
@@ -150,7 +151,7 @@ blockquote {
     display: inline-block;
     align-self: flex-end;
 }
-@media only screen and (max-width: 625px) {
+@media screen and (max-width: 625px), screen and (max-device-width: 1000px) {
     #nav-menu {
         display: flex;
         flex-direction: column;
@@ -158,14 +159,9 @@ blockquote {
         align-items: baseline;
     }
 }
-@media (-webkit-min-device-pixel-ratio: 3) { 
+@media (max-device-width: 1000px) {
     header {
         background-color: red;
-    }
-}
-@media (max-width: 1000px) { 
-    header {
-        color: green;
     }
 }
 
