@@ -67,8 +67,8 @@ footer {
     color: var(--front-soft);
 }
 
-@media only screen and (max-width:600px),
-       only screen and (max-device-width: 825px) and (min-resolution: 3dppx) and (orientation: portrait) {
+@media only screen and (max-width: 600px),
+       only screen and (max-device-width: 1000px) and (min-resolution: 3dppx) and (orientation: portrait) {
     header {
         padding: 33px 30px 24px 30px;
     }
@@ -151,7 +151,7 @@ blockquote {
     align-self: flex-end;
 }
 @media only screen and (max-width: 625px),
-       only screen and (max-device-width: 825px) and (min-resolution: 3dppx) and (orientation: portrait) {
+       only screen and (max-device-width: 1000px) and (min-resolution: 3dppx) and (orientation: portrait) {
     #nav-menu {
         display: flex;
         flex-direction: column;
