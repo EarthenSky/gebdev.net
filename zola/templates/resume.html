@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} resume {% endblock %}
+
+{% block content %}
+<div style="width: calc(100% - 2rem); height: 2rem; padding: 1rem; display: flex; flex-direction: row; gap: 12px; align-items: center;">
+    <b>
+        Some Cool Animations
+    </b>
+    <button style="font-family: 'open sans'; padding: 0.15rem 0.75rem; color: var(--front-softer);" onclick="danceAnimation()">
+        dance!
+    </button>
+    <!--
+    <button style="font-family: 'open sans'; padding: 0.15rem 0.75rem; color: var(--front-softer);" onclick="setupHover()">
+        inspect mode
+    </button>
+    -->
+</div>
+<iframe 
+    id="resume-frame"
+    style="width: 100%; height: calc(11in); overflow: hidden;"
+    src="/resume/resume.html"
+    frameBorder="0"
+    scrolling="no"
+>
+    Awww, the iframe didn't work...
+</iframe>
+<script>
+    function randint(min, max) {
+        return min + Math.floor(Math.random() * (max - min));
+    }
+
+    /*
+    function setupHover() {
+        function applyHoverStyle(node) {
+            if (node.nodeName != "BODY") {
+                node.classList.add("hover-interest");
+            }
+            for (const child of node.children)
+                applyHoverStyle(child);
+        }
+        applyHoverStyle(document.getElementById("resume-frame").contentWindow.document.getElementsByTagName("body")[0]);
+    }
+    document.getElementById("resume-frame").onload = () => setupHover();
+    */
+
+    function danceAnimation() {
+        function applyStyle(node, removeTransform=false) {
+            if (node.nodeName != "BODY") {
+                if (removeTransform) {
+                    node.style.transform = "translate(0,0)";
+                    node.style.transform = node.originalTransform;
+                } else {
+                    node.style.transition = "transform 0.5s";
+                    if (node.originalTransform == undefined)
+                        node.originalTransform = node.style.transform;
+                    node.style.transform = "translate(" + randint(-25, 25) + "px ," + randint(-25, 25) + "px) rotate(" + randint(-5, 5) + "deg)";
+                }
+            }
+            for (const child of node.children)
+                applyStyle(child, removeTransform);
+        }
+        applyStyle(document.getElementById("resume-frame").contentWindow.document.getElementsByTagName("body")[0]);
+        setTimeout(_ => {
+            applyStyle(document.getElementById("resume-frame").contentWindow.document.getElementsByTagName("body")[0]);
+        }, 300);
+        setTimeout(_ => {
+            applyStyle(document.getElementById("resume-frame").contentWindow.document.getElementsByTagName("body")[0]);
+        }, 700);
+        setTimeout(_ => {
+            applyStyle(document.getElementById("resume-frame").contentWindow.document.getElementsByTagName("body")[0], true);
+        }, 1000);
+    }
+</script>
+{% endblock content %}
