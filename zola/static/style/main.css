@@ -20,6 +20,16 @@
     /* -apple-system, BlinkMacSystemFont */
     /* "Alte Haas Grotesk 2" */
     --body: "Segoe UI","Open Sans",sans-serif;
+
+    --a1: #5ba675;
+    --a2: #6bc96c;
+    --a3: #abdd64;
+    --a4: #fcef8d;
+
+    --b1: #8465ec;
+    --b2: #6d80fa;
+    --b3: #8db7ff;
+    --b4: #aee2ff;
 }
 
 #select-forest, #select-amber, #select-ocean, #select-golden, #select-taiji {
@@ -89,11 +99,11 @@ monospace {
 
     font-family: monospace;
     white-space:pre;
-    background-color: var(--back-darker); 
+    background-color: black; 
     text-align: center;
     border-radius: 18px;
 
-    scrollbar-color: var(--back-darker) var(--back);
+    scrollbar-color: black var(--back-darker);
 }
 blockquote {
     color: #aaa;
@@ -111,7 +121,7 @@ blockquote {
     margin: 0 auto;
     max-width: 820px;
     min-height: 100vh;
-    background-color: var(--back); /* darkslategrey; */ 
+    background-color: var(--back-darker); /* darkslategrey; */ 
 }
 
 .posts {
@@ -204,13 +214,13 @@ blockquote {
     display: inline-block;
     position: relative; 
     transform-style: preserve-3d;
-    transition: transform 0.45s ease-in-out, color 0.45s ease-in-out; 
+    transition: transform 0.35s ease-in-out, color 0.35s ease-in-out; 
 }
 #title:hover > span1 {
     transition-delay: 0.05s;
     transform: translate3d(6px, 0, 0);
     color: var(--color1-high);
-    transition: transform 0.4s ease-in-out, color 0.45s ease-in-out; 
+    transition: transform 0.3s ease-in-out, color 0.35s ease-in-out; 
 }
 #title:hover > span2 {
     transition-delay: 0.015s;

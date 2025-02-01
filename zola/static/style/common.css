@@ -55,11 +55,12 @@ h3 {
 }
 
 a {
-    text-decoration: none;
     color: var(--color1-mid);
     
     display: inline-block;
-    text-decoration: underline solid transparent;
+    text-decoration: underline solid #87ce3c41;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
     transition: color 0.05s ease-in-out, text-decoration 0.05s ease;
 
     /*border-bottom: solid 1px #71aa34;*/

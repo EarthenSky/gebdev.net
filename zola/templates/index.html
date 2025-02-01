@@ -8,68 +8,62 @@
 
 {% block content %}
 <article>
-    <section id="desc">
-        <div style="display: flex; flex-wrap: wrap; align-content: center; justify-content: center; margin-bottom: 16px; padding: 0 8px;">
-            <h3 id="hiya" style="margin-bottom: 8px;">Hi — ᕕ(ᐛ)ᕗ</h3>
-            <div style="display: flex; align-items: center; margin-left: 12px; margin-bottom: 8px; color: var(--front-soft)">
+    <section style="display: flex; flex-direction: row; margin-top: -12px; justify-content: center;">
+        <div
+            id="circle"
+            style="position: relative; display: block; width: calc(128px + 12px); height: calc(128px + 22px); cursor: pointer;"
+            title="geb dev web dev"
+        >
+            <img src="images/misc/simple-geb-transparent.png" style="width: calc(128px + 12px); height: calc(128px + 12px);">
+        </div>
+
+        <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; justify-content: center; margin-bottom: 16px; padding: 0 8px;">
+            <h3 id="hiya" style="">Hi — ᕕ(ᐛ)ᕗ</h3>
+            <div style="display: flex; align-items: center; margin-bottom: 8px; color: var(--front-soft);">
                 <b style="display: inline-block; flex-wrap: wrap; max-width: 100%; text-align: center;">
                     I'm <span style="color: var(--front-hard);">Gabe</span>, and I make all sorts of cool things!
                 </b>
             </div>
         </div>
-
-        <div style="display: flex; flex-wrap: wrap; align-content: center; justify-content: center;">
-            <p style="max-width: calc(70% - 32px);">
-                I'm currently working on all sorts of unfinished projects, but my main interest is in graphics! 
-                If you'd like to chat, or contribute to any of the projects, feel free to do so through my
-                <a href="https://github.com/EarthenSky">github</a>.
-                
-                <br> <br>
-
-                I'm also sometimes referred to affectionately as <em>geb dev web dev</em>, <s style="color: var(--front-soft);">despite not doing much</s>
-                for doing too much web development...
-            </p>
-            
-            <div style="margin-left: 24px;">
-                <div
-                    id="circle"
-                    style="position: relative; display: block; margin: auto; width: calc(128px + 12px); height: calc(128px + 22px); margin-top: 24px; margin-bottom: 24px; font-weight: 800;"
-                    title="geb dev web dev"
-                >
-                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-115deg) ), calc( 64px + 64px * sin(-115deg) ), 0);"><div>G</div></div>
-                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-90deg) ), calc( 64px + 64px * sin(-90deg) ), 0);"><div>E</div></div>
-                    <div style="color: var(--color2-high); transform: translate3d(calc( 64px + 64px * cos(-65deg) ), calc( 64px + 64px * sin(-65deg) ), 0)"><div>B</div></div>
-
-                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(-25deg) ), calc( 64px + 64px * sin(-25deg) ), 0)"><div>D</div></div>
-                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(0deg) ), calc( 64px + 64px * sin(0deg) ), 0)"><div>E</div></div>
-                    <div style="color: var(--color1-high); transform: translate3d(calc( 64px + 64px * cos(25deg) ), calc( 64px + 64px * sin(25deg) ), 0)"><div>V</div></div>
-
-                    <div style="color: var(--color1-mid); transform: translate3d(calc( 64px + 64px * cos(65deg) ), calc( 64px + 64px * sin(65deg) ), 0)"><div>W</div></div>
-                    <div style="color: var(--color1-low); transform: translate3d(calc( 64px + 64px * cos(90deg) ), calc( 64px + 64px * sin(90deg) ), 0)"><div>E</div></div>
-                    <div style="color: var(--color1-low); transform: translate3d(calc( 64px + 64px * cos(115deg) ), calc( 64px + 64px * sin(115deg) ), 0)"><div>B</div></div>
-
-                    <div style="color: var(--color2-low); transform: translate3d(calc( 64px + 64px * cos(155deg) ), calc( 64px + 64px * sin(155deg) ), 0)"><div>D</div></div>
-                    <div style="color: var(--color2-low); transform: translate3d(calc( 64px + 64px * cos(180deg) ), calc( 64px + 64px * sin(180deg) ), 0)"><div>E</div></div>
-                    <div style="color: var(--color2-mid); transform: translate3d(calc( 64px + 64px * cos(205deg) ), calc( 64px + 64px * sin(205deg) ), 0)"><div>V</div></div>
-                <img src="images/misc/simple-geb-transparent.png" style="width: calc(128px + 12px); height: calc(128px + 12px); margin-top: 6px;">
-                </div>
-            </div>
-        </div>
+        
     </section>
 
-    <br>
-
-    <h2>What's here?</h2>
+    <h2>Projects</h2>
     <ul>
-        <li>I work on lots of cool <a href="/projects">projects</a></li>
-        <li>I have a <a href="/blog">blog</a> where I talk about math & computer things</li>
-    </ul>
+        <div style="padding: 8px; border-radius: 8px; display: flex; flex-direction: row;">
+            <div style="width: 8px; margin: 6px 8px 0 0; background-color: var(--color1-mid); border-radius: 8px;"></div>
+            <div style="width: calc(100% - 24px - 24px);">
+                <div>
+                    <a href="https://sfugamedev.club" style="font-size: 1.05em; font-family: 'Lato', 'ASAP', sans-serif; font-weight: 900;">SFU Game Dev Club</a>
+                    <span style="color: var(--color1-low); font-size: 0.9rem; margin-left: 8px; margin-right: 8px;">
+                        <b>website</b> //
+                        <b>2024</b>
+                    </span>
+                </div>
+                <div style="color: var(--front-soft); line-height: 1.16; font-size: 0.9rem;">Designed the webpage for the SFU Game Dev Club. Super happy with the result!</div>
+            </div>
+            <div style="width: 8px; margin: 6px 0 0 8px; background-color: var(--color1-mid); border-radius: 8px;"></div>
+        </div>
 
-    <br>
+        <div style="padding: 8px; border-radius: 8px; display: flex; flex-direction: row;">
+            <div style="width: 8px; margin: 6px 8px 0 0; background-color: var(--color1-mid); border-radius: 8px;"></div>
+            <div style="width: calc(100% - 24px - 24px);">
+                <div>
+                    <a href="https://tehgamedev.itch.io/record-rage" style="font-size: 1.05em; font-family: 'Lato', 'ASAP', sans-serif; font-weight: 900;">Record Rage</a>
+                    <span style="color: var(--color1-low); font-size: 0.9rem; margin-left: 8px; margin-right: 8px;">
+                        <b>game jam</b> //
+                        <b>2017</b>
+                    </span>
+                </div>
+                <div style="color: var(--front-soft); line-height: 1.15; font-size: 0.9rem;">Developed a rhythm game together with an artist and a pair of musicians</div>
+            </div>
+            <div style="width: 8px; margin: 6px 0 0 8px; background-color: var(--color1-mid); border-radius: 8px;"></div>
+        </div>
+    </ul>
 
     <div style="display: flex; flex-wrap: wrap;">
         <div style="min-width: 16rem;">
-            <h2>My Favourite Websites</h2>
+            <h2>Favourites</h2>
             <ul>
                 <li>
                     <a href="https://wordsandbuttons.online/the_real_cpp_killers.html">The Real C++ Killers (Not You, Rust)</a>
@@ -79,9 +73,6 @@
                 </li>
                 <li>
                     <a href="https://news.ycombinator.com">Hacker News</a>
-                </li>
-                <li>
-                    <a href="https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git">https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git</a>
                 </li>
                 <li>
                     <a href="https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf">Go To Statement Considered Harmful</a>
