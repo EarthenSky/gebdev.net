@@ -1,23 +1,63 @@
 {% extends "layouts/base.html" %}
 
+{% block style %}
+<link rel="stylesheet" href="/style/blog.css?v0.00">
+{% endblock style %}
+
 {% block title %} blog {% endblock %}
 
 {% block content %}
 <article>
-    <h2>Blog</h2>
+    <h2 style="padding: 0; margin: 0 0 24px 0;">Blog</h2>
+
+    <h3 style="display: block; margin: 24px 0; color: var(--color1-mid); font-size: 1.2em; font-weight: bolder;">
+        <a id="2025" href="#2025">
+            2025
+        </a>
+    </h3>
+
+    <h3 style="display: block; margin: 24px 0; color: var(--color1-mid); font-size: 1.2em; font-weight: bolder;">
+        <a id="2024" href="#2024">
+            2024
+        </a>
+    </h3>
     <div class="posts">
-        <ul>
-            <li>
-                <a href="/blog/slant-1/">Slant [0]</a> 
-                - Understanding and Solving a wild game of slashes
-                &nbsp;<em class="date-item">June 9th, 2024</em></p>
-            </li>
-            <li>
-                <a href="/blog/many-pictures/">Many Pictures</a>
-                - A screensaver website that uses Pixabay's public API to automagically scroll through images
-                &nbsp;<em class="date-item">July 20th, 2023</em></p>
-            </li>
-        </ul>
+        <div class="blog-post-card">
+            <div class="card-number">
+                <span>June 9</span>
+                2024
+            </div>
+            <div class="card-contents">
+                <a href="/blog/slant-0/">
+                    Slant [0]
+                </a>
+                <span style="color: var(--front-softer)">
+                    Understanding and solving a wild game filled with slashes
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="display: block; margin: 24px 0; color: var(--color1-mid); font-size: 1.2em; font-weight: bolder;">
+        <a id="2023" href="#2023">
+            2023
+        </a>
+    </h3>
+    <div class="posts">
+        <div class="blog-post-card">
+            <div class="card-number">
+                <span>July 20</span>
+                2023
+            </div>
+            <div class="card-contents">
+                <a href="/blog/many-pictures/">
+                    Many Pictures
+                </a>
+                <span style="color: var(--front-softer)">
+                    A screensaver website that uses Pixabay's public API to automagically scroll through images
+                </span>
+            </div>
+        </div>
         <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->
     </div>
     <br>

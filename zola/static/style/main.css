@@ -1,37 +1,5 @@
 /* this CSS inspired by https://wren.io/ and http://journal.stuffwithstuff.com/ and https://artemis.sh/ */
 
-:root {
-    /* TODO: pine blue for background */
-    --front-hard: #e9efe9;
-    --front-soft: #8b8f8b;
-    --front-softer: #5a5e5a;
-    --back: #2f3335;
-    --back-darker: #131414;
-    --color1-high: #c3dd66;
-    --color1-mid: #87ce3c;
-    --color1-low: #3f8d4c;
-    --color2-high: #8af1c6;
-    --color2-mid: #26d399;
-    --color2-low: #2e8f6f;
-
-    --header: "ASAP";
-
-    /* Georgia, serif */
-    /* -apple-system, BlinkMacSystemFont */
-    /* "Alte Haas Grotesk 2" */
-    --body: "Segoe UI","Open Sans",sans-serif;
-
-    --a1: #5ba675;
-    --a2: #6bc96c;
-    --a3: #abdd64;
-    --a4: #fcef8d;
-
-    --b1: #8465ec;
-    --b2: #6d80fa;
-    --b3: #8db7ff;
-    --b4: #aee2ff;
-}
-
 #select-forest, #select-amber, #select-ocean, #select-golden, #select-taiji {
     cursor: pointer;
 }
@@ -112,9 +80,7 @@ blockquote {
 
 #info {
     font-size: 14px;
-    border-bottom: solid 1px var(--color1-mid);
-    margin-bottom: 8px;
-    padding: 2px;
+    margin-bottom: 32px;
 }
 
 #column-container {

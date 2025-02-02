@@ -45,7 +45,6 @@ h2 {
 }
 
 h3 {
-    /*padding: 24px 0 12px 0;*/
     padding: 0;
     
     font: 24px/1.25 var(--header);
@@ -53,20 +52,32 @@ h3 {
 
     color: var(--color1-high);
 }
-
-a {
-    color: var(--color1-mid);
-    
+h3 > a:target:before {
+    font-size: 1em;
+    text-decoration: underline;
+    text-decoration-color: inherit;
     display: inline-block;
-    text-decoration: underline solid #87ce3c41;
+    content: "»";
+}
+a {
+    display: inline-block;
+
+    color: var(--color1-mid);
+
+    text-decoration: underline solid var(--color1-mid-trans);
     text-underline-offset: 3px;
     text-decoration-thickness: 2px;
+
     transition: color 0.05s ease-in-out, text-decoration 0.05s ease;
 
     /*border-bottom: solid 1px #71aa34;*/
 }
 a:hover {
     color: var(--color2-low);
+
+    text-decoration: underline solid var(--color1-low-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
 }
 
 .dark-link {

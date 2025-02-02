@@ -1,0 +1,86 @@
+.project-tag-purple {
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    border-radius: 8px;
+
+    color: var(--b2);
+    text-decoration-color: var(--b2-trans);
+}
+.project-tag-purple:hover {
+    color: var(--b1);
+    text-decoration-color: var(--b1-trans);
+}
+
+.project-tag-green {
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    border-radius: 8px;
+
+    color: var(--color1-mid);
+    text-decoration-color: var(--color1-mid-trans);
+}
+.project-tag-green:hover {
+    color: var(--color1-low);
+    text-decoration-color: var(--color1-low-trans);
+}
+
+.project-card {
+    display: flex;
+    flex-direction: row;
+
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+
+    background-color: black;
+}
+.project-card > div {
+    display: flex;
+    flex-direction: row;
+
+    width: calc(100%);
+}
+.project-card > div > div {
+    width: calc(100% - 16px);
+
+    line-height: 1.0;
+}
+.project-card > div > .barrier-end {
+    width: 8px;
+    height: 1px;
+    margin: 0 0 0 8px;
+    border-radius: 8px;
+
+    background-color: var(--black);
+
+    transition: height 0.15s ease-in-out, background-color 0.2s ease;
+}
+.project-card:hover > div > .barrier-end {
+    height: 100%;
+    background-color: var(--color1-low);
+}
+.project-card > div > div > .project-title {
+    font-family: 'Lato', 'ASAP', sans-serif;
+    font-size: 1.15em;
+    font-weight: 900;
+
+    line-height: 1.0;
+}
+.project-card > div > div > .project-tags {
+    display:inline-block;
+}
+.project-card > div > div > .project-tags > span {
+    font-size: 0.8em;
+
+    color: var(--front-softer);
+}
+.project-card > div > div > .project-desc {
+    margin-top: 6px;
+
+    font-size: 1rem;
+    line-height: 1.2;
+
+    color: var(--front-soft);
+}
