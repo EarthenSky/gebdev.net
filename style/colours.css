@@ -1,0 +1,40 @@
+:root {
+    /* TODO: pine blue for background */
+    --front-hard: #e9efe9;
+    --front-soft: #8b8f8b;
+    --front-softer: #5a5e5a;
+    --back: #2f3335;
+    --back-darker: #131414;
+    --black: #000000;
+    --color1-high: #c3dd66;
+    --color1-high-trans: #c3dd6641;
+    --color1-high-trans2: #c3dd669a;
+    --color1-mid: #87ce3c;
+    --color1-mid-trans: #87ce3c41;
+    --color1-low: #3f8d4c;
+    --color1-low-trans: #3f8d4c41;
+    --color2-high: #8af1c6;
+    --color2-mid: #26d399;
+    --color2-low: #2e8f6f;
+
+    --header: "ASAP";
+
+    /* Georgia, serif */
+    /* -apple-system, BlinkMacSystemFont */
+    /* "Alte Haas Grotesk 2" */
+    --body: "Segoe UI","Open Sans",sans-serif;
+
+    --a1: #5ba675;
+    --a1-trans: #5ba67541;
+    --a2: #6bc96c;
+    --a2-trans: #6bc96c41;
+    --a3: #abdd64;
+    --a4: #fcef8d;
+
+    --b1: #8465ec;
+    --b1-trans: #8465ec41;
+    --b2: #6d80fa;
+    --b2-trans: #6d80fa41;
+    --b3: #8db7ff;
+    --b4: #aee2ff;
+}
