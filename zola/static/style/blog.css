@@ -44,7 +44,7 @@
 /* --------- photo-blog --------- */
 
 .smaller-column-container {
-    width: 600px;
+    max-width: 600px;
     margin: auto;
 }
 
@@ -100,7 +100,8 @@
     border-radius: 8px;
 }
 .left-bubble > div > .photos > img {
-    width: 450px;
+    max-width: 450px;
+    width: 100%;
 }
 
 .right-bubble {
@@ -137,16 +138,7 @@
     border-radius: 8px;
 }
 .right-bubble > div > .photos > img {
-    width: 450px;
-}
-
-.right-photo-bubble {
-    display: flex;
-}
-.right-photo-bubble > img {
-    margin: 0 0 8px auto;
-    border-radius: 14px 14px 0 14px;
-    width: 450px;
+    max-width: 450px;
 }
 .right-bubble a {
     color: var(--yellow);
@@ -155,6 +147,16 @@
     text-decoration: underline solid var(--soft-yellow-trans);
     text-underline-offset: 3px;
     text-decoration-thickness: 2px;
+}
+
+.right-photo-bubble {
+    display: flex;
+}
+.right-photo-bubble > img {
+    margin: 0 0 8px auto;
+    border-radius: 14px 14px 0 14px;
+    max-width: 450px;
+    width: 100%;
 }
 
 .middle-text {
