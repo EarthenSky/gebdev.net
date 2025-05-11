@@ -1,3 +1,5 @@
+/* --------- meta-blog-page --------- */
+
 .blog-post-card {
     display: flex;
     flex-direction: row;
@@ -17,9 +19,7 @@
     flex-direction: column;
     text-align: right;
 
-    transition: background-color 0.2s ease;
-
-    background-color: var(--color1-low);
+    background-color: var(--stars);
 }
 .blog-post-card > .card-number > span {
     white-space: nowrap;
@@ -39,4 +39,133 @@
     font-family: 'Lato', 'ASAP', sans-serif;
     font-size: 1.0em;
     font-weight: 700;
+}
+
+/* --------- photo-blog --------- */
+
+.smaller-column-container {
+    width: 600px;
+    margin: auto;
+}
+
+.name {
+    display: block;
+
+    margin: 4px auto 4px 4px;
+    
+    font-weight: 600;
+
+    color: var(--soft-yellow);
+}
+.name > a {
+    color: var(--soft-yellow);
+}
+.name > a:hover {
+    text-decoration: underline solid var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.left-bubble {
+    display: flex;
+}
+.left-bubble > .text {
+    display: block;
+
+    margin: 0 auto 8px 0;
+    padding: 8px 14px;
+    border-radius: 14px 14px 14px 0;
+
+    font-size: 14px;
+
+    color: var(--white);
+    background-color: var(--stars);
+}
+.left-bubble > div > .photos {
+    display: flex;
+    flex-direction: row;
+
+    overflow-x: scroll;
+
+    max-width: 450px;
+}
+.left-bubble > div > .photos::-webkit-scrollbar {
+    height: 8px;
+}
+.left-bubble > div > .photos::-webkit-scrollbar-track {
+    background: var(--stars);
+}
+.left-bubble > div > .photos::-webkit-scrollbar-thumb {
+    background-color: var(--soft-yellow);
+    border-radius: 8px;
+}
+.left-bubble > div > .photos > img {
+    width: 450px;
+}
+
+.right-bubble {
+    display: flex;
+}
+.right-bubble > div {
+    display: block;
+
+    margin: 0 0 8px auto;
+    padding: 8px 14px;
+    border-radius: 14px 14px 0 14px;
+
+    font-size: 14px;
+
+    color: var(--white);
+    background-color: var(--dark-blue);
+}
+.right-bubble > div > .photos {
+    display: flex;
+    flex-direction: row;
+
+    overflow-x: scroll;
+
+    max-width: 450px;
+}
+.right-bubble > div > .photos::-webkit-scrollbar {
+    height: 8px;
+}
+.right-bubble > div > .photos::-webkit-scrollbar-track {
+    background: var(--stars);
+}
+.right-bubble > div > .photos::-webkit-scrollbar-thumb {
+    background-color: var(--soft-yellow);
+    border-radius: 8px;
+}
+.right-bubble > div > .photos > img {
+    width: 450px;
+}
+
+.right-photo-bubble {
+    display: flex;
+}
+.right-photo-bubble > img {
+    margin: 0 0 8px auto;
+    border-radius: 14px 14px 0 14px;
+    width: 450px;
+}
+.right-bubble a {
+    color: var(--yellow);
+}
+.right-bubble a:hover {
+    text-decoration: underline solid var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.middle-text {
+    display: flex;
+}
+.middle-text > div {
+    display: inline-block;
+    
+    margin: 16px auto;
+    margin-top: calc(16px - 8px);
+    font-size: 14px;
+
+    color: var(--soft-grey-2);
 }

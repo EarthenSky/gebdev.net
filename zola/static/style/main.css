@@ -1,27 +1,97 @@
-/* this CSS inspired by https://wren.io/ and http://journal.stuffwithstuff.com/ and https://artemis.sh/ */
+/* ----- new defaults ----- */
 
-#select-forest, #select-amber, #select-ocean, #select-golden, #select-taiji {
-    cursor: pointer;
-}
-#select-forest:active, #select-amber:active, #select-ocean:active, #select-golden:active, #select-taiji:active {
-    color: var(--color2-mid);
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, code, ol, ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
 }
 
-#select-forest > .progress-bar, #select-ocean > .progress-bar {
+/* ----- simple stuff ----- */
+
+body {
+    color: var(--front-hard);
+    background-color: var(--space);
+    
+    font: 16px/1.5 var(--body);
+    letter-spacing: .03em;
+}
+
+p {
+    padding: 8px 0;
+}
+
+p, blockquote {
+    hyphens: auto;
+}
+
+h1 {
+    /* from browser's h2 */
     display: block;
-    background: var(--color1-mid);
-    width: 0%;
-    height: 1px;
-    margin-bottom: 1px;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 
-    transition: background 0.15s ease-in-out;
+    margin: 0;
 }
-#select-forest:hover > .progress-bar, #select-ocean:hover > .progress-bar {
-    background: var(--color2-low);
+
+h2 {
+    padding: 24px 0 12px 0;
+
+    font: 28px/1.25 var(--header);
+    font-weight: 700;
+    
+    color: var(--soft-green) /*#b6d53c*/ ;
 }
-#select-forest:active > .progress-bar, #select-ocean:active > .progress-bar {
-    background: var(--color2-mid);
-    transform: translateY(1px);
+
+h3 {
+    padding: 0;
+    
+    font: 24px/1.25 var(--header);
+    font-weight: 700;
+
+    color: var(--soft-green);
+}
+h3 > a:target:before {
+    font-size: 1em;
+    text-decoration: underline;
+    text-decoration-color: inherit;
+    display: inline-block;
+    content: "»";
+}
+a {
+    display: inline-block;
+
+    color: var(--soft-blue);
+
+    text-decoration: underline solid var(--invisible);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 0px;
+
+    transition: color 0.05s ease-in-out, text-decoration 0.05s ease;
+
+    cursor: pointer;
+
+    /*border-bottom: solid 1px #71aa34;*/
+}
+a:hover {
+    color: var(--blue);
+
+    text-decoration: underline solid var(--soft-blue-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.dark-link {
+    color: var(--color1-low);
+}
+.dark-link:hover {
+    color: var(--color2-low);
+}
+
+hr {
+    border-color: var(--front-soft);
 }
 
 /* ----- custom tags & stuff ----- */
@@ -33,6 +103,7 @@ article {
     padding: 24px 60px 12px 60px;
 }
 article ol, article ul {
+    color:var(--soft-yellow);
     margin-left: 24px;
 }
 footer {
@@ -87,7 +158,7 @@ blockquote {
     margin: 0 auto;
     max-width: 820px;
     min-height: 100vh;
-    background-color: var(--back-darker); /* darkslategrey; */ 
+    background-color: var(--space); /* darkslategrey; */ 
 }
 
 .posts {
@@ -136,6 +207,36 @@ blockquote {
     }
 }
 
+/* ----- code blocks ----- */
+
+code {
+    font-family: monospace;
+    font-size: inherit;
+}
+
+span > code,
+p > code,
+li > code,
+dd > code,
+td > code {
+    background: #000;
+    word-wrap: break-word;
+    box-decoration-break: clone;
+    padding: .1rem .3rem .2rem;
+    border-radius: .2rem;
+}
+
+pre code {
+    display: block;
+    background: none;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
+    max-width: 100%;
+    min-width: 100px;
+    padding: 0;
+}
+
 /* ----- misc ----- */
 
 .medium-text {
@@ -162,48 +263,11 @@ blockquote {
     padding: 0;
 }
 
-/* ----- animations ----- */
-
-#title {
-    display: inline-block;
-    align-self: flex-end;
-
-    font: 28px/1.25 var(--header);
-    font-weight: 700;
-
-    padding: 0;
-    /* margin-top: 4px; */
-    /* margin-bottom: -4px; */
+.badge {
+    width: 88px;
+    height: 31px;
+    image-rendering: pixelated;
 }
-
-#title > * {
-    display: inline-block;
-    position: relative; 
-    transform-style: preserve-3d;
-    transition: transform 0.35s ease-in-out, color 0.35s ease-in-out; 
+.badge:hover {
+    filter: brightness(0.9);
 }
-#title:hover > span1 {
-    transition-delay: 0.05s;
-    transform: translate3d(6px, 0, 0);
-    color: var(--color1-high);
-    transition: transform 0.3s ease-in-out, color 0.35s ease-in-out; 
-}
-#title:hover > span2 {
-    transition-delay: 0.015s;
-    transform: translate3d(8px, 0, 0);
-    color: var(--color2-low);
-}
-#title:hover > span3 {
-    transition-delay: 0.075s;
-    transform: translate3d(10px, 0, 0);
-    color: var(--color2-high);
-}
-#title:hover > span4 {
-    transition-delay: 0.025s;
-    transform: translate3d(12px, 0, 0);
-    color: var(--color2-low);
-}
-
-/* ----- fonts ----- */
-
-/* Todo: bind Segoe UI */

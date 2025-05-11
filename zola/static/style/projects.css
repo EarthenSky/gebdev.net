@@ -1,29 +1,16 @@
-.project-tag-purple {
-    font-size: 0.8rem;
-    font-weight: bold;
-
-    border-radius: 8px;
-
-    color: var(--b2);
-    text-decoration-color: var(--b2-trans);
-}
-.project-tag-purple:hover {
-    color: var(--b1);
-    text-decoration-color: var(--b1-trans);
-}
-
 .project-tag-green {
     font-size: 1rem;
     font-weight: bold;
 
     border-radius: 8px;
 
-    color: var(--color1-mid);
-    text-decoration-color: var(--color1-mid-trans);
+    color: var(--yellow);
 }
 .project-tag-green:hover {
-    color: var(--color1-low);
-    text-decoration-color: var(--color1-low-trans);
+    color: var(--soft-yellow);
+    text-decoration-color: var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
 }
 
 .project-card {
@@ -34,7 +21,7 @@
     margin-bottom: 8px;
     border-radius: 8px;
 
-    background-color: black;
+    background-color: var(--dark-green);
 }
 .project-card > div {
     display: flex;
@@ -53,17 +40,19 @@
     margin: 0 0 0 8px;
     border-radius: 8px;
 
-    background-color: var(--black);
+    background-color: var(--stars);
 
     transition: height 0.15s ease-in-out, background-color 0.2s ease;
 }
 .project-card:hover > div > .barrier-end {
     height: 100%;
-    background-color: var(--color1-low);
+    background-color: var(--soft-yellow);
 }
 .project-card > div > div > .project-title {
     font-family: 'Lato', 'ASAP', sans-serif;
     font-weight: 900;
+
+    color: var(--yellow);
 
     margin-bottom: 3px;
 
@@ -75,7 +64,7 @@
 .project-card > div > div > .project-tags > span {
     font-size: 1em;
 
-    color: var(--front-softer);
+    color: var(--soft-yellow);
 }
 .project-card > div > div > .project-desc {
     margin-top: 3px;
@@ -85,5 +74,5 @@
     font-size: 0.85em;
     line-height: 1.2;
 
-    color: var(--front-softer);
+    color: var(--white);
 }

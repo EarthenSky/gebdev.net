@@ -12,17 +12,15 @@
         <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 
-        <link rel="stylesheet" href="/style/colours.css?v0.00">
-        <link rel="stylesheet" href="/style/widgets.css?v0.00">
-
-        <link rel="stylesheet" href="/style/common.css?v0.00">
-        <link rel="stylesheet" href="/style/main.css?v0.01">
-        <link rel="stylesheet" href="/style/projects.css?v0.00">
+        <link rel="stylesheet" href="/style/colours.css?v0.01">
+        <link rel="stylesheet" href="/style/main.css?v0.02">
+        <link rel="stylesheet" href="/style/projects.css?v0.01">
+        <link rel="stylesheet" href="/style/widgets.css?v0.01">
 
         {% block style %} {% endblock %}
 
         <link rel="icon" type="image/x-icon" href="/images/main.ico">
-        <title>geb's {% block title %} {% endblock %}</title>
+        <title>{% block title %} {% endblock %}</title>
     </head>
 
     <body>
@@ -30,17 +28,13 @@
             <header>
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <a href="/">
-                        <h1 id="title" style="margin-right: 8px; align-self: stretch;">
-                            <span1>geb</span1> <span2>dev</span2> <span3>.</span3> <span4>net</span4>
-                        </h1>
+                        <b>gebdev.net</b>
                     </a>
                     <div id="nav-menu">
-                        <span><a href="/" data-tooltip="the main page"><b>home</b></a></span>
-                        <span>| <a href="/blog" title="ranting"><b>blog</b></a></span>
+                        <span><a href="/blog" title="words"><b>blog</b></a></span>
                         <span>| <a href="/art" title="<3"><b>♪ art</b></a></span>
-                        <span>| <a href="/about"><b>about</b></a></span>
                         <span>| <a href="/resume" title="💼"><b>resume</b></a></span>
-                        <span>| <a href="https://github.com/EarthenSky" target="_blank" rel="noopener noreferrer" title="you know... 'the place'"><b>github</b></a></span>
+                        <span>| <a href="/about" title="hi"><b>about</b></a></span>
                     </div>
                 </div>
             </header>
@@ -52,20 +46,11 @@
             <footer>
                 <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
                 <p>
-                    palette: 
-                    <a id="select-forest" title="swaying of trees">
-                        forest
-                    </a>
-                    <!-- <a id="select-amber">amber</a> | -->
-                    <!-- <a id="select-ocean" title="a slight salty taste">
-                        ocean
-                    </a> -->
-                    <!--<a id="select-golden">golden</a> | -->
-                    <!--<a id="select-taiji">taiji</a> -->
+                    <em id="after-selected-color" style="padding: 0; color: var(--front-softer);">
+                        a starry night sky
+                    </em>
                 </p>
-                <em id="after-selected-color" style="padding: 0; color: var(--front-softer);">
-                    swaying of trees
-                </em>
+                
                 <!-- <p>© 2024</p> -->
 
                 <br> <br> <br>
