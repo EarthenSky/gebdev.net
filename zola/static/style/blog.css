@@ -95,6 +95,7 @@
     overflow-x: scroll;
 
     max-width: 450px;
+    width: 100%;
 }
 .left-bubble > div > .photos::-webkit-scrollbar {
     height: 8px;
@@ -133,6 +134,7 @@
     overflow-x: scroll;
 
     max-width: 450px;
+    width: 100%;
 }
 .right-bubble > div > .photos::-webkit-scrollbar {
     height: 8px;
