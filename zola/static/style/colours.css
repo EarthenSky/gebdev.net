@@ -1,7 +1,7 @@
 :root {
     /* TODO: pine blue for background */
     --front-hard: #e9efe9;
-    --front-soft: #8b8f8b;
+    --front-soft: #7e7f8e;
     --front-softer: #5a5e5a;
     --back: #2f3335;
     --back-darker: #131414;
@@ -22,7 +22,7 @@
     /* Georgia, serif */
     /* -apple-system, BlinkMacSystemFont */
     /* "Alte Haas Grotesk 2" */
-    --body: "Segoe UI","Open Sans",sans-serif;
+    --body: -apple-system,BlinkMacSystemFont,"Segoe UI",monospace;
 
     --a1: #5ba675;
     --a1-trans: #5ba67541;
@@ -37,4 +37,29 @@
     --b2-trans: #6d80fa41;
     --b3: #8db7ff;
     --b4: #aee2ff;
+
+    /* -------- new --------- */
+    --invisible: #ffffff00;
+    --soft-blue-trans: #9dcdfc41;
+    --soft-green-trans: #b3e99141;
+    --soft-yellow-trans: #ffeda741;
+
+    --space: #272736;
+    --stars: #473b78;
+    --white: #ffffeb;
+    --soft-grey-2: #6d7a94;
+    --soft-grey: #5a5e5a;
+    --black: #010112;
+    --soft-blue: #9dcdfc;
+    --blue: #4da6ff;
+    --dark-blue: #4b5bab;
+    --dark-green: #345a3b;
+    --green: #8fde5d;
+    --light-green: #c3dd66;
+    --soft-green: #b3e991;
+    --yellow: #ffe478;
+    --soft-yellow: #ffeda7;
+    --orange: #f2a65e;
+    --brown: #964253;
+
 }
