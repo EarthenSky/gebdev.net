@@ -192,8 +192,15 @@
     .baking-card {
         background-color: var(--dark-blue);
         padding: 12px;
+        border-radius: 12px;
     }
-    .baking-card .title {
+    .baking-card .top-container {
+        display: flex;
+        flex-direction: row;
+        
+        margin-bottom: 4px;
+    }
+    .baking-card .top-container .title {
         display: inline-block;
     
         color: var(--white);
@@ -201,13 +208,29 @@
     
         padding: 2px 12px;
         margin-right: 4px;
+        
+        border-radius: 4px;
+    }
+    .baking-card .top-container .link {
+        margin-top: 2px;
+        margin-left: auto;
+    }
+    .baking-card .desc {
+        margin-bottom: 4px;
+        
+        color: var(--soft-front-2);
+    }
+    .baking-card .ingredients {
+        margin-bottom: 4px;
     }
     </style>
     
     <div class="baking-card">
-        <div class="title">Geb Buns</div>
+        <div class="top-container">
+            <div class="title">Geb Buns</div>
+            <a class="link" href="">video here</a>
+        </div>
         <div class="desc">A modified recipie for pretzel buns, which are soft and not knotted.</div>
-        <a class="link" href="">video here</a>
         <ul class="ingredients">
             <li>1.5 cups water</li>
             <li>4 tbsp brown sugar</li>
@@ -222,6 +245,12 @@
             </li>
             <li>
                 Add yeast to the liquid. Add salt after.
+            </li>
+            <li>
+                 Add 3 cups of flour.
+            </li>
+            <li>
+                 knead for 15-30 mins
             </li>
             <li>
                 TODO: add the rest!
