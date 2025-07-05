@@ -45,8 +45,11 @@
     --soft-yellow-trans: #ffeda741;
     --stars-trans: #473b7841;
     --stars-on-black-trans: #8368bc41;
+    --soft-purple-trans: #b38eea41;
 
     --stars-on-black: #8368bc;
+    --warm-purple: #c25acd;
+    --soft-purple: #b38eea;
 
     --space: #272736;
     --stars: #473b78;
@@ -59,8 +62,10 @@
     --dark-blue: #4b5bab;
     --dark-green: #345a3b;
     --green: #8fde5d;
+    --warm-green: #6bc96c;
     --light-green: #c3dd66;
     --soft-green: #b3e991;
+    --warm-yellow: #e0a64f;
     --yellow: #ffe478;
     --soft-yellow: #ffeda7;
     --orange: #f2a65e;

@@ -84,10 +84,33 @@ a:hover {
 }
 
 .dark-link {
-    color: var(--color1-low);
+    color: var(--soft-purple);
 }
 .dark-link:hover {
-    color: var(--color2-low);
+    color: var(--warm-purple);
+    text-decoration: underline solid var(--soft-purple-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.green-link {
+    color: var(--soft-green);
+}
+.green-link:hover {
+    color: var(--warm-green);
+    text-decoration: underline solid var(--soft-green-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.yellow-link {
+    color: var(--soft-yellow);
+}
+.yellow-link:hover {
+    color: var(--warm-yellow);
+    text-decoration: underline solid var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
 }
 
 hr {
