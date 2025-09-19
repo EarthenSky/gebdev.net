@@ -5,7 +5,7 @@
     --front-softer: #5a5e5a;
     --back: #2f3335;
     --back-darker: #131414;
-    --black: #000000;
+    /*--black: #000000;*/
     --color1-high: #c3dd66;
     --color1-high-trans: #c3dd6641;
     --color1-high-trans2: #c3dd669a;
@@ -48,6 +48,8 @@
     --soft-purple-trans: #b38eea41;
 
     --stars-on-black: #8368bc;
+    --stars-on-black-filter: invert(49%) sepia(13%) saturate(2009%) hue-rotate(218deg) brightness(87%) contrast(81%);
+    --white-on-black-filter: invert(100%);
     --warm-purple: #c25acd;
     --soft-purple: #b38eea;
 
@@ -71,4 +73,10 @@
     --orange: #f2a65e;
     --brown: #964253;
 
+    --tag-green: #66ad37;
+    --tag-yellow: #eed056;
+    --tag-blue: #4da6ff;
+    --tag-purple: #b38eea;
+    --tag-red: #d5264a;
+    --tag-white: #ebe7db;
 }

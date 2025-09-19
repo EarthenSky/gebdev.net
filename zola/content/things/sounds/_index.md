@@ -1,4 +1,4 @@
 +++
-title = "Sounds"
-template = "index.html"
+title = "Music"
+template = "music.html"
 +++

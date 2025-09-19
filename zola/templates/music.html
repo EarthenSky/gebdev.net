@@ -1,0 +1,290 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} things {% endblock %}
+
+{% block content %}
+<article>
+    <h2>Sounds</h2>
+
+    <p>
+        I make music! The style ranges all over the place, from <a href="https://chipscompo.com/entry/2992">comfy chiptune</a> to <a href="https://on.soundcloud.com/QB3V5EMnfL32xMww7">chaotic convolutions</a>.
+        Maybe even <a href="https://www.newgrounds.com/audio/listen/1174272">an adventure through a magic forest</a>?
+    </p>
+
+    <br>
+    
+    <!-- TODO: test this in firefox -->
+    <!-- TODO: clean the code here up -->
+    <div style="display: flex; gap: 1rem;">
+        <audio id="mushi" src="https://chipscompo.s3.amazonaws.com/0.3682462361310701mushi.mp3"></audio>
+        <div class="audio-player" style="background-image: url('/images/art/song-images/walk-with-a-stick.png'); width: 100%;">
+            <div style="display: flex; background-color: #222; color: #ddd; border-radius: 1rem; cursor: pointer; padding: 0 0.5rem; height: 1.5rem;" onclick="
+                document.getElementById('gordian').pause()
+                document.getElementById('gordian-button').innerHTML = '⏵';
+                if (document.getElementById('mushi').paused) {
+                    document.getElementById('mushi').play()
+                    document.getElementById('mushi-button').innerHTML = '⏸';
+                } else {
+                    document.getElementById('mushi').pause()
+                    document.getElementById('mushi-button').innerHTML = '⏵';
+                }
+            ">
+                <div style="line-height: 1.5rem; height: 1.5rem; padding: 0; font-size: 0.75rem; margin-left: 0.25rem;"><a href="https://chipscompo.com/entry/3044">a walk with a stick</a></div>
+                <div id="mushi-button" class="audio-player-button" style="margin-left: auto; text-align: center; transform: translateY(-0.09rem);">⏵</div>
+            </div>
+            <div style="display: flex;">
+                <input id="mushi-time" class="audio-player-time" type="range" min="0.0" max="1.0" value="0.0" step="0.0001">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: start;">
+                <span style="display: flex; color: #222; font-weight: 900; margin-left: 0.75rem; margin-right: 0.25rem; text-align: center; transform: translateY(-0.09rem);">
+                    🕪
+                </span>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <input id="mushi-audio" class="audio-player-volume" type="range" min="0" max="100" value="75">
+                </div>
+                <span id="mushi-timestamp" style="color: #ddd; background-color: #222; border-radius: 1rem; padding: 0 0.5rem; font-weight: 500; font-family: monospace; font-size: 0.75rem; margin-right: 0.75rem; margin-left: auto;">0:00 / x:xx</span>
+            </div>
+            <script>
+                var lastTime = 0.0;
+                document.getElementById('mushi').volume = 0.75;
+                document.getElementById('mushi').addEventListener('durationchange', (e) => {
+                    let currentTime = document.getElementById('mushi').currentTime;
+                    let duration = document.getElementById('mushi').duration;
+                    if (lastTime != currentTime) {
+                        document.getElementById('mushi-time').value = currentTime / duration;
+                        document.getElementById('mushi-timestamp').innerHTML = 
+                            Math.floor(currentTime / 60) + ":" + String(Math.floor(currentTime % 60)).padStart(2, '0')
+                            + " / "
+                            + Math.floor(duration / 60) + ":" + String(Math.floor(duration % 60)).padStart(2, '0');
+                    }
+                    lastTime = currentTime;
+                })
+                document.getElementById('mushi').addEventListener('timeupdate', (e) => {
+                    let currentTime = document.getElementById('mushi').currentTime;
+                    let duration = document.getElementById('mushi').duration;
+                    if (lastTime != currentTime) {
+                        document.getElementById('mushi-time').value = currentTime / duration;
+                        document.getElementById('mushi-timestamp').innerHTML = 
+                            Math.floor(currentTime / 60) + ":" + String(Math.floor(currentTime % 60)).padStart(2, '0')
+                            + " / "
+                            + Math.floor(duration / 60) + ":" + String(Math.floor(duration % 60)).padStart(2, '0');
+                    }
+                    lastTime = currentTime;
+                })
+
+                document.getElementById('mushi-audio').addEventListener('change', (e) => {
+                    document.getElementById('mushi').volume = e.currentTarget.value / 100;
+                })
+                document.getElementById('mushi-audio').addEventListener('input', (e) => {
+                    document.getElementById('mushi').volume = e.currentTarget.value / 100;
+                })
+
+                document.getElementById('mushi-time').addEventListener('change', (e) => {
+                    document.getElementById('mushi').currentTime = e.currentTarget.value * document.getElementById('mushi').duration;
+                })
+                document.getElementById('mushi-time').addEventListener('input', (e) => {
+                    document.getElementById('mushi').currentTime = e.currentTarget.value * document.getElementById('mushi').duration;
+                })
+            </script>
+        </div>
+
+        <audio id="gordian" src="https://chipscompo.s3.amazonaws.com/0.6642475906553811gdc-website-song-fina;.mp3"></audio>
+        <div class="audio-player" style="background-image: url('/images/art/song-images/gordian.png'); width: 100%;">
+            <div style="display: flex; background-color: #222; color: #ddd; border-radius: 1rem; cursor: pointer; padding: 0 0.5rem; height: 1.5rem;" onclick="
+                document.getElementById('mushi').pause()
+                document.getElementById('mushi-button').innerHTML = '⏵';
+                if (document.getElementById('gordian').paused) {
+                    document.getElementById('gordian').play()
+                    document.getElementById('gordian-button').innerHTML = '⏸';
+                } else {
+                    document.getElementById('gordian').pause()
+                    document.getElementById('gordian-button').innerHTML = '⏵';
+                }
+            ">
+                <div style="line-height: 1.5rem; height: 1.5rem; padding: 0; font-size: 0.75rem; margin-left: 0.25rem;"><a href="https://chipscompo.com/entry/3044" style="color: #f3d52e">gordian</a></div>
+                <div id="gordian-button" class="audio-player-button" style="margin-left: auto; text-align: center; transform: translateY(-0.09rem);">⏵</div>
+            </div>
+            <div style="display: flex;">
+                <input id="gordian-time" class="audio-player-time" type="range" min="0.0" max="1.0" value="0.0" step="0.0001">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: start;">
+                <span style="display: flex; color: #222; font-weight: 900; margin-left: 0.75rem; margin-right: 0.25rem; text-align: center; transform: translateY(-0.09rem);">
+                    🕪
+                </span>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <input id="gordian-audio" class="audio-player-volume" type="range" min="0" max="100" value="75">
+                </div>
+                <span id="gordian-timestamp" style="color: #ddd; background-color: #222; border-radius: 1rem; padding: 0 0.5rem; font-weight: 500; font-family: monospace; font-size: 0.75rem; margin-right: 0.75rem; margin-left: auto;">0:00 / x:xx</span>
+            </div>
+            <script>
+                var lastTime = 0.0;
+                document.getElementById('gordian').volume = 0.75;
+                document.getElementById('gordian').addEventListener('durationchange', (e) => {
+                    let currentTime = document.getElementById('gordian').currentTime;
+                    let duration = document.getElementById('gordian').duration;
+                    if (lastTime != currentTime) {
+                        document.getElementById('gordian-time').value = currentTime / duration;
+                        document.getElementById('gordian-timestamp').innerHTML = 
+                            Math.floor(currentTime / 60) + ":" + String(Math.floor(currentTime % 60)).padStart(2, '0')
+                            + " / "
+                            + Math.floor(duration / 60) + ":" + String(Math.floor(duration % 60)).padStart(2, '0');
+                    }
+                    lastTime = currentTime;
+                })
+                document.getElementById('gordian').addEventListener('timeupdate', (e) => {
+                    let currentTime = document.getElementById('gordian').currentTime;
+                    let duration = document.getElementById('gordian').duration;
+                    if (lastTime != currentTime) {
+                        document.getElementById('gordian-time').value = currentTime / duration;
+                        document.getElementById('gordian-timestamp').innerHTML = 
+                            Math.floor(currentTime / 60) + ":" + String(Math.floor(currentTime % 60)).padStart(2, '0')
+                            + " / "
+                            + Math.floor(duration / 60) + ":" + String(Math.floor(duration % 60)).padStart(2, '0');
+                    }
+                    lastTime = currentTime;
+                })
+
+                document.getElementById('gordian-audio').addEventListener('change', (e) => {
+                    document.getElementById('gordian').volume = e.currentTarget.value / 100;
+                })
+                document.getElementById('gordian-audio').addEventListener('input', (e) => {
+                    document.getElementById('gordian').volume = e.currentTarget.value / 100;
+                })
+
+                document.getElementById('gordian-time').addEventListener('change', (e) => {
+                    document.getElementById('gordian').currentTime = e.currentTarget.value * document.getElementById('gordian').duration;
+                })
+                document.getElementById('gordian-time').addEventListener('input', (e) => {
+                    document.getElementById('gordian').currentTime = e.currentTarget.value * document.getElementById('gordian').duration;
+                })
+            </script>
+        </div>
+    </div>
+
+    <br>
+
+    <p>
+        You can find...
+        <ul>
+            <li>my most recent work on <a href="https://chipscompo.com/user/Zechnition">Chips Compo</a> (my favourite website)</li>
+            <li>some of my older work & competitions I've entered on <a href="https://zechnition.newgrounds.com/">newgrounds</a></li>
+            <li>the kinds of music I like on <a href="https://soundcloud.com/zechnition">soundcloud</a></li>
+        </ul>
+    
+        <br>
+
+        I've also judged several competitions such as <a href="https://www.newgrounds.com/bbs/topic/1508576/4#bbspost27475096_post_text">NGUAC 2022</a> (normal competition) and <a href="https://www.newgrounds.com/bbs/topic/1526849">AIM 2023</a> (art inspired music), both of which regularly get at least a hundred submissions.
+    </p>
+
+    <h2>Photos</h2>
+    <p>nothing here yet...</p>
+    <br>
+
+    <h2>Drawings</h2>
+    <p>I often do pixel art, but there's nothing I'm super proud of here yet...</p>
+    <br>
+        
+    <h2>Baking</h2>
+    <p>The following are some recipes I like making!</p>
+    <br>
+        
+    <style>
+    .baking-card {
+        background-color: var(--dark-blue);
+        padding: 12px;
+        border-radius: 12px;
+    }
+    .baking-card .top-container {
+        display: flex;
+        flex-direction: row;
+        
+        margin-bottom: 4px;
+    }
+    .baking-card .top-container .title {
+        display: inline-block;
+    
+        color: var(--white);
+        background-color: var(--brown);
+    
+        padding: 2px 12px;
+        margin-right: 4px;
+        
+        border-radius: 4px;
+    }
+    .baking-card .top-container .link {
+        margin-top: 2px;
+        margin-left: auto;
+    }
+    .baking-card .desc {
+        margin-bottom: 8px;
+        
+        color: var(--soft-front-2);
+    }
+    .baking-card .ingredients {
+        margin-bottom: 8px;
+    }
+    </style>
+    
+    <div id="geb-buns" class="baking-card">
+        <div class="top-container">
+            <div class="title">Geb Buns</div>
+            <a class="link" href="https://youtu.be/ugmJkv6Skng">video here (slightly modified)</a>
+        </div>
+        <div class="desc">A recipie for pretzel buns that are soft and not knotted.</div>
+        
+        <b>Ingredients</b>
+        <ul class="ingredients">
+            <li>1.5 cups water</li>
+            <li>4 tbsp brown sugar</li>
+            <li>1 tbsp butter</li>
+            <li>1.25 tsp yeast</li>
+            <li>1 tsp salt</li>
+            <li>3.125 cups flour</li>
+            <li>1 tsp olive oil</li>
+            <hr>
+            <li>4.5 cups water</li>
+            <li>1 tsp baking soda</li>
+            <hr>
+            <li>1 tbsp butter</li>
+            <li>some coarse grain salt</li>
+        </ul>
+        
+        <b>Instructions</b>
+        <ol class="instructions">
+            <li>
+                Put water, brown sugar, and 1 tbsp butter (half) in a bowl & mix. Ensure butter is liquid and water is warm. You want the temperature of the liquid to just barely NOT burn your finger.
+            </li>
+            <li>
+                Add yeast to the liquid. Add salt after.
+            </li>
+            <li>
+                Add all flour. Mix in 1 cup at a time.
+            </li>
+            <li>
+                Knead for 15-30 mins.
+            </li>
+            <li>
+                Put dough in bowl, then add olive oil. Coat the dough ball with the oil.
+            </li>
+            <li>
+                Leave the dough in a warm place (100-140 F) for 1-2 hours, or until doubled.
+            </li>
+            <li>
+                Cut dough into 12 pieces, then form balls by pinching.
+            </li>
+            <li>
+                Fill a pot with 4.5 cups of water and 1 tsp baking soda, then bring to a boil.
+            </li>
+            <li>
+                Put buns in the pot 3 at a time for 30s on each side.
+            </li>
+            <li>
+                For each bun, cut a hole on the top using scissors, add a small amount of melted butter, then sprinkle coarse salt.
+            </li>
+            <li>
+                Bake in an oven for 20 minutes at 400 F.
+            </li>
+        <ol>
+    </div>
+</article>
+{% endblock content %}
