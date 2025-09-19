@@ -1,0 +1,172 @@
+{
+    "music": {
+        "albums": {
+            "kind": "text",
+            "properties": ["collapsible"],
+            "text": "oops, nothing here yet~"
+        },
+        "misc": {
+            "kind": "music",
+            "properties": ["collapsible"],
+            "items": [
+                {
+                    "title": "boop",
+                    "slug": "boop",
+                    "original_source": null,
+                    "other_sources": [],
+                    "colour": "#4d4eb3",
+                    "tags": [ "song", "chiptune", "calm", "loops", "boop", "space" ]
+                },
+                {
+                    "title": "a walk with a stick",
+                    "slug": "a-walk-with-a-stick",
+                    "original_source": "https://chipscompo.com/entry/3044",
+                    "other_sources": [],
+                    "colour": "#74c99e",
+                    "tags": [ "song", "calm", "forest", "stick" ]
+                },
+                {
+                    "title": "Gordian",
+                    "slug": "gordian",
+                    "original_source": "https://chipscompo.com/entry/3167",
+                    "other_sources": [
+                        { "link": "https://www.newgrounds.com/audio/listen/1339075", "reason": "improved the mix" }
+                    ],
+                    "colour": "#eaaa56",
+                    "tags": [ "song", "chiptune", "intense" ]
+                }
+            ]
+        }
+    },
+    "photography": {
+        "lens": {
+            "kind": "images",
+            "properties": ["collapsible"],
+            "items": []
+        },
+        "shake": {
+            "kind": "images",
+            "properties": ["collapsible"],
+            "items": []
+        }
+    },
+    "pixel-art": {
+        "game_dev_club": {
+            "kind": "images",
+            "properties": ["collapsible"],
+            "items": [
+                {
+                    "url": "/images/art/game-dev-fall-2023.png",
+                    "desc": "A flair image inspired by 'a short hike' for when we started up biweekly meetings again",
+                    "date": "2023-09-28"
+                },
+                {
+                    "url": "/images/art/gdc-mountain-banner-vertical.png",
+                    "desc": "Our club's banner. The mountain represents Burnaby mountain, where the club resides",
+                    "date": "2022-12-12"
+                },
+                {
+                    "url": "/images/art/wide-2.png",
+                    "desc": "Our club's banner, aligned in a horizontally",
+                    "date": "2022-12-12"
+                },
+                {
+                    "url": "/images/art/generic-meeting-4.png",
+                    "desc": "A graphic for the fourth 'generic meeting', based on hollow knight's interface",
+                    "date": "2024-07-21"
+                },
+                {
+                    "url": "/images/art/long-logo-neo-2.png",
+                    "desc": "One of the first logos I made for the club. Initially I wanted it to be a series of waves, but I noticed they looked more like scales!",
+                    "date": "2021-08-17"
+                },
+                {
+                    "url": "/images/art/sgdc-fps-logo.png",
+                    "desc": "Made for an FPS Unity tutorial, but it got reused quite a bit",
+                    "date": "2022-05-06"
+                },
+                {
+                    "url": "/images/art/logo-sword-circle-4-fixed.png",
+                    "desc": "I got into the habit of seasonally updating our club's logo. This one was inspired by Kimetsu no Yaiba, as a sword with a trail of fire behind it",
+                    "date": "2022-05-06"
+                },
+                {
+                    "url": "/images/art/gm8_planet_only.png",
+                    "desc": "Perhaps you can tell I like drawing little planets",
+                    "date": "2024-11-4"
+                }
+            ]
+        },
+        "misc": {
+            "kind": "images",
+            "items": [
+                {
+                    "url": "/images/art/not-celeste.png",
+                    "desc": "An 8x8 tileset which recreates the aesthetic of Celeste's first area",
+                    "date": "2024-09-10"
+                }
+            ]
+        }
+    },
+    "baking": {
+        "kind": "links",
+        "items": [
+            {
+                "name": "Geb Buns",
+                "url": "/recipes/geb_buns",
+                "tags": [ "recipe" ]
+            },
+            {
+                "name": "Chili Oil",
+                "url": "/recipes/chili_oil",
+                "tags": [ "recipe" ]
+            }
+        ]
+    },
+    "brewing": {
+        "tools": {
+            "kind": "text",
+            "text": "oops, nothing here yet"
+        },
+        "journal": {
+            "kind": "table",
+            "items": [
+                {
+                    "name": "Apple Juice Cider",
+                    "slug": "/apple_juice_cider",
+                    "start_date": "",
+                    "tags": [ "recipe" ]
+                },
+                {
+                    "name": "Rocket Fuel"
+                },
+                {
+                    "name": "Salmonberry Wine"
+                },
+                {
+                    "name": "Mixed-berry Strong Wine"
+                }
+            ]
+        }
+    },
+    "growing" : {
+        "kind": "links",
+        "items": [
+            {
+                "name": "Spring 2024 Hops",
+                "url": "/",
+                "tags": []
+            },
+            {
+                "name": "CSSS Garden",
+                "url": "/",
+                "tags": []
+            },
+            {
+                "name": "Apple Seeds",
+                "url": "/",
+                "tags": []
+            }
+        ]
+    }
+}

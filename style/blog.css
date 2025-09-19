@@ -1,0 +1,206 @@
+/* --------- meta-blog-page --------- */
+
+.blog-post-card {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+    border: solid 0 #13102c; /* --star-trans over --black */
+    box-shadow: 0px 0px 1px var(--space);
+
+    overflow: hidden;
+
+    transition: box-shadow 0.21s ease-out, color 0.075s ease-out;
+}
+.blog-post-card:hover {
+    box-shadow: 0px 0px 8px var(--stars);
+    text-decoration: none;
+}
+.blog-post-card > .card-number {
+    width: 4.5em;
+    padding: 8px 8px;
+
+    font-family: 'Lato', 'ASAP', sans-serif;
+    font-size: 0.85em;
+    font-weight: 500;
+
+    color: var(--white);
+
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+
+    background-color: var(--stars);
+}
+.blog-post-card > .card-number > span {
+    white-space: nowrap;
+}
+.blog-post-card > .card-contents {
+    width: 100%;
+    padding: 8px 8px 8px 16px;
+
+    background-color: var(--black);
+}
+.blog-post-card > .card-contents > .title {
+    /*display: block;*/
+
+    margin-right: 4px;
+
+    font-family: 'Lato', 'ASAP', sans-serif;
+    font-size: 1.0em;
+    font-weight: 700;
+
+    transition: color 0.15s ease-out;
+}
+.blog-post-card:hover .card-contents .title {
+    color: var(--stars-on-black);
+
+    text-decoration: underline solid var(--stars-on-black-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+.blog-post-card > .card-contents > .desc {
+    color: var(--soft-grey);
+}
+
+/* --------- photo-blog --------- */
+
+.smaller-column-container {
+    max-width: 600px;
+    width: calc(100% - 60px - 60px);
+    margin: auto;
+}
+@media screen and (max-width: 600px),
+       screen and (max-device-width: 1000px) {
+    .smaller-column-container {
+        width: calc(100% - 30px - 30px);
+    }
+}
+
+.name {
+    display: block;
+
+    margin: 4px auto 4px 4px;
+    
+    font-weight: 600;
+
+    color: var(--soft-yellow);
+}
+.name > a {
+    color: var(--soft-yellow);
+}
+.name > a:hover {
+    text-decoration: underline solid var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.left-bubble {
+    display: flex;
+}
+.left-bubble > .text {
+    display: block;
+
+    margin: 0 auto 8px 0;
+    padding: 8px 14px;
+    border-radius: 14px 14px 14px 0;
+
+    font-size: 14px;
+
+    color: var(--white);
+    background-color: var(--stars);
+}
+.left-bubble > div > .photos {
+    display: flex;
+    flex-direction: row;
+
+    overflow-x: scroll;
+
+    max-width: 450px;
+    width: 100%;
+}
+.left-bubble > div > .photos::-webkit-scrollbar {
+    height: 8px;
+}
+.left-bubble > div > .photos::-webkit-scrollbar-track {
+    background: var(--stars);
+}
+.left-bubble > div > .photos::-webkit-scrollbar-thumb {
+    background-color: var(--soft-yellow);
+    border-radius: 8px;
+}
+.left-bubble > div > .photos > img {
+    max-width: 450px;
+    width: 100%;
+}
+
+.right-bubble {
+    display: flex;
+}
+.right-bubble > div {
+    display: block;
+
+    margin: 0 0 8px auto;
+    padding: 8px 14px;
+    border-radius: 14px 14px 0 14px;
+
+    font-size: 14px;
+
+    color: var(--white);
+    background-color: var(--dark-blue);
+}
+.right-bubble > div > .photos {
+    display: flex;
+    flex-direction: row;
+
+    overflow-x: scroll;
+
+    max-width: 450px;
+    width: 100%;
+}
+.right-bubble > div > .photos::-webkit-scrollbar {
+    height: 8px;
+}
+.right-bubble > div > .photos::-webkit-scrollbar-track {
+    background: var(--stars);
+}
+.right-bubble > div > .photos::-webkit-scrollbar-thumb {
+    background-color: var(--soft-yellow);
+    border-radius: 8px;
+}
+.right-bubble > div > .photos > img {
+    max-width: 450px;
+}
+.right-bubble a {
+    color: var(--yellow);
+}
+.right-bubble a:hover {
+    text-decoration: underline solid var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.right-photo-bubble {
+    display: flex;
+}
+.right-photo-bubble > img {
+    margin: 0 0 8px auto;
+    border-radius: 14px 14px 0 14px;
+    max-width: 450px;
+    width: 100%;
+}
+
+.middle-text {
+    display: flex;
+}
+.middle-text > div {
+    display: inline-block;
+    
+    margin: 16px auto;
+    margin-top: calc(16px - 8px);
+    font-size: 14px;
+
+    color: var(--soft-grey-2);
+}
