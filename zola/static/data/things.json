@@ -57,42 +57,42 @@
             "items": [
                 {
                     "url": "/images/art/game-dev-fall-2023.png",
-                    "title": "A flair image inspired by 'a short hike' for when we started up biweekly meetings again",
+                    "desc": "A flair image inspired by 'a short hike' for when we started up biweekly meetings again",
                     "date": "2023-09-28"
                 },
                 {
                     "url": "/images/art/gdc-mountain-banner-vertical.png",
-                    "title": "Our club's banner. The mountain represents Burnaby mountain, where the club resides",
+                    "desc": "Our club's banner. The mountain represents Burnaby mountain, where the club resides",
                     "date": "2022-12-12"
                 },
                 {
                     "url": "/images/art/wide-2.png",
-                    "title": "Our club's banner, aligned in a horizontally",
+                    "desc": "Our club's banner, aligned in a horizontally",
                     "date": "2022-12-12"
                 },
                 {
                     "url": "/images/art/generic-meeting-4.png",
-                    "title": "A graphic for the fourth 'generic meeting', based on hollow knight's interface",
+                    "desc": "A graphic for the fourth 'generic meeting', based on hollow knight's interface",
                     "date": "2024-07-21"
                 },
                 {
                     "url": "/images/art/long-logo-neo-2.png",
-                    "title": "One of the first logos I made for the club. Initially I wanted it to be a series of waves, but I noticed they looked more like scales!",
+                    "desc": "One of the first logos I made for the club. Initially I wanted it to be a series of waves, but I noticed they looked more like scales!",
                     "date": "2021-08-17"
                 },
                 {
                     "url": "/images/art/sgdc-fps-logo.png",
-                    "title": "Made for an FPS Unity tutorial, but it got reused quite a bit",
+                    "desc": "Made for an FPS Unity tutorial, but it got reused quite a bit",
                     "date": "2022-05-06"
                 },
                 {
-                    "url": "/images/art/logo-sword-circle-4-big.png",
-                    "title": "I got into the habit of seasonally updating our club's logo. This one was inspired by Kimetsu no Yaiba, as a sword with a trail of fire behind it",
+                    "url": "/images/art/logo-sword-circle-4-fixed.png",
+                    "desc": "I got into the habit of seasonally updating our club's logo. This one was inspired by Kimetsu no Yaiba, as a sword with a trail of fire behind it",
                     "date": "2022-05-06"
                 },
                 {
-                    "url": "/images/art/gm8_plant_only.png",
-                    "title": "Perhaps you can tell I like drawing little planets",
+                    "url": "/images/art/gm8_planet_only.png",
+                    "desc": "Perhaps you can tell I like drawing little planets",
                     "date": "2024-11-4"
                 }
             ]
@@ -102,7 +102,7 @@
             "items": [
                 {
                     "url": "/images/art/not-celeste.png",
-                    "title": "An 8x8 tileset which recreates the aesthetic of Celeste's first area",
+                    "desc": "An 8x8 tileset which recreates the aesthetic of Celeste's first area",
                     "date": "2024-09-10"
                 }
             ]

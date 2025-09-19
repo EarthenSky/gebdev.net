@@ -165,6 +165,70 @@ function generateLinkItems(json_list, depth) {
     return link_items;
 }
 
+function generateImageItems(json_list) {
+    // TODO: add explicit w/h
+    let margin = 2;
+    let border = 2;
+    let size = 5.2 * CELL_SIZE - margin * 2 - 2 * border;
+
+    let image_items = [];
+    for (const json of json_list) {
+        let outer_text = document.createElement("span");
+        //outer_text.style.marginTop = "auto";
+        outer_text.style.fontSize = "0.85em";
+        outer_text.style.width = 4 * CELL_SIZE + "px"; // is only default!
+        outer_text.style.margin = "4px 4px 0 0";
+        outer_text.style.textWrap = "nowrap";
+        outer_text.style.overflow = "hidden";
+        outer_text.style.textOverflow = "ellipsis";
+        outer_text.style.color = "var(--soft-grey-2)";
+        outer_text.innerHTML = json["url"];
+
+        // TODO: in a new layer
+        /* let expand_icon = document.createElement("img");
+        expand_icon.src = "/icons/arrow-expand.svg"; 
+        expand_icon.style.width  = CELL_SIZE + "px";
+        expand_icon.style.height = CELL_SIZE + "px";
+        expand_icon.style.display = "relative";
+        expand_icon.style.filter = "var(--stars-on-black-filter)";
+        */
+
+        let image = document.createElement("img");
+        //image.style.minWidth = 4 * CELL_SIZE + "px";
+        image.style.height = size + "px";
+        image.style.objectFit = "cover";
+        image.style.borderWidth = border + "px";
+        image.style.borderRadius = "4px";
+        image.style.backgroundColor = "var(--invisible)";
+        image.classList.add("image-item");
+        image.src = json["url"];
+
+        let correctWidth = _ => {
+            let correction = 0;
+            if (image.naturalWidth)
+            outer_text.style.width = (size * (image.naturalWidth / image.naturalHeight)) + "px";
+        };
+        image.addEventListener('load', correctWidth);
+        if (image.complete && image.naturalWidth !== 0)
+            correctWidth();
+
+        let item = document.createElement("div");
+        item.style.display = "flex";
+        item.style.flexDirection = "column";
+        item.style.height = 6 * CELL_SIZE + "px";
+        item.style.margin = margin + "px";
+        item.style.overflowX = "hidden";
+
+        item.appendChild(image);
+        item.appendChild(outer_text);
+
+        // TODO: add support for playing the music
+
+        image_items.push(item);
+    }
+    return image_items;
+}
+
 // --------------------------------------------------------- //
 
 function generateRows(depth, json) {
@@ -221,21 +285,33 @@ function generateRows(depth, json) {
                 let music_container = document.createElement("div");
                 music_container.style.display = "flex";
                 music_container.style.flexDirection = "row";
+                music_container.style.flexWrap = "wrap";
                 music_container.style.width = "100%";
                 music_container.style.marginLeft = ((depth+1) * 25) + "px";
 
-                for (let item of generateMusicItems(value["items"]))
+                for (const item of generateMusicItems(value["items"]))
                     music_container.appendChild(item);
 
                 // TODO: deal with the lines on the RHS
                 rows_container.appendChild(music_container);
 
             } else if (value["kind"] == "links") {
-                for (let item of generateLinkItems(value["items"], depth+1))
+                for (const item of generateLinkItems(value["items"], depth+1))
                     rows_container.appendChild(item);
 
-            } else if (value["kind"] == "art") {
-            
+            } else if (value["kind"] == "images") {
+                let image_container = document.createElement("div");
+                image_container.style.display = "flex";
+                image_container.style.flexDirection = "row";
+                image_container.style.flexWrap = "wrap";
+                image_container.style.width = "100%";
+                image_container.style.marginLeft = ((depth+1) * 25) + "px";
+
+                for (const item of generateImageItems(value["items"]))
+                    image_container.appendChild(item);
+
+                // TODO: deal with the lines on the RHS
+                rows_container.appendChild(image_container);
             }
 
         }
