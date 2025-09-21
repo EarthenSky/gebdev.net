@@ -169,32 +169,13 @@ function generateImageItems(json_list) {
     // TODO: add explicit w/h
     let margin = 2;
     let border = 2;
-    let size = 5.2 * CELL_SIZE - margin * 2 - 2 * border;
+    let size = 5 * CELL_SIZE - margin * 2 - 2 * border;
 
     let image_items = [];
     for (const json of json_list) {
-        let outer_text = document.createElement("span");
-        //outer_text.style.marginTop = "auto";
-        outer_text.style.fontSize = "0.85em";
-        outer_text.style.width = 4 * CELL_SIZE + "px"; // is only default!
-        outer_text.style.margin = "4px 4px 0 0";
-        outer_text.style.textWrap = "nowrap";
-        outer_text.style.overflow = "hidden";
-        outer_text.style.textOverflow = "ellipsis";
-        outer_text.style.color = "var(--soft-grey-2)";
-        outer_text.innerHTML = json["url"];
-
-        // TODO: in a new layer
-        /* let expand_icon = document.createElement("img");
-        expand_icon.src = "/icons/arrow-expand.svg"; 
-        expand_icon.style.width  = CELL_SIZE + "px";
-        expand_icon.style.height = CELL_SIZE + "px";
-        expand_icon.style.display = "relative";
-        expand_icon.style.filter = "var(--stars-on-black-filter)";
-        */
-
         let image = document.createElement("img");
-        //image.style.minWidth = 4 * CELL_SIZE + "px";
+        image.style.gridRow = "1";
+        image.style.gridColumn = "1";
         image.style.height = size + "px";
         image.style.objectFit = "cover";
         image.style.borderWidth = border + "px";
@@ -204,27 +185,61 @@ function generateImageItems(json_list) {
         image.src = json["url"];
 
         let correctWidth = _ => {
-            let correction = 0;
-            if (image.naturalWidth)
             outer_text.style.width = (size * (image.naturalWidth / image.naturalHeight)) + "px";
         };
         image.addEventListener('load', correctWidth);
         if (image.complete && image.naturalWidth !== 0)
             correctWidth();
 
-        let item = document.createElement("div");
-        item.style.display = "flex";
-        item.style.flexDirection = "column";
-        item.style.height = 6 * CELL_SIZE + "px";
-        item.style.margin = margin + "px";
-        item.style.overflowX = "hidden";
+        let expand_icon = document.createElement("img");
+        expand_icon.src = "/icons/arrow-expand.svg";
+        expand_icon.style.gridRow = "1";
+        expand_icon.style.gridColumn = "1";
+        expand_icon.style.margin = "auto auto auto auto";
+        expand_icon.style.width  = "25px";
+        expand_icon.style.height = "25px";
+        expand_icon.style.filter = `
+            var(--white-on-black-filter)
+            drop-shadow( 0   0    5px black)
+            drop-shadow( 0   0    3px #000000aa)
+        `;
+        expand_icon.classList.add("expand-icon");
 
-        item.appendChild(image);
-        item.appendChild(outer_text);
+        let image_container = document.createElement("div");
+        image_container.style.display = "grid";
+        image_container.style.flexDirection = "column";
+        image_container.style.height = 5 * CELL_SIZE - 2 * margin + "px"; // is only the default!
+        image_container.style.margin = margin + "px";
+        image_container.style.overflowX = "hidden";
+        image_container.classList.add("image-container");
+        image_container.appendChild(image);
+        image_container.appendChild(expand_icon);
 
-        // TODO: add support for playing the music
+        let outer_text = document.createElement("span");
+        outer_text.style.fontSize = "0.85em";
+        outer_text.style.width = 4 * CELL_SIZE + "px"; // is only the default!
+        outer_text.style.height = 1 * CELL_SIZE + "px";
+        outer_text.style.margin = "0px 4px 0 4px";
+        outer_text.style.textWrap = "nowrap";
+        outer_text.style.overflow = "hidden";
+        outer_text.style.lineHeight = 1 * CELL_SIZE + "px";
+        outer_text.style.minWidth = "0";
+        outer_text.style.textOverflow = "ellipsis";
+        outer_text.style.color = "var(--soft-grey-2)";
+        outer_text.innerHTML = json["url"].split("/").slice(-1)[0];
 
-        image_items.push(item);
+        // TODO: on click, hide everything in parent container except this item, then show
+
+        let image_layer = document.createElement("div");
+        image_layer.style.display = "flex";
+        image_layer.style.flexDirection = "column";
+        image_layer.style.height = 6 * CELL_SIZE + "px";
+        image_layer.style.margin = margin + "px";
+        image_layer.style.overflowX = "hidden";
+        image_layer.appendChild(image_container);
+        image_layer.appendChild(outer_text);
+
+        image_items.push(image_layer);
     }
     return image_items;
 }

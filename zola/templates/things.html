@@ -97,6 +97,13 @@
         margin-left: 4px;
         width: 25px;
         height: 25px;
+        transform: scale(1);
+    }
+    .icon-item:hover {
+        transform: scale(0.9);
+    }
+    .icon-item:active {
+        transform: scale(1.05);
     }
 
     .music-item {
@@ -124,14 +131,23 @@
         border-radius: 2px;
     }
 
-    .image-item {
+    .image-container {
         cursor: pointer;
+    }
+    .image-container .image-item {
         border-color: var(--space);
         border-style: solid;
-        transition: border-color 0.15s ease-out;
+        transition: border-color 0.20s ease-out;
     }
-    .image-item:hover {
+    .image-container:hover .image-item {
         border-color: var(--stars);
+    }
+    .image-container .expand-icon {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .image-container:hover .expand-icon {
+        opacity: 1.0;
     }
 
 </style>
