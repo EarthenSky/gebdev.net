@@ -1,5 +1,10 @@
 /* --------- meta-blog-page --------- */
 
+a {
+    display: inline;
+    word-wrap: break-word;
+}
+
 .blog-post-card {
     display: flex;
     flex-direction: row;
@@ -102,6 +107,7 @@
 }
 .left-bubble > .text {
     display: block;
+    max-width: 75%;
 
     margin: 0 auto 8px 0;
     padding: 8px 14px;
@@ -141,6 +147,7 @@
 }
 .right-bubble > div {
     display: block;
+    max-width: 75%;
 
     margin: 0 0 8px auto;
     padding: 8px 14px;
@@ -191,6 +198,15 @@
     max-width: 450px;
     width: 100%;
 }
+
+/*.photo-container {
+    display: block;
+    flex-direction: row;
+
+    overflow-x: scroll;
+
+    flex
+}*/
 
 .middle-text {
     display: flex;
