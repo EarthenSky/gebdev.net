@@ -1,0 +1,140 @@
+/*
+    This file contains style for css cards
+*/
+
+.blog-card {
+    display: inline-block;
+
+    width: calc(100% - 16px * 2);
+    margin-bottom: 16px;
+    padding: 15px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.filled {
+    border: 1px solid var(--soft-green);
+    background-color: var(--soft-green);
+}
+.outline {
+    border: 1px solid var(--dark-green);
+    background-color: var(--space);
+}
+.blog-card.filled:hover {
+    border: 1px solid var(--soft-yellow);
+    background-color: var(--soft-yellow);
+
+    text-decoration: none;
+}
+.blog-card.outline:hover {
+    border: 1px solid var(--soft-yellow);
+
+    text-decoration: none;
+}
+.blog-card div {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+
+    margin-bottom: -2px;
+}
+.blog-card div h2 {
+    padding: 0;
+
+    font-family: Spectral;
+    font-weight: 600;
+    font-size: 32px;
+
+    transition: color 0.25s ease;
+}
+.filled div h2 {
+    color: var(--space);
+}
+.outline div h2 {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover div h2 {
+    color: var(--soft-yellow);
+}
+.blog-card div div {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: auto;
+}
+.blog-card div div div {
+    margin-left: auto;
+
+    font-weight: 400;
+    font-size: 0.8em;
+
+    text-align: right;
+
+    transition: color 0.25s ease;
+}
+.filled div div div {
+    color: var(--space);
+}
+.outline div div div {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover div div div {
+    color: var(--soft-yellow);
+}
+.blog-card span {
+    font-size: 1.0em;
+    font-weight: 400;
+
+    transition: color 0.25s ease;
+}
+.filled span {
+    color: var(--space);
+}
+.outline span {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover span {
+    color: var(--soft-yellow);
+}
+
+.file-browser-card {
+    display: inline-block;
+
+    padding: 11px;
+    margin-bottom: 16px;
+
+    border: 1px solid var(--soft-blue);
+    border-radius: 6px;
+
+    background-color: var(--soft-blue);
+
+    cursor: pointer;
+
+    transition: background-color 0.25s ease, border 0.25s ease;
+}
+.file-browser-card:hover {
+    border: 1px solid var(--blue);
+    background-color: var(--blue);
+
+    text-decoration: none;
+}
+.file-browser-card h3 {
+    padding: 0;
+
+    font-family: Spectral;
+    font-weight: 600;
+    font-size: 1.25em;
+
+    color: var(--space);
+
+    margin-bottom: -4px;
+}
+.file-browser-card span {
+    font-weight: 400;
+    font-size: 0.8em;
+    
+    color: var(--space);
+}

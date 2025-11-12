@@ -220,3 +220,14 @@ a {
 
     color: var(--soft-grey-2);
 }
+
+/* ---------- new blog page ---------- */
+
+.filter-item {
+    margin-left: 6px;
+    cursor: pointer;
+    transition: color 0.1s ease;
+}
+.filter-item:hover {
+    color: var(--softer-grey);
+}

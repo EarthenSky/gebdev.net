@@ -41,11 +41,13 @@
     /* -------- new --------- */
     --invisible: #ffffff00;
     --soft-blue-trans: #9dcdfc41;
+    --blue-trans: #4da6ff41;
     --soft-green-trans: #b3e99141;
     --soft-yellow-trans: #ffeda741;
     --stars-trans: #473b7841;
     --stars-on-black-trans: #8368bc41;
     --soft-purple-trans: #b38eea41;
+    --white-trans: #ffffeb41;
 
     --stars-on-black: #8368bc;
     --stars-on-black-filter: invert(49%) sepia(13%) saturate(2009%) hue-rotate(218deg) brightness(87%) contrast(81%);
@@ -53,9 +55,10 @@
     --warm-purple: #c25acd;
     --soft-purple: #b38eea;
 
-    --space: #272736;
+    --space: #262631; /*#272736;*/
     --stars: #473b78;
     --white: #ffffeb;
+    --softer-grey: #8789c4;
     --soft-grey-2: #6d6f94;
     --soft-grey: #5a5d5e;
     --black: #010112;

@@ -27,39 +27,106 @@
         </div>
     </section>
 
-    <section style="display: flex; flex-direction: row; justify-content: center; font-size: 1em;">
-        <ul style="padding: 16px;">
-            <li><a href="/blog" class="dark-link">blog</a></li>
-            <ul>
-                <li><a href="/blog/2025-hops" class="dark-link">spring 2025 hops</a></li>
-                <li><a href="/blog/slant-0" class="dark-link">slant[0]</a></li>
-                <li><a href="/blog/many-pictures" class="dark-link">many pictures</a></li>
-            </ul>
-        </ul>
+    <section style="display: flex; flex-direction: column; justify-content: center; font-size: 1em;">
+        <div>
+            <div 
+                style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
+            >
+                <div style="margin-right: 6px;">Blog</div>
+                <div style="margin-left: auto;">Filter:</div>
+                <div class="filter-item" style="text-decoration: underline;">newest</div>
+                <div class="filter-item">gardening</div>
+                <div class="filter-item">math</div>
+                <div class="filter-item">software</div>
+            </div>
 
-        <ul style="padding: 16px">
-            <li><a href="/things">everything</a></li>
-            <ul>
-                <li><a href="/things/gebby">music</a></li>
-                <li><a href="/things/photos">photography</a></li>
-                <li><a href="/things/pixel-art">pixel art</a></li>
-                <li><a href="/things/baking">baking</a></li>
-                <li><a href="/things/brewing">brewing</a></li>
-                <li><a href="/things/growing">growing</a></li>
-            </ul>
-        </ul>
+            <a href="/blog/2025-hops" class="blog-card filled">
+                <div>
+                    <h2>Spring 2025 Hops</h2>
+                    <div>
+                        <div>2025</div>
+                        <div>gardening, photos</div>
+                    </div>
+                </div>
+                <span>A photo blog about growing hops for the first time</span>
+            </a>
 
-        <ul style="padding: 16px">
-            <li><a href="/resume" class="green-link">please hire me?</a></li>
-            <li><a href="/portfolio" class="green-link">my portfolio</a></li>
-            <ul>
-                <li><a href="/portfolio#video-games" class="green-link">video games</a></li>
-                <li><a href="/portfolio#web-dev" class="green-link">web dev</a></li>
-            </ul>
-        </ul>
+            <a href="/blog/slant-0" class="blog-card outline">
+                <div>
+                    <h2>Slant [0]</h2>
+                    <div>
+                        <div>June 9, 2024</div>
+                        <div>math, puzzles, algorithms</div>
+                    </div>
+                </div>
+                <span>Understanding and solving a wild game of slashes</span>
+            </a>
+
+            <a href="/blog/many-pictures" class="blog-card outline">
+                <div>
+                    <h2>Many Pictures</h2>
+                    <div>
+                        <div>July 20, 2023</div>
+                        <div>software</div>
+                    </div>
+                </div>
+                <span>A screensaver using Pixabay's API to automagically scroll through images</span>
+            </a>
+        </div>
+
+        <div>
+            <div style="color: var(--soft-grey-2); margin: 6px 0; font-weight: 400; font-size: 0.95em;">File Browser</div>
+            <a class="file-browser-card" href="/gebby">
+                <h3>Music</h3>
+                <span>0 items</span>
+            </a>
+            <a class="file-browser-card" href="/photos">
+                <h3>Photography</h3>
+                <span>0 items</span>
+            </a>
+            <a class="file-browser-card" href="/pixel-art">
+                <h3>Pixel Art</h3>
+                <span>0 items</span>
+            </a>
+            <a class="file-browser-card" href="/baking">
+                <h3>Baking</h3>
+                <span>0 items</span>
+            </a>
+            <a class="file-browser-card" href="/brewing">
+                <h3>Brewing</h3>
+                <span>0 items</span>
+            </a>
+            <a class="file-browser-card" href="/growing">
+                <h3>Growing</h3>
+                <span>0 items</span>
+            </a>
+        </div>
+
+        <div>
+            <div style="color: var(--soft-grey-2); margin: 6px 0; font-weight: 400; font-size: 0.95em;">About me</div>
+
+            <div style="
+                background-color: var(--space);
+                width: calc(100% - 16px * 2);
+                padding: 15px;
+                border-radius: 6px;
+                margin-bottom: 16px;
+                border: 1px solid var(--dark-green);
+                display: flex;
+                flex-direction: column;
+            ">
+                <div style="font-weight: 400; font-size: 1em; color: var(--soft-green);">
+                    I'm having a lot of fun writing software at the moment. I've also got a fancy <a href="/resume">resume</a> and a <a href="/portfolio">portfolio</a>. The best place you can find me is on <a href="https://github.com/EarthenSky">GitHub</a>.
+                </div>
+
+                <a class="blue-link" href="/about" style="font-weight: 700; font-size: 1em; margin-left: auto;">
+                    More About
+                </a>
+            </div>
+        </div>
     </section>
 
-    <section style="display: flex; flex-direction: row; justify-content: center; margin-top: 32px; margin-bottom: 8px;">
+    <section style="display: flex; flex-direction: row; justify-content: center; margin-top: 32px; margin-bottom: 8px; flex-wrap: wrap;">
         <a href="https://wiki.debian.org/InstallingDebianOn/Microsoft/Windows/SubsystemForLinux">
             <img class="badge" src="images/badge/powered-by-debian.gif">
         </a>

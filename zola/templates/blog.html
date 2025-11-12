@@ -1,52 +1,56 @@
 {% extends "layouts/base.html" %}
 
 {% block style %}
-<link rel="stylesheet" href="/style/blog.css?v0.00">
 {% endblock style %}
 
 {% block title %} blog {% endblock %}
 
 {% block content %}
 <article>
-    <h2 style="padding: 0; margin: 0 0 24px 0; color: var(--soft-purple);">Blog</h2>
-
     <div class="posts">
-        <a class="blog-post-card" href="/blog/2025-hops">
-            <div class="card-contents">
-                <span class="title">Spring 2025 Hops</span>
-                <span class="desc">
-                    A photo blog growing hops for the first time!
-                </span>
+        <!-- TODO: implement this filter -->
+        <div 
+            style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
+        >
+            <div style="margin-right: 6px;">Blog</div>
+            <div style="margin-left: auto;">Filter:</div>
+            <div class="filter-item" style="text-decoration: underline;">newest</div>
+            <div class="filter-item">gardening</div>
+            <div class="filter-item">math</div>
+            <div class="filter-item">software</div>
+        </div>
+
+        <a href="/blog/2025-hops" class="blog-card filled">
+            <div>
+                <h2>Spring 2025 Hops</h2>
+                <div>
+                    <div>2025</div>
+                    <div>gardening, photos</div>
+                </div>
             </div>
-            <div class="card-number">
-                2025
-            </div>
+            <span>A photo blog about growing hops for the first time</span>
         </a>
 
-        <a class="blog-post-card" href="/blog/slant-0/">
-            <div class="card-contents">
-                <span class="title">Slant [0]</span>
-                <span class="desc">
-                    Understanding and solving a wild game filled with slashes
-                </span>
+        <a href="/blog/slant-0" class="blog-card outline">
+            <div>
+                <h2>Slant [0]</h2>
+                <div>
+                    <div>June 9, 2024</div>
+                    <div>math, puzzles, algorithms</div>
+                </div>
             </div>
-            <div class="card-number">
-                <span>June 9</span>
-                2024
-            </div>
+            <span>Understanding and solving a wild game of slashes</span>
         </a>
 
-        <a class="blog-post-card" href="/blog/many-pictures/">
-            <div class="card-contents">
-                <span class="title">Many Pictures</span>
-                <span class="desc">
-                    A screensaver website that uses Pixabay's public API to automagically scroll through images
-                </span>
+        <a href="/blog/many-pictures" class="blog-card outline">
+            <div>
+                <h2>Many Pictures</h2>
+                <div>
+                    <div>July 20, 2023</div>
+                    <div>software</div>
+                </div>
             </div>
-            <div class="card-number">
-                <span>July 20</span>
-                2023
-            </div>
+            <span>A screensaver using Pixabay's API to automagically scroll through images</span>
         </a>
 
         <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->

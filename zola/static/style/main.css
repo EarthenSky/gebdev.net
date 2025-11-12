@@ -113,6 +113,16 @@ a:hover {
     text-decoration-thickness: 2px;
 }
 
+.white-link {
+    color: white;
+}
+.white-link:hover {
+    color: var(--white-purple);
+    text-decoration: underline solid var(--white-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
 hr {
     border-color: var(--front-soft);
 }
