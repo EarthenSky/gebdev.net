@@ -25,7 +25,7 @@ tags=["osh", "linux"]
 .question div {
     padding: 10px 14px;
     margin-left: 6px;
-    margin-right: 64px;
+    margin-right: 32px;
 
     border-radius: 12px 12px 12px 0;
 
@@ -43,7 +43,7 @@ tags=["osh", "linux"]
     flex-direction: row;
 
     margin-top: 12px;
-    margin-left: calc(64px + 6px);
+    margin-left: calc(3em + 6px + 32px);
 }
 .answer div {
     padding: 10px 14px;
@@ -59,6 +59,18 @@ tags=["osh", "linux"]
     padding: 0;
     color: var(--yellow);
     background-color: transparent;
+}
+@media screen and (max-width: 600px),
+       screen and (max-device-width: 1000px) {
+    .question img {
+        height: 0;
+    }
+    .question div {
+        margin-left: 0;
+    }
+    .answer {
+        margin-left: calc(32px);
+    }
 }
 
 .collapsible-answer {
@@ -102,23 +114,21 @@ It reminded me how `PATH` can be the ultimate compatibility ruiner. If you haven
 
 But if `PATH` is truly so important for compatibility, why can't different shells agree on this small example?
 
-```sh
-$ env -i /bin/mksh -c "echo \$PATH"
-/bin:/usr/bin
+<pre><code>$ env -i /bin/mksh -c <string>"echo \$PATH"</string>
+<comment>/bin:/usr/bin</comment>
 
-$ env -i /bin/zsh -c "echo \$PATH"
-/bin:/usr/bin:/usr/ucb:/usr/local/bin
-# this one is weird because it changes based on the platform
+$ env -i /bin/zsh -c <string>"echo \$PATH"</string>
+<comment>/bin:/usr/bin:/usr/ucb:/usr/local/bin</comment>
 
-$ env -i /bin/ash -c "echo \$PATH"
-/sbin:/usr/sbin:/bin:/usr/bin
+$ env -i /bin/ash -c <string>"echo \$PATH"</string>
+<comment>/sbin:/usr/sbin:/bin:/usr/bin</comment>
 
-$ env -i /bin/bash -c "echo \$PATH"
-/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.
+$ env -i /bin/bash -c <string>"echo \$PATH"</string>
+<comment>/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.</comment>
 
-$ env -i /bin/sh -c "echo \$PATH"
-/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-```
+$ env -i /bin/sh -c <string>"echo \$PATH"</string>
+<comment>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</comment>
+</code></pre>
 
 What's going on above is
 
@@ -164,7 +174,7 @@ Per `bash`'s [reference manual](https://www.gnu.org/software/bash/manual/bash.ht
 <div class="question" style="margin-bottom: 16px;">
     <img src="/images/profiles/default3.png">
     <div>
-        Why <code>/usr/bin</code>? Just <code>/bin</code> sounds like it would be simpler.
+        Why is <code>gcc</code> in <code>/usr/bin</code>? Just <code>/bin</code> sounds like it would be simpler.
     </div>
 </div>
 
@@ -172,7 +182,7 @@ To answer this question, we're first assuming you're on a Linux system. But even
 
 ### `/bin` and `/usr/bin`
 
-According to FHS, `/bin` is for **programs that may be used by anyone**, but which are required when no other filesystems are mounted. On the other hand, `/usr/bin` is the primary directory for executable commands on the system.
+According to FHS, `/bin` is for **programs that may be used by anyone**, but which are required when no other filesystems are mounted. `/usr/bin` is just the primary directory for executable commands on the system.
 
 On Debian `/bin` is a symlink to `/usr/bin`, which sounds like a good call.
 
@@ -200,7 +210,7 @@ On Debian `/bin` is a symlink to `/usr/bin`, which sounds like a good call.
 
 ### `/sbin` and `/usr/sbin`
 
-`/usr/sbin` is for binaries used exclusively by the system administrator. Just like before, `/sbin` is typically symlink to `/usr/sbin`. This directory consists of commands for configuring the system, like `adduser`, `chroot`, or `ip`.
+`/usr/sbin` is for binaries **used exclusively by the system administrator**. Just like before, `/sbin` is typically a symlink to `/usr/sbin`. This directory consists of commands for configuring the system, like `adduser`, `chroot`, or `ip`.
 
 ### `/usr/local/bin` and `/usr/local/sbin`
 
@@ -208,9 +218,9 @@ FHS recommends placing locally installed software in `/usr/local/bin` and `/usr/
 
 ### `/usr/ucb`
 
-A weird directory to be built-in to `zsh`.
+An unexpected directory to be built-in to `zsh`'s default `PATH`.
 
-FHS does not specify `/ucb` anywhere, because it's a convention on BSD! Apparently `ucb` stands for "University of California, Berkeley" where BSD originated, and the directory was intended for compatibility with tools developed for BSD systems. Although `/bin/ucb` seems to have been deprecated in some BSD systems [since as early as 1993](https://docs-archive.freebsd.org/44doc/smm/01.setup/paper.pdf), which may be part of the reason is doesn't appear in FHS.
+FHS does not specify `/ucb` anywhere, because it's a convention on BSD! Apparently `ucb` stands for "University of California, Berkeley" where BSD originated, and the directory was **intended for compatibility with tools developed for BSD** systems. Although `/bin/ucb` seems to have been deprecated in some BSD systems [since as early as 1993](https://docs-archive.freebsd.org/44doc/smm/01.setup/paper.pdf), which may be part of the reason is doesn't appear in FHS.
 
 ### Current directory
 
@@ -225,13 +235,13 @@ FHS does not specify `/ucb` anywhere, because it's a convention on BSD! Apparent
     </div>
 </div>
 
-Contrary to popular belief, A stork does not fly to your Linux distro and set its `PATH` during installation. Unfortunately, there's a lot of nuance regarding which config scripts get run when the environment is setup.
+Contrary to popular belief, A stork does not fly to your Linux distro and set its `PATH` during installation. Unfortunately, there's actually a lot of nuance regarding which config scripts get run when the environment is setup. The following are only the most common examples.
 
 ### Interactive shells
 
 When you open your terminal, this is called an interactive shell. It gives feedback when you type commands, which is helpful for human brains.
 
-When an interactive shell starts up, <code>bash</code> follows a <a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">startup routine</a>. It first executes <code>/etc/profile</code> which is the system wide initialization script for shells. <code>bash</code> then runs the following in order: `~/.bash_profile`, `~/.bash_login`, and finally `~/.profile`.
+When <code>bash</code> starts up as an interactive shell it follows a <a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">startup routine</a>. It first executes <code>/etc/profile</code> which is the system wide initialization script for shells. <code>bash</code> then runs the following in order: `~/.bash_profile`, `~/.bash_login`, and finally `~/.profile`.
 
 ### Non-interactive shells
 
@@ -264,7 +274,7 @@ When an interactive shell starts up, <code>bash</code> follows a <a href="https:
 <div class="question">
     <img src="/images/profiles/default18.png">
     <div>
-        I started a non-interactive shell with <code>bash -c 'echo $PATH'</code> but it still doesn't contain <code>"."</code>. Why?
+        I started a non-interactive shell with <code>bash -c "echo \$PATH"</code> but it still doesn't show the default <code>PATH</code>. Why?
     </div>
 </div>
 
@@ -299,8 +309,18 @@ The sudo policy affects auditing, logging, and policy decisions. `/etc/sudoers` 
 
 The most important aspect of the sudo policy, in our situation, is how it affects the [command environment](https://man7.org/linux/man-pages/man5/sudoers.5.html#:~:text=proto(5).-,Command%20environment,-Since%20environment%20variables). Notably, it can restrict which environment variables are inherited after running the `sudo` command!
 
+By default `/etc/sudoers` appears to have `env_reset` set, with `secure_path` equal to `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin`. This means that if no `PATH` environment variable is set, whatever is run by the `sudo` command will get the value of `secure_path`. This works as follows:
+
+<pre><code>$ env -i bash -c <string>"sudo ./echo_path.sh"</string>
+<comment>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</comment>
+
+<comment># modify secure_path in /etc/sudoers</comment>
+$ env -i bash -c <string>"sudo ./echo_path.sh"</string>
+<comment>/this:/is:/a:/modified:/secure:/path</comment>
+</code></pre>
+
 <details style="margin-bottom: 16px;">
-    <summary style="cursor: pointer;">Lame details about <code>/etc/sudoers</code></summary>
+    <summary style="cursor: pointer;">Some lame additional details about <code>/etc/sudoers</code> for those interested</summary>
     <div>
         <blockquote>
             By default, the <code>env_reset</code> flag is enabled. This causes commands to be executed with a new, minimal environment ... [which] is initialized with the contents of <code>/etc/environment</code>.
@@ -317,17 +337,6 @@ The most important aspect of the sudo policy, in our situation, is how it affect
     </div>
 </details>
 
-By default `/etc/sudoers` appears to have `env_reset` set, with `secure_path` equal to `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin`. This means that if no `PATH` environment variable is set, whatever is run by the `sudo` command will get the value of `secure_path`. This works as follows:
-
-```sh
-$ osh -c "sudo ./echo_path.sh"
-/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# modify secure_path in /etc/sudoers
-
-$ osh -c "sudo ./echo_path.sh"
-/this:/is:/a:/modified:/secure:/path
-```
 
 ## D. Nobody uses anything but `bash` anyways
 
@@ -351,7 +360,7 @@ I've recently been helping with a ["secret project"](https://oils.pub/blog/2025/
 
 ### The (not so) secret project
 
-The seemingly simple project is as follows:
+<div style="margin-top: 16px;"></div>
 
 0. Spin up an alpine linux instance.
 1. Replace `/bin/bash`, `/bin/sh`, and `/bin/ash` with [symlinks](https://en.wikipedia.org/wiki/Symbolic_link) to `osh`.
@@ -363,24 +372,25 @@ This is a cool idea because if someone using alpine linux ([like me](https://ish
 
 Given the alpine package manager's wide usage, such a detailed suite of automated tests approximately enumerates all observable shell behaviour. So according to [Hyrum's Law](https://www.hyrumslaw.com/), `osh` and `ash` would be approximately indistinguishable! However, `ash`, and `bash` are incompatible shells themselves, so it's a dream that could never be. At least these tests help `osh` find a lot of `bash` incompatibilities along the way.
 
-### You said something about motivation?
+### Default `PATH` matters
 
-Oh right, motivation. My role in this project has been to dig into packages that fail to build, then find their **root cause**.
+My role in this project has been to dig into packages that fail to build, then find their **root cause**.
 
-For example, when you try to build the `lua-aports` package, [a bunch of tests fail](https://web.archive.org/web/20251114091059/https://op.oils.pub/aports-build/2025-10-22.wwz/_tmp/aports-report/2025-10-22/disagree-2025-10-15-main/osh-as-sh/log/lua-aports.log.txt). It's still not clear what it does exactly, but Lua is definitely involved. One failing test is the following:
+For example, when you try to build the `lua-aports` package, [a bunch of tests fail](https://web.archive.org/web/20251114091059/https://op.oils.pub/aports-build/2025-10-22.wwz/_tmp/aports-report/2025-10-22/disagree-2025-10-15-main/osh-as-sh/log/lua-aports.log.txt). It's not clear to me what `lua-aports` does exactly, but Lua is definitely involved. One failing test is the following:
 
-```sh
-[ RUN      ] spec/abuild_spec.lua:36: abuild get_conf should return the value of a configuration variable from the user config
+<pre><code>[ RUN      ] spec/abuild_spec.lua:36: abuild get_conf should return the value of a configuration variable from the user config
 Unable to deduce build architecture. Install apk-tools, or set CBUILD.
 spec/abuild_spec.lua:37: Expected objects to be equal.
 Passed in:
-(string) ''
+(string) <string>''</string>
 Expected:
-(string) 'myvalue'
+(string) <string>'myvalue'</string>
 
 stack traceback:
 	spec/abuild_spec.lua:37: in function <spec/abuild_spec.lua:36>
-```
+</code></pre>
+
+<!-- TODO: clean up formatting past here -->
 
 Of course, this doesn't seem to be related to the default `PATH` at all, but debugging can be tricky like that. If you're interested in the (slightly compressed) trail I followed, it was:
 

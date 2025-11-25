@@ -269,3 +269,14 @@ a {
 .filter-item:hover {
     color: var(--softer-grey);
 }
+
+/* ---------- in blog pages ---------- */
+
+pre code comment {
+    color: var(--softer-grey);
+}
+
+pre code string {
+    color: var(--yellow);
+}
+
