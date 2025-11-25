@@ -1,0 +1,28 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ page.title }} {% endblock %}
+
+{% block content %}
+<article>
+    <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; text-align: center; margin-top: 16px; margin-bottom: 36px;">
+        <h2 style="font-size: 3rem; margin: 0;">{{ page.title }}</h2>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            {{ page.description }}
+            
+        </div>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            {% if page.taxonomies.tags %}
+                {% for tag in page.taxonomies.tags %}
+                    <a class="grey-link" href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}">#{{ tag }}</a>{% if page.taxonomies.tags | length > 1 %}{% if loop.index != page.taxonomies.tags | length %},
+                        {% endif %}
+                    {% endif %}
+                {% endfor %} |
+            {% endif %}
+            {{ page.date | date(format="%B %d, %Y") }}
+        </div>
+    </div>
+
+    {{ page.content | safe }}
+
+</article>
+{% endblock content %}

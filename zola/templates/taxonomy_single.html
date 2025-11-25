@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ term.name }} {% endblock %}
+
+{% block content %}
+<article>
+    <div 
+        style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
+    >
+        <div style="margin-right: 6px;">posts on #{{ term.name }}</div>
+        <a href=".." style="margin-left: auto; font-size: 0.95em;">back</a>
+    </div>
+
+    <!-- TODO: add info for specific taxonomies here using if statements -->
+
+    {% for page in term.pages %}
+        <div style="display: flex; flex-wrap: wrap;">
+            <a style="margin-right: 10px; flex-shrink: 0;" href="{{ page.permalink | safe }}">{{ page.title }}</a>
+            <span style="min-width: 200px;">{{ page.description }}</span>
+            <span style="margin-left: 10px;"></span>
+            <span style="color: var(--soft-grey-2); float: right; flex: 1 0 auto; text-align: right;">{{ page.date | date(format="%B %d, %Y") }}</span>
+        </div>
+    {% endfor %}
+</article>
+{% endblock content %}

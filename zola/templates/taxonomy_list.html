@@ -1,0 +1,18 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ taxonomy.name }} {% endblock %}
+
+{% block content %}
+<article>
+    <div 
+        style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
+    >
+        <div style="margin-right: 6px;">{{ taxonomy.name }}</div>
+        <a href=".." style="margin-left: auto; font-size: 0.95em;">back</a>
+    </div>
+
+    {% for term in terms %}
+        <div><a href="{{ term.permalink | safe }}">{{ term.name }}</a></div>
+    {% endfor %}
+</article>
+{% endblock content %}

@@ -3,58 +3,50 @@
 {% block style %}
 {% endblock style %}
 
-{% block title %} blog {% endblock %}
+{% block title %} {{ section.title }} {% endblock %}
 
 {% block content %}
 <article>
     <div class="posts">
-        <!-- TODO: implement this filter -->
         <div 
             style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
         >
             <div style="margin-right: 6px;">Blog</div>
+
+            <a href="/tags" class="grey-link" style="margin-left: auto;">search tags</a>
+
+            <!-- TODO: implement this filter 
             <div style="margin-left: auto;">Filter:</div>
             <div class="filter-item" style="text-decoration: underline;">newest</div>
             <div class="filter-item">gardening</div>
             <div class="filter-item">math</div>
             <div class="filter-item">software</div>
+            -->
         </div>
 
-        <a href="/blog/2025-hops" class="blog-card filled">
+        {% for page in section.pages %}
+        <a href="{{ page.permalink | safe }}" class="blog-card {% if loop.index == 1 %} filled {% else %} outline {% endif %}">
             <div>
-                <h2>Spring 2025 Hops</h2>
+                <h2 style="margin: 0;">{{ page.title }}</h2>
                 <div>
-                    <div>2025</div>
-                    <div>gardening, photos</div>
+                    <div>{{ page.date | date(format="%B %d, %Y") }}</div>
+                    {% if page.taxonomies.tags %}
+                    <div>
+                        {% for tag in page.taxonomies.tags %}
+                            {{ tag }}{% if page.taxonomies.tags | length > 1 %}{% if loop.index != page.taxonomies.tags | length %},
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
-            <span>A photo blog about growing hops for the first time</span>
+            <span>{{ page.description }}</span>
         </a>
-
-        <a href="/blog/slant-0" class="blog-card outline">
-            <div>
-                <h2>Slant [0]</h2>
-                <div>
-                    <div>June 9, 2024</div>
-                    <div>math, puzzles, algorithms</div>
-                </div>
-            </div>
-            <span>Understanding and solving a wild game of slashes</span>
-        </a>
-
-        <a href="/blog/many-pictures" class="blog-card outline">
-            <div>
-                <h2>Many Pictures</h2>
-                <div>
-                    <div>July 20, 2023</div>
-                    <div>software</div>
-                </div>
-            </div>
-            <span>A screensaver using Pixabay's API to automagically scroll through images</span>
-        </a>
+        {% endfor %}
 
         <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->
     </div>
-    <br>
+
 </article>
 {% endblock content %}

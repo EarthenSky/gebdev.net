@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} home {% endblock %}
+{% block title %} {{ section.title }} {% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="/style/who.css?v0.00">
@@ -11,14 +11,14 @@
     <section style="display: flex; flex-direction: row; margin-top: -12px; justify-content: center;">
         <div
             id="circle"
-            style="position: relative; display: block; width: calc(128px + 12px); height: calc(128px + 22px); cursor: pointer;"
+            style="position: relative; display: block; width: calc(128px + 12px); height: calc(128px + 2px); cursor: pointer;"
             title="geb dev web dev"
         >
-            <img src="/images/misc/simple-geb-transparent.png" style="width: calc(128px + 12px); height: calc(128px + 12px);">
+            <img src="/images/misc/geb-trans-small.png" style="width: calc(128px + 12px); height: calc(128px + 2px); transform: scale(0.7);">
         </div>
 
         <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; justify-content: center; margin-bottom: 16px; padding: 0 8px;">
-            <h3>Hi — ᕕ(ᐛ)ᕗ</h3>
+            <h3 style="font-weight: 900; margin: 0;">Hi — ᕕ(ᐛ)ᕗ</h3>
             <div style="display: flex; align-items: center; margin-bottom: 8px; color: var(--soft-grey-2);">
                 <b style="display: inline-block; flex-wrap: wrap; max-width: 100%; text-align: center;">
                     I'm <span style="color: var(--white);">Gabe</span>, and I make all sorts of cool things!
@@ -28,50 +28,46 @@
     </section>
 
     <section style="display: flex; flex-direction: column; justify-content: center; font-size: 1em;">
-        <div>
-            <div 
+        <div class="posts">
+            <div
                 style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
             >
                 <div style="margin-right: 6px;">Blog</div>
+
+                <a href="/tags" class="grey-link" style="margin-left: auto;">search tags</a>
+
+                <!-- TODO: implement this filter 
                 <div style="margin-left: auto;">Filter:</div>
                 <div class="filter-item" style="text-decoration: underline;">newest</div>
                 <div class="filter-item">gardening</div>
                 <div class="filter-item">math</div>
                 <div class="filter-item">software</div>
+                -->
             </div>
 
-            <a href="/blog/2025-hops" class="blog-card filled">
+            {% set section = get_section(path="blog/_index.md") %}
+            {% for page in section.pages %}
+            <a href="{{ page.permalink | safe }}" class="blog-card {% if loop.index == 1 %} filled {% else %} outline {% endif %}">
                 <div>
-                    <h2>Spring 2025 Hops</h2>
+                    <h2 style="margin: 0;">{{ page.title }}</h2>
                     <div>
-                        <div>2025</div>
-                        <div>gardening, photos</div>
+                        <div>{{ page.date | date(format="%B %d, %Y") }}</div>
+                        {% if page.taxonomies.tags %}
+                        <div>
+                            {% for tag in page.taxonomies.tags %}
+                                {{ tag }}{% if page.taxonomies.tags | length > 1 %}{% if loop.index != page.taxonomies.tags | length %},
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                <span>A photo blog about growing hops for the first time</span>
+                <span>{{ page.description }}</span>
             </a>
+            {% endfor %}
 
-            <a href="/blog/slant-0" class="blog-card outline">
-                <div>
-                    <h2>Slant [0]</h2>
-                    <div>
-                        <div>June 9, 2024</div>
-                        <div>math, puzzles, algorithms</div>
-                    </div>
-                </div>
-                <span>Understanding and solving a wild game of slashes</span>
-            </a>
-
-            <a href="/blog/many-pictures" class="blog-card outline">
-                <div>
-                    <h2>Many Pictures</h2>
-                    <div>
-                        <div>July 20, 2023</div>
-                        <div>software</div>
-                    </div>
-                </div>
-                <span>A screensaver using Pixabay's API to automagically scroll through images</span>
-            </a>
+            <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->
         </div>
 
         <div>

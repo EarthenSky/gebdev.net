@@ -1,0 +1,234 @@
++++
+title = "Slant [0]"
+date = 2024-06-09
+description = "Solving a wild game of slashes"
+[taxonomies]
+tags=["math", "puzzles", "algorithms", "slant"]
++++
+
+<style>
+    .slant-box {
+        display: block;
+        max-height: 500px;
+        padding: calc(8px + 8px) calc(16px + 16px);
+
+        border-radius: 16px;
+
+        overflow-y: auto;
+        flex: 0 0 auto;
+
+        text-align: center;
+        white-space: pre;
+        font-family: monospace;
+
+        background-color: black;
+        scrollbar-color: black var(--back-darker);
+    }
+
+    slant {
+        color: var(--green);
+        font-weight: 900;
+    }
+</style>
+
+<a href="https://en.wikipedia.org/wiki/Gokigen_Naname">Slant</a> is an awesome but underrated puzzle. Made by the same 
+<a href="https://en.wikipedia.org/wiki/Nikoli_(publisher)">puzzle company</a> as sudoku, the rules for slant are as follows:
+
+<blockquote>
+    Fill in a diagonal line (a slant) in every grid tile so that there are no loops in the grid, and so that every numbered
+    point has that many lines touching it.
+</blockquote>
+
+If you're interested now, you can play it <a href="https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/slant.html">here</a>!
+I like to think that slant is a <a href="https://www.gamedeveloper.com/design/juicy-a-useful-game-design-term-">superior puzzle</a>
+when compared against something like sudoku, since making progress is
+<a href="https://youtu.be/xuCn8ux2gbs?si=KEekAV63b5m_QEX1&t=559" style="display: inline; word-wrap: break-word;">easier and there's more of it</a>.
+More filling in the puzzle means more satisfying feedback!
+
+Thinking about how fun slant is begs an interesting question: **How hard is it?**
+
+For a person of course, different configurations might be easier or harder. But for a computer, difficulty is measured by how
+long they might take to solve the hardest possible configuration of a certain size. What we're asking then is: Is slant as hard as sudoku
+(<a href="https://en.wikipedia.org/wiki/NP-completeness">NP complete</a>), or it might be much easier (polynomial time)? Would a puzzle with `900` cells take closer to `2^900` seconds, or `900^2` seconds?
+
+This is the first post in a series about slant, with the goal of analyzing the game, figuring out how challenging it is, and learning how 
+to solve these puzzles efficiently.
+
+<div style="background-color: var(--black); padding: 16px; border-radius: 6px; margin: 24px 0;">
+    <label>Table of Contents</label>
+    <ul>
+        <li><a href="#rules">A. Rules</a></li>
+        <li><a href="#brute-force">B. Brute Force</a></li>
+        <li><a href="#next-time">C. Next Time</a></li>
+    </ul>
+</div>
+
+<h3 id="rules" style="margin-top: 24px;">A. Rules</h3>
+
+<!-- TODO: make these have the same top part, then implement a zola rule / thingy for this pattern -->
+
+<div style="display: flex; align-items: start">
+    <div>
+        <p>
+            As you start playing slant, you'll notice a few <b>simple rules</b> you can take advantage of.
+            Often, it's possible to guarantee a cell must contain either a left or right slant.
+        </p>
+        <p>
+            One common example is the following 3 by 3 grid, where two (1) numbered
+            circles are adjacent. If any of the slants were flipped, it would result in being required to fill in two
+            lines that touch the other (1). An inconsistency!
+        </p>
+    </div>
+    <div class="slant-box" style="margin-left: 8px;">-------------
+|   | <slant>/</slant> | <slant>\</slant> |
+--  +  (1) --
+|   |   |   |
+--  +  (1) --
+|   | <slant>\</slant> | <slant>/</slant> |
+-------------
+</div>
+</div>
+
+<h3 id="brute-forcing-slant">B. Brute Forcing Slant</h3>
+
+Using rules like the above is how I solve slant puzzles by hand. It's fun to try to learn some of the more complicated
+rules by yourself. An added benefit of these rules is that we can implement them in code really easily. Each rule helps us fill in tiles, so <b>let's figure out as many rules as possible</b>! 
+
+The trick, however, is finding rules using a computer. One way to do so is to check every combination of slants around
+a set of numbered points. If every valid combination has the same slant in any grid tile, then that slant can be inferred.
+In our example above, all the green slants have to be there, otherwise the puzzle is not solvable. This is the "brute force"
+method, since it is practically as slow as possible.
+
+<blockquote>
+    Can you think of a slower way to solve a problem than checking every
+    possible solution?
+</blockquote>
+
+A 3 by 3 grid can contain 4 numbered points in the middle 2 by 2 intersections. In addition, there are only 4 non-trivial kinds of numbered points: 
+(1), (2), (3), and empty (or no-constraint). This means there are <b>256 unique permutations</b> of numbered points. However, since all 
+slant rules are actually the same rule if rotated and/or flipped, there are actually only <b>55 unique combinations</b>, and that's not even
+taking into account the underlying rules.
+
+We start by checking every possible permutation of slants that files the 3 by 3 grid for a combination of 4 numbered points.
+Each permutation  of slants will either solve the puzzle or break one of the rules of slant, leaving it inconsistent. If
+there are <b>no valid solutions</b> for a set of numbered points, then that puzzle is unsolvable.
+
+Going through all combinations, and taking into account rotational symmetry, we find only 4 2x2 patterns which are not
+solvable. If you're playing a valid slant puzzle, you'll never see the following combinations:
+
+<div class="slant-box" style="margin-bottom: 16px;">------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (1) (1) -- -- (2) (3) -- -- (3) (3) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+-- (1) (1) -- -- (1) (2) -- -- (3) (3) -- -- (3) (3) --
+|   |   |   | |   |   |   | |   |   |   | |   |   |   |
+------------- ------------- ------------- -------------
+</div>
+
+Next, if a combination of 4 numbered points has <b>multiple solutions</b>, we can look through them all and see if there are any diagonals which stay 
+the same the same throughout every pattern.
+
+The following <b>22</b> patterns are those which have at least one solution & imply a slant can be placed. 
+
+<div class="slant-box" style="margin-bottom: 16px;">------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | |   | <slant>/</slant> | <slant>\</slant> |
+--  +   +  -- --  +   +  -- --  +  (1) -- --  +  (1) --
+| <slant>/</slant> |   | <slant>\</slant> | | <slant>\</slant> |   | <slant>/</slant> | |   | <slant>\</slant> |   | | <slant>/</slant> | <slant>\</slant> | <slant>\</slant> |
+-- (1) (1) -- -- (3) (3) -- -- (1)  +  -- -- (1) (1) --
+| <slant>\</slant> |   | <slant>/</slant> | | <slant>/</slant> |   | <slant>\</slant> | |   |   |   | | <slant>\</slant> | <slant>\</slant> | <slant>/</slant> |
+------------- ------------- ------------- -------------
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   | <slant>/</slant> | <slant>\</slant> | |   | <slant>/</slant> | <slant>\</slant> |
+--  +  (1) -- --  +  (1) -- --  +  (1) -- --  +  (1) --
+|   | <slant>\</slant> |   | |   | <slant>\</slant> |   | |   |   |   | |   |   |   |
+-- (1) (2) -- -- (1) (3) -- -- (2) (1) -- -- (3) (1) --
+|   |   |   | |   |   |   | |   | <slant>\</slant> | <slant>/</slant> | |   | <slant>\</slant> | <slant>/</slant> |
+------------- ------------- ------------- -------------
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | | <slant>\</slant> | <slant>\</slant> | <slant>/</slant> | | <slant>/</slant> | <slant>\</slant> | <slant>\</slant> |
+--  +  (1) -- --  +  (2) -- --  +  (3) -- -- (1) (1) --
+| <slant>\</slant> |   | <slant>/</slant> | | <slant>\</slant> |   | <slant>/</slant> | | <slant>\</slant> | <slant>/</slant> | <slant>/</slant> | | <slant>\</slant> | <slant>\</slant> | <slant>/</slant> |
+-- (3) (3) -- -- (3) (3) -- -- (3) (3) -- -- (1) (3) --
+| <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> | <slant>/</slant> | <slant>\</slant> | | <slant>\</slant> | <slant>/</slant> | <slant>/</slant> |
+------------- ------------- ------------- -------------
+------------- ------------- ------------- -------------
+| <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> |   | <slant>\</slant> |
+-- (1) (1) -- -- (1) (1) -- -- (1) (1) -- -- (1) (2) --
+| <slant>\</slant> |   | <slant>/</slant> | | <slant>\</slant> |   | <slant>/</slant> | | <slant>\</slant> |   | <slant>/</slant> | |   | <slant>/</slant> |   |
+-- (2) (2) -- -- (2) (3) -- -- (3) (3) -- -- (2) (1) --
+| <slant>\</slant> |   | <slant>/</slant> | |   |   |   | | <slant>/</slant> |   | <slant>\</slant> | | <slant>\</slant> |   | <slant>/</slant> |
+------------- ------------- ------------- -------------
+------------- ------------- ------------- -------------
+|   |   |   | |   |   |   | |   |   |   | | <slant>\</slant> | <slant>\</slant> | <slant>/</slant> |
+-- (1) (2) -- -- (1) (2) -- -- (1) (3) -- -- (1) (3) --
+|   | <slant>/</slant> |   | | <slant>\</slant> |   | <slant>/</slant> | |   | <slant>/</slant> |   | | <slant>\</slant> | <slant>/</slant> | <slant>/</slant> |
+-- (3) (1) -- -- (3) (3) -- -- (3) (1) -- -- (3) (3) --
+|   |   |   | | <slant>/</slant> |   | <slant>\</slant> | |   |   |   | | <slant>/</slant> | <slant>/</slant> | <slant>\</slant> |
+------------- ------------- ------------- -------------
+------------- -------------
+| <slant>\</slant> |   | <slant>/</slant> | | <slant>\</slant> |   | <slant>/</slant> |
+-- (2) (2) -- -- (2) (3) --
+| <slant>\</slant> |   | <slant>/</slant> | |   |   |   |
+-- (3) (3) -- -- (3) (2) --
+| <slant>/</slant> |   | <slant>\</slant> | | <slant>/</slant> |   | <slant>\</slant> |
+------------- -------------
+</div>
+
+Most of these patterns are ones which are easy to figure out yourself, most notably the ones involving orthogonal (1)s or (3)s. 
+However, there were two rules I didn't know about before! These rules didn't exist in any of the few sites in which I 
+could find slant strategies or deductions. 
+
+So they're probably brand new!
+
+<div class="slant-box" style="margin-bottom: 16px;">-------------   -------------
+| <slant>\</slant> |   | <slant>/</slant> |   | <slant>/</slant> |   | <slant>\</slant> |
+-- (2) (3) --   -- (2) (1) --
+|   |   |   |   |   | <slant>\</slant> |   |
+-- (3) (2) --   -- (1) (2) --
+| <slant>/</slant> |   | <slant>\</slant> |   | <slant>\</slant> |   | <slant>/</slant> |
+-------------   -------------
+</div>
+
+These rules appear to be different from all the others, being the result of unique interactions caused by the (2)s propagating changes of the (1)s and (3)s. 
+Placing the opposite slant in any of the corner tiles would result in a contradiction. In addition, like most rules we see a form of inverse symmetry 
+between the (1)s and (3)s.
+
+However, the diagonals touching the (2)s are an interesting case. The only way to learn these rules naturally is to place a multiple slants and observe 
+that all cases, would result in a contradiction contradiction. The other rules we've figured out before now only require placing one slant and immediately 
+noticing a contradiction follows.
+
+This realization leads to more questions...
+
+<blockquote>
+    Are there additional rules that require more slants to be placed down?
+</blockquote>
+
+<blockquote>
+    Could we logically derive this rule without brute forcing?
+</blockquote>
+
+<blockquote>
+    Are there rules that we can't find efficiently without brute forcing?
+</blockquote>
+
+Or even
+                    
+<blockquote>
+    What's the most efficient way to solve slant puzzles?
+</blockquote>
+
+<h3 id="next-time">C. Next Time</h3>
+
+Next time, we'll extend our simple pattern finder from before and construct a pattern database for automated solving of puzzles. Using this
+automated solver, we can begin to dive into the complexity of slant and answer some of these questions.
+
+In the future, I want to spend some time figuring out if slant is really NP complete, how to design the hardest puzzles, and 
+how to use deduction to learn slant rules instead of brute force.
+
+Slant is mathematically interesting, and it'll work as a great punching bag to learn when to apply techniques from different fields or not!
+
+<hr style="margin-top: 24px;">
+<p>
+    <span style="color: var(--front-soft)">The next article in this series is not out yet!
+    <a style="float: right;" href="https://gebdev.net" data-tooltip="the main page">back home</a>
+</p>

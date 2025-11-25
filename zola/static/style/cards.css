@@ -3,11 +3,12 @@
 */
 
 .blog-card {
-    display: inline-block;
+    display: block;
+    position: relative;
 
-    width: calc(100% - 16px * 2);
+    width: calc(100% - 14px * 2);
     margin-bottom: 16px;
-    padding: 15px;
+    padding: 13px;
 
     border-radius: 6px;
 
@@ -19,6 +20,31 @@
     border: 1px solid var(--soft-green);
     background-color: var(--soft-green);
 }
+.filled::before {
+    position: absolute;
+    vertical-align: middle;
+
+    top: 50%;
+    transform: translateX(calc(-100% - 14px - 12px)) translateY(-50%) rotate(-20deg);
+    color: var(--soft-green);
+    content: 'New!';
+
+    transition: color 0.25s ease, transform 0.35s ease;
+}
+.blog-card.filled:hover::before {
+    color: var(--soft-yellow);
+    transform: translateX(calc(-100% - 14px - 12px + 2px)) translateY(calc(-50% - 2px)) rotate(12deg);
+}
+@media screen and (max-width: 600px),
+       screen and (max-device-width: 1000px) {
+    .filled::before {
+        transform: translateX(calc(-100% - 14px + 3px)) translateY(-50%) rotate(-85deg);
+    }
+    .blog-card.filled:hover::before {
+        transform: translateX(calc(-100% - 14px + 3px + 1px)) translateY(calc(-50% - 1px)) rotate(-95deg);
+    }
+}
+
 .outline {
     border: 1px solid var(--dark-green);
     background-color: var(--space);
@@ -46,7 +72,7 @@
 
     font-family: Spectral;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 30px;
 
     transition: color 0.25s ease;
 }
@@ -123,6 +149,7 @@
 }
 .file-browser-card h3 {
     padding: 0;
+    margin: 0;
 
     font-family: Spectral;
     font-weight: 600;

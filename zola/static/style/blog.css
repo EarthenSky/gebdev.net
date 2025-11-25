@@ -1,3 +1,41 @@
+/* --------- defaults --------- */
+
+code {
+    display: inline-block;
+    padding: 0px 4px;
+
+    font-size: 0.865em;
+
+    border-radius: 4px;
+    background-color: var(--light-space);
+}
+
+pre:has(code) {
+    display: flex; /* idek at this point */
+    white-space: pre;
+
+    margin-bottom: 16px;
+}
+pre code {
+    display: inline;
+
+    width: calc(100% - 2*16px);
+    padding: 16px;
+    margin: 0;
+
+    overflow-x: auto;
+
+    border-radius: 4px;
+
+    background-color: var(--light-space);
+    scrollbar-color: var(--space) var(--light-space);
+}
+
+ol {
+    margin-top: -8px;
+    margin-bottom: 24px;
+}
+
 /* --------- meta-blog-page --------- */
 
 a {
@@ -116,7 +154,7 @@ a {
     font-size: 14px;
 
     color: var(--white);
-    background-color: var(--stars);
+    background-color: var(--light-space);
 }
 .left-bubble > div > .photos {
     display: flex;
@@ -131,7 +169,7 @@ a {
     height: 8px;
 }
 .left-bubble > div > .photos::-webkit-scrollbar-track {
-    background: var(--stars);
+    background: var(--light-space);
 }
 .left-bubble > div > .photos::-webkit-scrollbar-thumb {
     background-color: var(--soft-yellow);

@@ -43,11 +43,13 @@
     --soft-blue-trans: #9dcdfc41;
     --blue-trans: #4da6ff41;
     --soft-green-trans: #b3e99141;
+    --softer-grey-trans: #8789c441;
     --soft-yellow-trans: #ffeda741;
     --stars-trans: #473b7841;
     --stars-on-black-trans: #8368bc41;
     --soft-purple-trans: #b38eea41;
     --white-trans: #ffffeb41;
+    --black-trans: #01011241;
 
     --stars-on-black: #8368bc;
     --stars-on-black-filter: invert(49%) sepia(13%) saturate(2009%) hue-rotate(218deg) brightness(87%) contrast(81%);
@@ -56,6 +58,7 @@
     --soft-purple: #b38eea;
 
     --space: #262631; /*#272736;*/
+    --light-space: #3c3c4c;
     --stars: #473b78;
     --white: #ffffeb;
     --softer-grey: #8789c4;
@@ -65,6 +68,7 @@
     --soft-blue: #9dcdfc;
     --blue: #4da6ff;
     --dark-blue: #4b5bab;
+    --darker-blue: #323f82;
     --dark-green: #345a3b;
     --green: #8fde5d;
     --warm-green: #6bc96c;
@@ -82,4 +86,12 @@
     --tag-purple: #b38eea;
     --tag-red: #d5264a;
     --tag-white: #ebe7db;
+}
+
+soft-yellow {
+    color: var(--soft-yellow);
+}
+
+soft-green {
+    color: var(--soft-green);
 }
