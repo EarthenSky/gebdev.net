@@ -10,7 +10,7 @@
     line-height: 1.05;
 
     width: calc(100% - 14px * 2);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     padding: 13px;
 
     border-radius: 6px;
@@ -38,24 +38,7 @@
     color: var(--soft-yellow);
     transform: translateX(calc(-100% - 14px - 12px + 2px)) translateY(calc(-50% - 2px)) rotate(12deg);
 }
-@media screen and (max-width: 600px),
-       screen and (max-device-width: 1000px) {
-    .filled::before {
-        transform: translateX(calc(-100% - 14px + 3px)) translateY(-50%) rotate(-85deg);
-    }
-    .blog-card.filled:hover::before {
-        transform: translateX(calc(-100% - 14px + 3px + 1px)) translateY(calc(-50% - 1px)) rotate(-95deg);
-    }
-    .blog-card {
-        line-height: 0.9;
-    }
-    .blog-card div h2 {
-        font-size: 1.6em !important;
-    }
-    .blog-card span {
-        font-size: 0.9em !important;
-    }
-}
+
 
 .outline {
     border: 1px solid var(--dark-green);
@@ -110,7 +93,7 @@
     margin-bottom: 3px;
     margin-left: auto;
 }
-.blog-card div div div {
+.blog-card > div > div > div {
     margin-left: auto;
 
     font-weight: 400;
@@ -143,6 +126,27 @@
 }
 .blog-card.outline:hover span {
     color: var(--soft-yellow);
+}
+@media screen and (max-width: 600px),
+       screen and (max-device-width: 1000px) {
+    .filled::before {
+        transform: translateX(calc(-100% - 14px + 3px)) translateY(-50%) rotate(-85deg);
+    }
+    .blog-card.filled:hover::before {
+        transform: translateX(calc(-100% - 14px + 3px + 1px)) translateY(calc(-50% - 1px)) rotate(-95deg);
+    }
+    .blog-card {
+        line-height: 0.9;
+    }
+    .blog-card div h2 {
+        font-size: 1.6em;
+    }
+    .blog-card > div > div > div {
+        font-size: 0.725em;
+    }
+    .blog-card span {
+        font-size: 0.85em;
+    }
 }
 
 .file-browser-card {

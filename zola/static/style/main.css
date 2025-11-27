@@ -115,6 +115,16 @@ a:hover {
     text-decoration-thickness: 2px;
 }
 
+.secret-link {
+    color: var(--space);
+}
+.secret-link:hover {
+    color: var(--softer-grey);
+    text-decoration: underline solid var(--softer-grey-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
 .yellow-link {
     color: var(--soft-yellow);
 }

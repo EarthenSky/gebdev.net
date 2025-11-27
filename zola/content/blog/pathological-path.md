@@ -6,106 +6,6 @@ description = "A deep dive into shells and their default PATH"
 tags=["osh", "linux"]
 +++
 
-<style>
-.question {
-    display: flex;
-    flex-direction: row;
-
-    margin-top: 12px;
-}
-.question img {
-    /* clip-path: circle(50%); */
-    display: block;
-    border-radius: 8px 8px 8px 8px;
-
-    height: 3em;
-
-    align-self: start;
-}
-.question div {
-    padding: 10px 14px;
-    margin-left: 6px;
-    margin-right: 32px;
-
-    border-radius: 12px 12px 12px 0;
-
-    align-self: start;
-
-    background-color: var(--light-space);
-}
-.question div code {
-    padding: 0;
-    color: var(--green);
-    background-color: var(--light-space);
-}
-.answer {
-    display: flex;
-    flex-direction: row;
-
-    margin-top: 12px;
-    margin-left: calc(3em + 6px + 32px);
-}
-.answer div {
-    padding: 10px 14px;
-    margin-left: auto;
-
-    border-radius: 12px 12px 0 12px;
-
-    align-self: start;
-
-    background-color: var(--darker-blue);
-}
-.answer div code {
-    padding: 0;
-    color: var(--yellow);
-    background-color: transparent;
-}
-@media screen and (max-width: 600px),
-       screen and (max-device-width: 1000px) {
-    .question img {
-        height: 0;
-    }
-    .question div {
-        margin-left: 0;
-    }
-    .answer {
-        margin-left: calc(32px);
-    }
-}
-
-.collapsible-answer {
-    display: block;
-    text-align: center;
-}
-.collapsible-answer summary {
-    display: block;
-    margin: 16px auto;
-    cursor: pointer;
-
-    max-width: 15em;
-
-    border-radius: 6px;
-
-    color: var(--soft-grey-2);
-}
-.collapsible-answer summary:hover {
-    color: var(--softer-grey);
-    background-color: var(--light-space);
-}
-.collapsible-answer summary span {
-    display: inline;
-}
-.collapsible-answer[open] summary span {
-    display: none;
-}
-.collapsible-answer summary div {
-    display: none;
-}
-.collapsible-answer[open] summary div {
-    display: block;
-}
-</style>
-
 Sometimes it's your CI server, sometimes it's cross compilation, and sometimes someone on a Mac just wants to build your code. Even in the wild west of the early 80s, you still REALLY wanted to be able to run the code you [painstakingly typed out by hand from BYTE magazine](https://archive.org/details/byte-magazine-1980-07/page/n43/mode/2up). Compatibility has always been important.
 
 I've been helping improve the compatibility of [osh](https://oils.pub/osh.html) as part of the [oils project](https://oils.pub/), but ran into this weird inconsistency between shells regarding `PATH` in an empty environment.
@@ -387,7 +287,7 @@ Expected:
 (string) <string>'myvalue'</string>
 
 stack traceback:
-	spec/abuild_spec.lua:37: in function <spec/abuild_spec.lua:36>
+	spec/abuild_spec.lua:37: in function &lt;spec/abuild_spec.lua:36&gt;
 </code></pre>
 
 <!-- TODO: clean up formatting past here -->
@@ -396,41 +296,17 @@ Of course, this doesn't seem to be related to the default `PATH` at all, but deb
 
 0. `MYVAR` doesn't exist in the current environment? Something must be up. 
 
-    ```sh
-    describe("get_conf", function()
-            local abuild = require("aports.abuild")
-            it("should return the value of a configuration variable from the user config", function()
-                    -- This assertion is failing!
-                    assert.equal("myvalue", abuild.get_conf("MYVAR"))
-            end)
-    end)
-    ```
+    <pre><code>describe(<string>"get_conf"</string>, function()<br>    local abuild = require(<string>"aports.abuild"</string>)<br>    it(<string>"should return the value of a configuration variable from the user config"</string>, function()<br>        <comment>-- This assertion is failing!</comment><br>        assert.equal(<string>"myvalue"</string>, abuild.get_conf(<string>"MYVAR"</string>))<br>    end)<br>end)</code></pre>
 
 1. This Lua test is part of a test framework called `lua-busted`, which is invoked after the package builds using the command `env -i busted-$(LUA_VERSION) --verbose`. `busted-5.4` (our current version) starts with a shebang, so the error might occur before the testsuite is run?
 
-    ```sh
-    #!/usr/bin/lua5.4
-    -- Busted command-line runner
-    require 'busted.runner'({ standalone = false })
-    ```
+    <pre><code><comment>#!/usr/bin/lua5.4</comment><br><comment>-- Busted command-line runner</comment><br>require <string>'busted.runner'</string>({ standalone = <const>false</const> })</code></pre>
 
 2. Oh wow, just running `./busted-5.4` without `env -i` passes all tests. Something in the environment must be causing these issues.
 
 3. There are a few key differences between the environment variables of `ash` and `osh` (only differences shown):
 
-    ```sh
-    osh-0.36$ cat ./display_env.sh
-    env
-
-    ash$ env -i ./display_env.sh
-    PATH=/sbin:/usr/sbin:/bin:/usr/bin
-    SHLVL=1
-
-    osh-0.36$ env -i ./display_env.sh
-    PATH=/bin:/usr/bin
-    LINES=63
-    COLUMNS=141
-    ```
+    <pre><code>$ cat ./display_env.sh<br><comment>env</comment><br><br>ash$ env -i ./display_env.sh<br><comment>PATH=/sbin:/usr/sbin:/bin:/usr/bin</comment><br><comment>SHLVL=1</comment><br><br>osh-0.36$ env -i ./display_env.sh<br><comment>PATH=/bin:/usr/bin</comment><br><comment>LINES=63</comment><br><comment>COLUMNS=141</comment></code></pre>
 
 4. Aha! Adding `/sbin:/usr/sbin` to `osh`'s default `PATH` solves the build failures. The testing framework must have depended on a non-interactive subshell that tried to run system configuration commands, likely for the local environment.
 

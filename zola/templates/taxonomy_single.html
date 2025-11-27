@@ -13,12 +13,42 @@
 
     <!-- TODO: add info for specific taxonomies here using if statements -->
 
+    {% if term.name == "osh" %}
+        <p style="margin-bottom: 12px;">
+            <code>osh</code> is a <code>bash</code> compatible shell that's part of the Oils project. Written in subset
+            of python that's transpiled to a c++, it's got loads of benefits over <code>bash</code>. I like most that
+            it has a <a href="https://www.oilshell.org/blog/2019/02/05.html#:~:text=OSH%20has%208%20times%20less%20source%20code%20than%20bash">significantly smaller</a>
+            code size! You can find more info about it on the <a href="https://oils.pub/osh.html">Oils website</a>.
+        </p>
+
+    {% endif %}
+
+    <style>
+    .line {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 12px;
+    }
+    .line > .top {
+        display: flex;
+        flex-direction: row;
+    }
+
+    @media screen and (max-width: 600px),
+        screen and (max-device-width: 1000px) {
+        .line {
+            flex-direction: column;
+        }
+    }
+    </style>
+
     {% for page in term.pages %}
-        <div style="display: flex; flex-wrap: wrap;">
-            <a style="margin-right: 10px; flex-shrink: 0;" href="{{ page.permalink | safe }}">{{ page.title }}</a>
-            <span style="min-width: 200px;">{{ page.description }}</span>
-            <span style="margin-left: 10px;"></span>
-            <span style="color: var(--soft-grey-2); float: right; flex: 1 0 auto; text-align: right;">{{ page.date | date(format="%B %d, %Y") }}</span>
+        <div class="line">
+            <div class="top">
+                <a style="margin-right: 10px; flex-shrink: 0;" href="{{ page.permalink | safe }}">{{ page.title }}</a>
+                <span style="color: var(--soft-grey-2); flex: 1 0 auto; text-align: right;">{{ page.date | date(format="%B %d, %Y") }}</span>
+            </div>
+            <span style="min-width: 200px; flex-shrink: 1;">{{ page.description }}</span>
         </div>
     {% endfor %}
 </article>

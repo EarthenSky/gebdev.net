@@ -46,25 +46,33 @@
             </div>
 
             {% set section = get_section(path="blog/_index.md") %}
+
+            {% set_global first_matching = true %}
             {% for page in section.pages %}
-            <a href="{{ page.permalink | safe }}" class="blog-card {% if loop.index == 1 %} filled {% else %} outline {% endif %}">
-                <div>
-                    <h2>{{ page.title }}</h2>
-                    <div>
-                        <div>{{ page.date | date(format="%B %d, %Y") }}</div>
-                        {% if page.taxonomies.tags %}
+                {% if "unlisted" not in page.extra or page.extra.unlisted == false %}
+                    <a href="{{ page.permalink | safe }}" class="blog-card {% if first_matching %} filled {% else %} outline {% endif %}">
                         <div>
-                            {% for tag in page.taxonomies.tags %}
-                                {{ tag }}{% if page.taxonomies.tags | length > 1 %}{% if loop.index != page.taxonomies.tags | length %},
-                                    {% endif %}
+                            <h2>{{ page.title }}</h2>
+                            <div>
+                                <div>{{ page.date | date(format="%B %d, %Y") }}</div>
+                                {% if page.taxonomies.tags %}
+                                <div>
+                                    {% for tag in page.taxonomies.tags %}
+                                        {{ tag }}{% if page.taxonomies.tags | length > 1 %}{% if loop.index != page.taxonomies.tags | length %},
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                                 {% endif %}
-                            {% endfor %}
+                            </div>
                         </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <span>{{ page.description }}</span>
-            </a>
+                        <span>{{ page.description }}</span>
+                    </a>
+
+                    {% if first_matching %}
+                        {% set_global first_matching = false %}
+                    {% endif %}
+                {% endif %}
             {% endfor %}
 
             <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->
