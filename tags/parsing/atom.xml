@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - parsing</title>
+    <link rel="self" type="application/atom+xml" href="https://gebdev.net/tags/parsing/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://gebdev.net"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-11-26T00:00:00+00:00</updated>
+    <id>https://gebdev.net/tags/parsing/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Keeping Parsers Readable</title>
+        <published>2025-11-26T00:00:00+00:00</published>
+        <updated>2025-11-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://gebdev.net/blog/keeping-parsers-readable/"/>
+        <id>https://gebdev.net/blog/keeping-parsers-readable/</id>
+        
+        <content type="html" xml:base="https://gebdev.net/blog/keeping-parsers-readable/">&lt;p&gt;&lt;code&gt;osh&lt;&#x2F;code&gt; is a cool shell that&#x27;s trying to become compatible with &lt;code&gt;bash&lt;&#x2F;code&gt;. The &lt;code&gt;mdev-conf&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;pkgs.alpinelinux.org&#x2F;package&#x2F;edge&#x2F;main&#x2F;armhf&#x2F;mdev-conf&quot;&gt;alpine linux package&lt;&#x2F;a&gt; was failing to build with &lt;code&gt;osh&lt;&#x2F;code&gt; as the system shell. Graciously tag-team debugged by Andy and Bram from the &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;&quot;&gt;Oils project&lt;&#x2F;a&gt;, they found the &lt;strong&gt;root cause&lt;&#x2F;strong&gt; was the following bug in &lt;code&gt;osh&lt;&#x2F;code&gt; here doc parser.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;const&gt;$&lt;&#x2F;const&gt; cat bug.sh
+&lt;comment&gt;# don&#x27;t understand this syntax? me neither. keep reading and I cover it.&lt;&#x2F;comment&gt; 
+&lt;session&gt;cat &amp;lt;&amp;lt;EOF
+a \&quot;quote\&quot;
+EOF&lt;&#x2F;session&gt;
+
+&lt;const&gt;$&lt;&#x2F;const&gt; osh bug.sh
+&lt;session&gt;a &quot;quote&quot;&lt;&#x2F;session&gt;
+
+&lt;const&gt;$&lt;&#x2F;const&gt; bash bug.sh
+&lt;session&gt;a \&quot;quote\&quot;&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Interestingly enough, &lt;code&gt;toysh&lt;&#x2F;code&gt;, &lt;code&gt;sush&lt;&#x2F;code&gt;, and &lt;code&gt;brush&lt;&#x2F;code&gt; all fail in the same way. This seems to be the kind of thing &lt;a href=&quot;https:&#x2F;&#x2F;oilshell.zulipchat.com&#x2F;#narrow&#x2F;channel&#x2F;503208-bug-post-mortem&#x2F;topic&#x2F;mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs&#x2F;near&#x2F;553270324&quot;&gt;you need to make your shell &lt;strong&gt;mature&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center; margin-bottom: 16px;&quot;&gt;
+    &lt;div style=&quot;margin: auto; display: inline-block; text-align: left;&quot;&gt;
+        1. &lt;a href=&quot;#where-document&quot;&gt;Where document?&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        2. &lt;a href=&quot;#the-parser-has-been-defeated&quot;&gt;The parser has been defeated!&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        3. &lt;a href=&quot;#future-proofing&quot;&gt;Future proofing&lt;&#x2F;a&gt;
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;where-document&quot;&gt;Where document?&lt;&#x2F;h2&gt;
+&lt;p&gt;A here document is like a multiline string from the olden days. Seriously, I&#x27;ll explain it and you&#x27;re gonna say &amp;quot;oh yeah, that sounds like what they&#x27;d do.&amp;quot;&lt;&#x2F;p&gt;
+&lt;p&gt;A here document as three parts:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;The first line starts with a &lt;code&gt;&amp;lt;&amp;lt;&lt;&#x2F;code&gt; followed by &lt;strong&gt;any string&lt;&#x2F;strong&gt; that doesn&#x27;t contain a newline or spaces.&lt;&#x2F;li&gt;
+&lt;li&gt;After that, every line is considered a string character.&lt;&#x2F;li&gt;
+&lt;li&gt;The last line is a copy of that string from before.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Finally, here documents placed after a command pass their contents as stdin. The easiest way to use a here doc to &lt;code&gt;cat&lt;&#x2F;code&gt; it. A little known fact is that if &lt;code&gt;cat&lt;&#x2F;code&gt; is not provided a filename, it will repeat whatever it&#x27;s provided from stdin. Of course, we can use the pipe to convert stdout from a command into stdin.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;$ echo &amp;quot;please cat this&amp;quot; | cat
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Thus, we can display the contents of a here doc using &lt;code&gt;cat&lt;&#x2F;code&gt; as follows:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;$ cat &amp;lt;&amp;lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &amp;quot;quote things&amp;quot; without needing to escape them.
+Oh the freedom
+MY_FANCY_END_TOKEN
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can even put variables in here documents&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;$ x=10
+$ y=$((x*2))
+
+$ cat &amp;lt;&amp;lt;END
+$x * 2 = $y
+END
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;the-parser-has-been-defeated&quot;&gt;The parser has been defeated!&lt;&#x2F;h2&gt;
+&lt;p&gt;Now that you&#x27;ve learned some cursed &lt;code&gt;bash&lt;&#x2F;code&gt; knowledge, lets fix &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser. Time for a game plan:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dive into &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and figure out where it converts &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Don&#x27;t.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Seems simple enough? Luckily &lt;code&gt;osh&lt;&#x2F;code&gt; has &lt;code&gt;osh --tool tokens&lt;&#x2F;code&gt;, which lets us start by peeking into the result of the tokenization step.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;$ osh --tool tokens
+cat &amp;lt;&amp;lt;END
+hello! \&amp;quot; \$ \\
+END
+    0 Lit_Chars            &amp;#x27;cat&amp;#x27;
+    1 WS_Space             &amp;#x27; &amp;#x27;
+    2 Redir_DLess          &amp;#x27;&amp;lt;&amp;lt;&amp;#x27;
+    3 Lit_Chars            &amp;#x27;END&amp;#x27;
+    4 Op_Newline           &amp;#x27;\n&amp;#x27;
+    5 Lit_Chars            &amp;#x27;hello! &amp;#x27;
+    6 Lit_EscapedChar      &amp;#x27;\\&amp;quot;&amp;#x27;
+    7 Lit_Chars            &amp;#x27; &amp;#x27;
+    8 Lit_EscapedChar      &amp;#x27;\\$&amp;#x27;
+    9 Lit_Chars            &amp;#x27; &amp;#x27;
+   10 Lit_EscapedChar      &amp;#x27;\\\\&amp;#x27;
+   11 Lit_Chars            &amp;#x27;\n&amp;#x27;
+   12 Eof_Real             &amp;#x27;&amp;#x27;
+   13 Lit_CharsWithoutPrefix &amp;#x27;&amp;#x27;
+   14 Undefined_Tok        &amp;#x27;END\n&amp;#x27;
+   15 Eof_Real             &amp;#x27;&amp;#x27;
+(16 tokens)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay, so &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; is a &lt;code&gt;Lit_EscapedChar&lt;&#x2F;code&gt;. Let&#x27;s search for this token and see if we can find the parsing step.&lt;&#x2F;p&gt;
+&lt;p&gt;Only 14 results, nice. Hmm, nothing particularly jumps out though.&lt;&#x2F;p&gt;
+&lt;p&gt;If you were smart (unlike me) you might think to grep &amp;quot;here doc&amp;quot; which would nicely land you at&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;def ReadHereDocBody(self, parts):
+    # type: (List[word_part_t]) -&amp;gt; None
+    &amp;quot;&amp;quot;&amp;quot;
+    A here doc is like a double quoted context, except &amp;quot; and \&amp;quot; aren&amp;#x27;t special.
+    &amp;quot;&amp;quot;&amp;quot;
+    self._ReadLikeDQ(None, False, parts)
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay cool, so this is the parser. OH, and &lt;code&gt;Lit_EscapedChar&lt;&#x2F;code&gt; is in &lt;code&gt;_ReadLikeDQ&lt;&#x2F;code&gt;! This must be it!&lt;&#x2F;p&gt;
+&lt;p&gt;Long story short, we can simply replace the escaped literal character with a regular literal token during parsing, and the problem is resolved!&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;diff&quot; class=&quot;language-diff &quot;&gt;&lt;code class=&quot;language-diff&quot; data-lang=&quot;diff&quot;&gt;if self.token_type == Id.Lit_EscapedChar:
+    ch = lexer.TokenSliceLeft(tok, 1)
++   if ch == &amp;#x27;&amp;quot;&amp;#x27; and is_here_doc:
++       tok.id = Id.Lit_Chars
++       part = tok
++   else:
+-   part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
++       part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Easy. Simple. 2 line change. Tests pass with flying colours.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;future-proofing&quot;&gt;Future proofing&lt;&#x2F;h2&gt;
+&lt;p&gt;But nothing in life is easy. Any idea what&#x27;s wrong with this code change? Take 3 seconds to see if you can think of some weird example... Okay, time&#x27;s up!&lt;&#x2F;p&gt;
+&lt;p&gt;This code is &lt;a href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;VuG4QhA89es?si=7XEKoC2QZVZ6080J&amp;amp;t=1577&quot;&gt;pretty good&lt;&#x2F;a&gt; but it&#x27;s breaking a contract between &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and its lexer.&lt;&#x2F;p&gt;
+&lt;p&gt;A cool interpreter has 3 main parts which the data touches in order:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Lexer&lt;&#x2F;strong&gt; -&amp;gt; processing strings sucks. It&#x27;s horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Parser&lt;&#x2F;strong&gt; -&amp;gt; turn your stream of tokens into an AST. Actually in our case we&#x27;re a leaf node, so we return a sequence of &amp;quot;parts&amp;quot; that make up what is essentially a single AST node.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Evaluator&lt;&#x2F;strong&gt; -&amp;gt; make your AST nodes do the thing they&#x27;re supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string &amp;amp; pass it on.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Remember 2 moments ago when we said strings suck so they shouldn&#x27;t be in the parser? We do &lt;code&gt;ch == &#x27;&amp;quot;&#x27;&lt;&#x2F;code&gt; above. Why are strings in the parser!&lt;&#x2F;p&gt;
+&lt;p&gt;Instead, lets update the parser to turn &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;Lit_BackslashDoubleQuote&lt;&#x2F;code&gt; tokens during here docs.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;diff&quot; class=&quot;language-diff &quot;&gt;&lt;code class=&quot;language-diff&quot; data-lang=&quot;diff&quot;&gt; # DQ stands for &amp;quot;double quote.&amp;quot; Here docs share the same lexer rule as double quoted strings.
+ LEXER_DEF[lex_mode_e.DQ] = [
+-    R(r&amp;#x27;\\[$`&amp;quot;\\]&amp;#x27;, Id.Lit_EscapedChar),
++    R(r&amp;#x27;\\[$`\\]&amp;#x27;, Id.Lit_EscapedChar),
++    C(&amp;#x27;\\&amp;quot;&amp;#x27;, Id.Lit_BackslashDoubleQuote),
+     C(&amp;#x27;\\\n&amp;#x27;, Id.Ignored_LineCont),
+     C(&amp;#x27;\\&amp;#x27;, Id.Lit_BadBackslash),  # syntax error in YSH, but NOT in OSH
+ ] + _LEFT_SUBS + _VARS + [
+     R(r&amp;#x27;[^$`&amp;quot;\0\\]+&amp;#x27;, Id.Lit_Chars),  # matches a line at most
+     C(&amp;#x27;$&amp;#x27;, Id.Lit_Dollar),  # completion of var names relies on this
+     # NOTE: When parsing here doc line, this token doesn&amp;#x27;t end it.
+     C(&amp;#x27;&amp;quot;&amp;#x27;, Id.Right_DoubleQuote),
+ ]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then update the parser as well.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;diff&quot; class=&quot;language-diff &quot;&gt;&lt;code class=&quot;language-diff&quot; data-lang=&quot;diff&quot;&gt; if self.token_type == Id.Lit_EscapedChar:
+     ch = lexer.TokenSliceLeft(tok, 1)
+     part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
++
++ elif self.token_type == Id.Lit_BackslashDoubleQuote:
++    if left_token:
++        ch = lexer.TokenSliceLeft(tok, 1)
++        part = word_part.EscapedLiteral(tok, ch)
++    else:
++        # in here docs \&amp;quot; should not be escaped, staying as literal characters
++        tok.id = Id.Lit_Chars
++        part = tok
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And we didn&#x27;t have to change the evaluator at all!&lt;&#x2F;p&gt;
+&lt;p&gt;Nothing like a good feeling.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

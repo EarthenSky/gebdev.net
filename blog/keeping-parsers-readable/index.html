@@ -1,0 +1,234 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/style/colours.css?v0.03">
+        <link rel="stylesheet" href="/style/main.css?v0.06">
+        <link rel="stylesheet" href="/style/projects.css?v0.03">
+        <link rel="stylesheet" href="/style/widgets.css?v0.03">
+        
+        <link rel="stylesheet" href="/style/cards.css?v0.02">
+        <link rel="stylesheet" href="/style/blog.css?v0.02">
+
+         
+
+        <link rel="icon" type="image/x-icon" href="/images/main.ico">
+        <title> Keeping Parsers Readable </title>
+    </head>
+
+    <body>
+        <div id="column-container">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <a href="/">
+                        <b>gebdev.net</b>
+                    </a>
+                    <div id="nav-menu">
+                        <span><a href="/blog" title="blogosphere" class="green-link"><b>blog</b></a></span>
+                        <span>| <a href="/things" title="all of it!"><b>file browser</b></a></span>
+                        <span>| <a href="/about" title="hi" class="green-link"><b>about</b></a></span>
+                    </div>
+                </div>
+            </header>
+
+             
+
+            
+<article>
+    <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; text-align: center; margin-top: 16px; margin-bottom: 36px;">
+        <h2 style="font-size: 3rem; margin: 0;">Keeping Parsers Readable</h2>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            How to update a parser without introducing tech debt
+            
+        </div>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/osh/">#osh</a>,
+                        
+                    
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/parsing/">#parsing</a>
+                    
+                 |
+            
+            November 26, 2025
+        </div>
+    </div>
+
+    <p><code>osh</code> is a cool shell that's trying to become compatible with <code>bash</code>. The <code>mdev-conf</code> <a href="https://pkgs.alpinelinux.org/package/edge/main/armhf/mdev-conf">alpine linux package</a> was failing to build with <code>osh</code> as the system shell. Graciously tag-team debugged by Andy and Bram from the <a href="https://oils.pub/">Oils project</a>, they found the <strong>root cause</strong> was the following bug in <code>osh</code> here doc parser.</p>
+<pre><code><const>$</const> cat bug.sh
+<comment># don't understand this syntax? me neither. keep reading and I cover it.</comment> 
+<session>cat &lt;&lt;EOF
+a \"quote\"
+EOF</session>
+
+<const>$</const> osh bug.sh
+<session>a "quote"</session>
+
+<const>$</const> bash bug.sh
+<session>a \"quote\"</session>
+</code></pre>
+<p>Interestingly enough, <code>toysh</code>, <code>sush</code>, and <code>brush</code> all fail in the same way. This seems to be the kind of thing <a href="https://oilshell.zulipchat.com/#narrow/channel/503208-bug-post-mortem/topic/mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs/near/553270324">you need to make your shell <strong>mature</strong></a>.</p>
+<div style="text-align: center; margin-bottom: 16px;">
+    <div style="margin: auto; display: inline-block; text-align: left;">
+        1. <a href="#where-document">Where document?</a>
+        <br>
+        2. <a href="#the-parser-has-been-defeated">The parser has been defeated!</a>
+        <br>
+        3. <a href="#future-proofing">Future proofing</a>
+    </div>
+</div>
+<h2 id="where-document">Where document?</h2>
+<p>A here document is like a multiline string from the olden days. Seriously, I'll explain it and you're gonna say &quot;oh yeah, that sounds like what they'd do.&quot;</p>
+<p>A here document as three parts:</p>
+<ol>
+<li>The first line starts with a <code>&lt;&lt;</code> followed by <strong>any string</strong> that doesn't contain a newline or spaces.</li>
+<li>After that, every line is considered a string character.</li>
+<li>The last line is a copy of that string from before.</li>
+</ol>
+<p>Finally, here documents placed after a command pass their contents as stdin. The easiest way to use a here doc to <code>cat</code> it. A little known fact is that if <code>cat</code> is not provided a filename, it will repeat whatever it's provided from stdin. Of course, we can use the pipe to convert stdout from a command into stdin.</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ echo &quot;please cat this&quot; | cat
+</code></pre>
+<p>Thus, we can display the contents of a here doc using <code>cat</code> as follows:</p>
+<pre><code>$ cat &lt;&lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom
+MY_FANCY_END_TOKEN
+</code></pre>
+<p>You can even put variables in here documents</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ x=10
+$ y=$((x*2))
+
+$ cat &lt;&lt;END
+$x * 2 = $y
+END
+</code></pre>
+<h2 id="the-parser-has-been-defeated">The parser has been defeated!</h2>
+<p>Now that you've learned some cursed <code>bash</code> knowledge, lets fix <code>osh</code>'s parser. Time for a game plan:</p>
+<ul>
+<li>Dive into <code>osh</code>'s parser and figure out where it converts <code>\&quot;</code> into <code>&quot;</code>.</li>
+<li>Don't.</li>
+</ul>
+<p>Seems simple enough? Luckily <code>osh</code> has <code>osh --tool tokens</code>, which lets us start by peeking into the result of the tokenization step.</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ osh --tool tokens
+cat &lt;&lt;END
+hello! \&quot; \$ \\
+END
+    0 Lit_Chars            &#x27;cat&#x27;
+    1 WS_Space             &#x27; &#x27;
+    2 Redir_DLess          &#x27;&lt;&lt;&#x27;
+    3 Lit_Chars            &#x27;END&#x27;
+    4 Op_Newline           &#x27;\n&#x27;
+    5 Lit_Chars            &#x27;hello! &#x27;
+    6 Lit_EscapedChar      &#x27;\\&quot;&#x27;
+    7 Lit_Chars            &#x27; &#x27;
+    8 Lit_EscapedChar      &#x27;\\$&#x27;
+    9 Lit_Chars            &#x27; &#x27;
+   10 Lit_EscapedChar      &#x27;\\\\&#x27;
+   11 Lit_Chars            &#x27;\n&#x27;
+   12 Eof_Real             &#x27;&#x27;
+   13 Lit_CharsWithoutPrefix &#x27;&#x27;
+   14 Undefined_Tok        &#x27;END\n&#x27;
+   15 Eof_Real             &#x27;&#x27;
+(16 tokens)
+</code></pre>
+<p>Okay, so <code>\&quot;</code> is a <code>Lit_EscapedChar</code>. Let's search for this token and see if we can find the parsing step.</p>
+<p>Only 14 results, nice. Hmm, nothing particularly jumps out though.</p>
+<p>If you were smart (unlike me) you might think to grep &quot;here doc&quot; which would nicely land you at</p>
+<pre data-lang="py" class="language-py "><code class="language-py" data-lang="py">def ReadHereDocBody(self, parts):
+    # type: (List[word_part_t]) -&gt; None
+    &quot;&quot;&quot;
+    A here doc is like a double quoted context, except &quot; and \&quot; aren&#x27;t special.
+    &quot;&quot;&quot;
+    self._ReadLikeDQ(None, False, parts)
+</code></pre>
+<p>Okay cool, so this is the parser. OH, and <code>Lit_EscapedChar</code> is in <code>_ReadLikeDQ</code>! This must be it!</p>
+<p>Long story short, we can simply replace the escaped literal character with a regular literal token during parsing, and the problem is resolved!</p>
+<pre data-lang="diff" class="language-diff "><code class="language-diff" data-lang="diff">if self.token_type == Id.Lit_EscapedChar:
+    ch = lexer.TokenSliceLeft(tok, 1)
++   if ch == &#x27;&quot;&#x27; and is_here_doc:
++       tok.id = Id.Lit_Chars
++       part = tok
++   else:
+-   part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
++       part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
+</code></pre>
+<p>Easy. Simple. 2 line change. Tests pass with flying colours.</p>
+<h2 id="future-proofing">Future proofing</h2>
+<p>But nothing in life is easy. Any idea what's wrong with this code change? Take 3 seconds to see if you can think of some weird example... Okay, time's up!</p>
+<p>This code is <a href="https://youtu.be/VuG4QhA89es?si=7XEKoC2QZVZ6080J&amp;t=1577">pretty good</a> but it's breaking a contract between <code>osh</code>'s parser and its lexer.</p>
+<p>A cool interpreter has 3 main parts which the data touches in order:</p>
+<ul>
+<li><strong>Lexer</strong> -&gt; processing strings sucks. It's horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).</li>
+<li><strong>Parser</strong> -&gt; turn your stream of tokens into an AST. Actually in our case we're a leaf node, so we return a sequence of &quot;parts&quot; that make up what is essentially a single AST node.</li>
+<li><strong>Evaluator</strong> -&gt; make your AST nodes do the thing they're supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string &amp; pass it on.</li>
+</ul>
+<p>Remember 2 moments ago when we said strings suck so they shouldn't be in the parser? We do <code>ch == '&quot;'</code> above. Why are strings in the parser!</p>
+<p>Instead, lets update the parser to turn <code>\&quot;</code> into <code>Lit_BackslashDoubleQuote</code> tokens during here docs.</p>
+<pre data-lang="diff" class="language-diff "><code class="language-diff" data-lang="diff"> # DQ stands for &quot;double quote.&quot; Here docs share the same lexer rule as double quoted strings.
+ LEXER_DEF[lex_mode_e.DQ] = [
+-    R(r&#x27;\\[$`&quot;\\]&#x27;, Id.Lit_EscapedChar),
++    R(r&#x27;\\[$`\\]&#x27;, Id.Lit_EscapedChar),
++    C(&#x27;\\&quot;&#x27;, Id.Lit_BackslashDoubleQuote),
+     C(&#x27;\\\n&#x27;, Id.Ignored_LineCont),
+     C(&#x27;\\&#x27;, Id.Lit_BadBackslash),  # syntax error in YSH, but NOT in OSH
+ ] + _LEFT_SUBS + _VARS + [
+     R(r&#x27;[^$`&quot;\0\\]+&#x27;, Id.Lit_Chars),  # matches a line at most
+     C(&#x27;$&#x27;, Id.Lit_Dollar),  # completion of var names relies on this
+     # NOTE: When parsing here doc line, this token doesn&#x27;t end it.
+     C(&#x27;&quot;&#x27;, Id.Right_DoubleQuote),
+ ]
+</code></pre>
+<p>Then update the parser as well.</p>
+<pre data-lang="diff" class="language-diff "><code class="language-diff" data-lang="diff"> if self.token_type == Id.Lit_EscapedChar:
+     ch = lexer.TokenSliceLeft(tok, 1)
+     part = word_part.EscapedLiteral(tok, ch)  # type: word_part_t
++
++ elif self.token_type == Id.Lit_BackslashDoubleQuote:
++    if left_token:
++        ch = lexer.TokenSliceLeft(tok, 1)
++        part = word_part.EscapedLiteral(tok, ch)
++    else:
++        # in here docs \&quot; should not be escaped, staying as literal characters
++        tok.id = Id.Lit_Chars
++        part = tok
+</code></pre>
+<p>And we didn't have to change the evaluator at all!</p>
+<p>Nothing like a good feeling.</p>
+
+
+    <div style="display: flex; flex-direction: row;">
+        <a href="/blog" style="margin-left: auto;">back to blog</a>
+    </div>
+
+</article>
+
+
+            <footer style="color: var(--soft-grey-2);">
+                <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
+                <p style="margin-bottom: 48px;">
+                    <em id="after-selected-color" style="padding: 0;">
+                        a starry night sky
+                    </em>
+                </p>
+            </footer>
+        </div>
+    </body>
+
+    <!-- TODO: simplify this ... <script src="scripts/colours.js"></script> -->
+
+     
+
+</html>

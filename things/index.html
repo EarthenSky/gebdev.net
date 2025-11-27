@@ -1,0 +1,253 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/style/colours.css?v0.03">
+        <link rel="stylesheet" href="/style/main.css?v0.06">
+        <link rel="stylesheet" href="/style/projects.css?v0.03">
+        <link rel="stylesheet" href="/style/widgets.css?v0.03">
+        
+        <link rel="stylesheet" href="/style/cards.css?v0.02">
+        <link rel="stylesheet" href="/style/blog.css?v0.02">
+
+         
+
+        <link rel="icon" type="image/x-icon" href="/images/main.ico">
+        <title> things </title>
+    </head>
+
+    <body>
+        <div id="column-container">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <a href="/">
+                        <b>gebdev.net</b>
+                    </a>
+                    <div id="nav-menu">
+                        <span><a href="/blog" title="blogosphere" class="green-link"><b>blog</b></a></span>
+                        <span>| <a href="/things" title="all of it!"><b>file browser</b></a></span>
+                        <span>| <a href="/about" title="hi" class="green-link"><b>about</b></a></span>
+                    </div>
+                </div>
+            </header>
+
+             
+
+            
+<style>
+    .starry-background {
+        background-image: url('/images/misc/stars-bg.png');
+        background-size: 300px;
+        background-position: 50px 50px;
+        background-repeat: repeat;
+    }
+    #file-browser {
+        color: var(--soft-purple);
+        font-size: 0.9em;
+        margin: 12px 0;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        /* TODO: align tags properly by adding required bottom-padding to angle bars // align-items: center;*/
+    }
+
+    .vertical-bar {
+        margin-left: 10.5px;
+        margin-right: 10.5px;
+        width: 4px;
+        height: 25px;
+
+        background-color: var(--stars);
+    }
+    .horizontal-bar {
+        margin-top: 10.5px;
+        height: 4px;
+        margin-bottom: 10.5px;
+        
+        width: 25px;
+
+        background-color: var(--stars);
+    }
+    .space {
+        width: 25px;
+        height: 25px;
+    }
+    .angle-bar {
+        margin-left: 10.5px;
+        margin-right: 10.5px;
+        width: 4px;
+        height: calc(25px / 2 - 2px);
+
+        background-color: var(--stars);
+    }
+    .angle-bar::after {
+        content: "";
+        position: absolute;
+
+        margin-top: 10.5px;
+        margin-bottom: 10.5px;
+        height: 4px;
+        width: calc(25px / 2 + 2px);
+
+        background-color: var(--stars);
+    }
+    .t-bar {
+        margin-left: 10.5px;
+        margin-right: 10.5px;
+        width: 4px;
+        height: 100%;
+        min-height: 25px;
+
+        background-color: var(--stars);
+    }
+    .t-bar::after {
+        content: "";
+        position: absolute;
+
+        margin-top: 10.5px;
+        margin-bottom: 10.5px;
+        height: 4px;
+        width: calc(25px / 2 + 2px);
+
+        background-color: var(--stars);
+    }
+    
+    .text-item {
+        display: inline;
+        margin-left: 4px;
+    }
+    .text-item span {
+        font-weight: 600;
+        vertical-align: -1px;
+    }
+
+    .icon-item {
+        display: inline;
+        margin-left: 4px;
+        width: 25px;
+        height: 25px;
+        transform: scale(1);
+    }
+    .icon-item:hover {
+        transform: scale(0.9);
+    }
+    .icon-item:active {
+        transform: scale(1.05);
+    }
+
+    .music-item {
+        cursor: pointer;
+        overflow-x: hidden;
+    }
+    .music-text {
+        display: inline-block;
+        width: fit-content;
+
+        text-wrap: nowrap;
+        transition: transform 1s ease;
+    }
+    .music-item:hover .music-text {
+        transform: translateX(
+            min(84px - 100%, 0px)
+        );
+    }
+
+    .tag {
+        border-radius: 7px;
+        transition: border-radius 0.2s ease;
+    }
+    .tag:hover {
+        border-radius: 2px;
+    }
+
+    .image-container {
+        cursor: pointer;
+    }
+    .image-container .image-item {
+        border-color: var(--space);
+        border-style: solid;
+        transition: border-color 0.20s ease-out;
+    }
+    .image-container:hover .image-item {
+        border-color: var(--stars);
+    }
+    .image-container .expand-icon {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .image-container:hover .expand-icon {
+        opacity: 1.0;
+    }
+
+</style>
+<article>
+    <div class="starry-background" style="display: flex; flex-direction: column; height: 90px; width: 100%;">
+        <div style="margin-left:auto; margin-top:auto; display:flex; align-items:center;">
+            <!-- TODO: implement this music playing -->
+            <!-- TODO: implement a little planet bouncing -->
+            <h2 style="display: inline; font-family: var(--body); color: var(--stars-on-black); font-size: 1em; padding: 0;">
+                geb's night time file browser
+            </h2>
+            <img style="cursor:pointer; filter: var(--stars-on-black-filter);" src="/icons/play.svg" height="25" width="25"/>
+            <img style="cursor:pointer; filter: var(--stars-on-black-filter);" src="/icons/music.svg" height="25" width="25"/>
+        </div>
+    </div>
+
+    <div id="file-browser">
+        <!--<div class="row">
+            <div class="t-bar"></div>
+            <div class="text-item"><span>music</span></div>
+        </div>
+        <div class="row">
+            <div class="vertical-bar"></div>
+            <div class="angle-bar"></div>
+            <div class="text-item">
+                <span>albums</span>
+            </div>
+            <div class="icon-item">
+                <img style="cursor:pointer; filter: var(--stars-on-black-filter);" src="/icons/folder.svg" height="25" width="25"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="t-bar"></div>
+            <div class="text-item"><span>photography</span></div>
+        </div>
+        -->
+        <div class="row">
+            <div class="vertical-bar"></div>
+        </div>
+    </div>
+</article>
+
+
+            <footer style="color: var(--soft-grey-2);">
+                <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
+                <p style="margin-bottom: 48px;">
+                    <em id="after-selected-color" style="padding: 0;">
+                        a starry night sky
+                    </em>
+                </p>
+            </footer>
+        </div>
+    </body>
+
+    <!-- TODO: simplify this ... <script src="scripts/colours.js"></script> -->
+
+    
+<script defer src="/scripts/night_time_file_browser.js"></script>
+
+
+</html>
