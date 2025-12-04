@@ -17,6 +17,8 @@ body {
 }
 
 p {
+    /* This is because of some weird line spacing stuff??? */
+    margin-top: -2px;
     margin-bottom: 16px;
 }
 

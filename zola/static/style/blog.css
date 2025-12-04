@@ -242,8 +242,6 @@ a {
     flex-direction: row;
 
     overflow-x: scroll;
-
-    flex
 }*/
 
 .middle-text {
@@ -275,17 +273,33 @@ a {
 pre code comment {
     color: var(--softer-grey);
 }
-
 pre code string {
-    color: var(--yellow);
+    color: var(--everforest-yellow);
 }
-
 pre code const {
+    color: var(--soft-blue);
+}
+pre code keyword {
     color: var(--red);
+}
+pre code symbol {
+    color: var(--medium-green);
+}
+pre code bra {
+    color: var(--red);
+}
+pre code op {
+    color: var(--orange);
 }
 
 pre code session {
-    color: var(--light-blue);
+    color: var(--soft-blue);
+}
+pre code addition {
+    background-color: var(--dark-green);
+}
+pre code removal {
+    background-color: var(--dark-red);
 }
 
 /* ---------- question & answer blocks ---------- */
