@@ -1,7 +1,8 @@
 +++
-title = "Keeping Parsers Readable"
-date = 2025-11-26
+title = "Patch Parsers Properly"
+date = 2025-12-03
 description = "How to update a parser without introducing tech debt"
+aliases = ["/blog/keeping-parsers-readable"]
 [taxonomies]
 tags=["osh", "parsing"]
 [extra]
@@ -24,6 +25,8 @@ EOF</session>
 </code></pre>
 
 Interestingly enough, `toysh`, `sush`, and `brush` all fail in the same way. This seems to be the kind of thing [you need to make your shell **mature**](https://oilshell.zulipchat.com/#narrow/channel/503208-bug-post-mortem/topic/mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs/near/553270324).
+
+I think it's an interesting distinction, so let's run through how this bug was fixed & why it was done in a specific way.
 
 <div style="text-align: center; margin-bottom: 16px;">
     <div style="margin: auto; display: inline-block; text-align: left;">
@@ -140,7 +143,7 @@ Nothing in life is easy. Any idea what's wrong with this code change? I'll give 
 
 This code is [pretty good](https://youtu.be/VuG4QhA89es?si=7XEKoC2QZVZ6080J&t=1577) but it's breaking a contract between `osh`'s parser and its lexer.
 
-In an interpreter the source code passed to it will touch 3 main parts, in order:
+The source code passed into an interpreter will touch 3 main parts, in order:
 - **Lexer** -> processing strings sucks. It's horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).
 - **Parser** -> turn your stream of tokens into an AST. In our case we're a leaf node, so we get away with returning a list of "parts," where an escaped character is one part.
 - **Evaluator** -> make your AST nodes do the thing they're supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string & pass it on.
