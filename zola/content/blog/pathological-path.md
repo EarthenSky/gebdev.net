@@ -14,19 +14,19 @@ It reminded me how `PATH` can be the ultimate compatibility ruiner. If you haven
 
 But if `PATH` is truly so important for compatibility, why can't different shells agree on this small example?
 
-<pre><code>$ env -i /bin/mksh -c <string>"echo \$PATH"</string>
+<pre><code>$ env -i /bin/mksh -c <string>'echo $PATH'</string>
 <comment>/bin:/usr/bin</comment>
 
-$ env -i /bin/zsh -c <string>"echo \$PATH"</string>
+$ env -i /bin/zsh -c <string>'echo $PATH'</string>
 <comment>/bin:/usr/bin:/usr/ucb:/usr/local/bin</comment>
 
-$ env -i /bin/ash -c <string>"echo \$PATH"</string>
+$ env -i /bin/ash -c <string>'echo $PATH'</string>
 <comment>/sbin:/usr/sbin:/bin:/usr/bin</comment>
 
-$ env -i /bin/bash -c <string>"echo \$PATH"</string>
+$ env -i /bin/bash -c <string>'echo $PATH'</string>
 <comment>/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.</comment>
 
-$ env -i /bin/sh -c <string>"echo \$PATH"</string>
+$ env -i /bin/sh -c <string>'echo $PATH'</string>
 <comment>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</comment>
 </code></pre>
 
@@ -34,7 +34,7 @@ What's going on above is
 
 - `env -i` → Clears the environment. All environment variables, including `PATH`, get removed.
 - `<shell> -c` → Evaluates the following string in a non-interactive shell. This is the same mode as when you run a shell script.
-- `"echo \$PATH"` → You'd expect this to be empty because `PATH` is an environment variable and it just got cleared. But `PATH` is so important that shells have a built-in default included in their source code!
+- `'echo $PATH'` → You'd expect this to be empty because `PATH` is an environment variable and it just got cleared. But `PATH` is so important that shells have a built-in default included in their source code!
 
 I'm getting a little ahead of myself. Let's start from the beginning of the story.
 
@@ -148,7 +148,7 @@ When <code>bash</code> starts up as an interactive shell it follows a <a href="h
 <div class="question">
     <img src="/images/profiles/default18.png">
     <div>
-        I looked at <code>/etc/profile</code> and saw it assigns <code>PATH</code>, but it's different than <code>env -i /bin/bash -c "echo \$PATH"</code>.
+        I looked at <code>/etc/profile</code> and saw it assigns <code>PATH</code>, but it's different than <code>env -i /bin/bash -c 'echo $PATH'</code>.
     </div>
 </div>
 <div class="question" style="margin-left: calc(2.5em + 6px)">
@@ -174,7 +174,7 @@ When <code>bash</code> starts up as an interactive shell it follows a <a href="h
 <div class="question">
     <img src="/images/profiles/default18.png">
     <div>
-        I started a non-interactive shell with <code>bash -c "echo \$PATH"</code> but it still doesn't show the default <code>PATH</code>. Why?
+        I started a non-interactive shell with <code>bash -c 'echo $PATH'</code> but it still doesn't show the default <code>PATH</code>. Why?
     </div>
 </div>
 
