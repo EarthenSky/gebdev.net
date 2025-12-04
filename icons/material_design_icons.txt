@@ -1,0 +1,1 @@
+See https://github.com/Templarian/MaterialDesign for where I got a lot of the icons from. License is Apache 2.0.

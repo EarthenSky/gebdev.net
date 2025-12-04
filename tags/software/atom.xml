@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - software</title>
+    <link rel="self" type="application/atom+xml" href="https://gebdev.net/tags/software/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://gebdev.net"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-07-20T00:00:00+00:00</updated>
+    <id>https://gebdev.net/tags/software/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Many Pictures</title>
+        <published>2023-07-20T00:00:00+00:00</published>
+        <updated>2023-07-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://gebdev.net/blog/many-pictures/"/>
+        <id>https://gebdev.net/blog/many-pictures/</id>
+        
+        <content type="html" xml:base="https://gebdev.net/blog/many-pictures/">&lt;p&gt;Generating a random image is fun; you never know what you&#x27;re going to get! I&#x27;ve always thought it would be an interesting screensaver, so I made &lt;a href=&quot;https:&#x2F;&#x2F;many-pictures.github.io&#x2F;&quot;&gt;a small static site&lt;&#x2F;a&gt; to do just that.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-problem&quot; style=&quot;margin-top: 24px;&quot;&gt;The problem&lt;&#x2F;h3&gt;
+&lt;p&gt;At 100 queries per day, the &lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;custom-search&#x2F;v1&#x2F;overview#pricing&quot;&gt;free API&lt;&#x2F;a&gt; provided by Google image search won&#x27;t work. A screensaver needs to be constantly producing interesting stuff! However, anyone can make requests to google images from a browser for free. We can take the straight forwards approach and &amp;quot;reverse engineer&amp;quot; the google search bar by making an HTTP request with the following query:&lt;&#x2F;p&gt;
+&lt;div style=&quot;display: flex; flex-direction: row; align-items: center; justify-content: center; margin: 1em 0;&quot;&gt;
+    &lt;div class=&quot;multiline-code&quot; style=&quot;display: inline;&quot;&gt;
+        https:&#x2F;&#x2F;www.google.com&#x2F;search?&lt;span style=&quot;color: var(--soft-green);&quot;&gt;q=your+search+query+here&lt;&#x2F;span&gt;&amp;tbm=isch
+    &lt;&#x2F;div&gt;
+    &lt;a class=&quot;tooltip&quot; style=&quot;margin-left: 6px;&quot;&gt;[1]&lt;span class=&quot;tooltip-text&quot;&gt;That last part &lt;code&gt;&amp;tbm=isch&lt;&#x2F;code&gt; tells google to only search images.&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;In my experience, this approach can fail inconsistently and tends to only get poor quality images. The higher quality version of an image likely requires some amount of additional steps that javascript performs when in browsers.&lt;&#x2F;p&gt;
+&lt;p&gt;But there&#x27;s a different approach. To beat both issues, I looked into &lt;a href=&quot;https:&#x2F;&#x2F;pixabay.com&#x2F;&quot;&gt;Pixabay&lt;&#x2F;a&gt;, a great website for finding free photos submitted by users. Most of these photos are pretty high in quality, given that they&#x27;re forced to go through a layer of &lt;a href=&quot;https:&#x2F;&#x2F;pixabay.com&#x2F;images&#x2F;tools&#x2F;quality_rating&#x2F;&quot;&gt;community voting&lt;&#x2F;a&gt; first. And it just so happens that Pixabay has a really nice &lt;a href=&quot;https:&#x2F;&#x2F;pixabay.com&#x2F;service&#x2F;about&#x2F;api&#x2F;&quot;&gt;free API&lt;&#x2F;a&gt; that fit my purposes!&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;how-does-it-work&quot; style=&quot;margin-top: 24px;&quot;&gt;How does it work?&lt;&#x2F;h3&gt;
+&lt;p&gt;Many Pictures is a screensaver website that uses Pixabay&#x27;s public API to automatically scroll through images. It&#x27;s purpose is for when you have an idle computer, such as a shared computer in a public space. The current version of Many Pictures scrolls through images in chronological order, so it never repeats.&lt;&#x2F;p&gt;
+&lt;p&gt;You can also use the mouse&#x27;s scroll wheel to increase and decrease the scroll speed.&lt;&#x2F;p&gt;
+&lt;div style=&quot;width: 60%; margin: 24px auto 0 auto;&quot;&gt;
+    &lt;img style=&quot;width: 100%;&quot; src=&quot;&#x2F;images&#x2F;blog&#x2F;many-pictures&#x2F;example_921.png&quot;&gt;&lt;&#x2F;img&gt;
+    &lt;p class=&quot;img-desc&quot;&gt;Image 921 added to Pixabay, including the layout of Many Pictures&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;more-problems&quot; style=&quot;margin-top: 24px;&quot;&gt;More problems&lt;&#x2F;h3&gt;
+&lt;p&gt;Pixabay&#x27;s free API has a limit of 100 requests per minute. If the scroll speed ever loads images faster than once per &lt;code&gt;600ms&lt;&#x2F;code&gt;, Many Pictures will detect it using a geometric average and throttle the scroll speed accordingly.&lt;&#x2F;p&gt;
+&lt;div style=&quot;width: 90%; margin: 24px auto 24px auto;&quot;&gt;
+    &lt;img style=&quot;width: 100%;&quot; src=&quot;&#x2F;images&#x2F;blog&#x2F;many-pictures&#x2F;timing_data.png&quot;&gt;&lt;&#x2F;img&gt;
+    &lt;p class=&quot;img-desc&quot;&gt;The geometric average time vs the exact time the image took to load, with scroll speed at the bottom&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;You can see in the above chart that the geometric average helps rough out any speedups &#x2F; slowdowns caused by the time it takes to download each image. When recording this data, I only ever increased the scroll speed, while the algorithm slowed it down. You can see this on the bottom half of the chart.&lt;&#x2F;p&gt;
+&lt;p&gt;A nice side-effect of this approach is that slowdowns are somewhat smooth, and typically occur all at once.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;try-it-out&quot; style=&quot;margin-top: 24px;&quot;&gt;Try it out&lt;&#x2F;h3&gt;
+&lt;p&gt;To use Many Pictures you need your own API key. 100 images per minute is too shallow of a limit for more than a few people to use at a time, but luckily Pixabay API keys are free! Follow these steps to grab your own key &amp;amp; plug it into Many Pictures.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+    &lt;li&gt;Go to &lt;a href=&quot;https:&#x2F;&#x2F;pixabay.com&#x2F;api&#x2F;docs&#x2F;&quot;&gt;https:&#x2F;&#x2F;pixabay.com&#x2F;api&#x2F;docs&#x2F;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+    &lt;li&gt;Create a free account &amp; login&lt;&#x2F;li&gt;
+    &lt;li&gt;Ctrl+F &quot;Your API key:&quot; &amp; copy the key (highlighted in green)&lt;&#x2F;li&gt;
+    &lt;li&gt;Go to &lt;a href=&quot;https:&#x2F;&#x2F;many-pictures.github.io&#x2F;&quot;&gt;https:&#x2F;&#x2F;many-pictures.github.io&#x2F;&lt;&#x2F;a&gt; and input your api key in the top input box&lt;&#x2F;li&gt;
+    &lt;li&gt;Press enter&lt;&#x2F;li&gt;
+    &lt;li&gt;Enjoy!&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;div style=&quot;width: 60%; margin: 24px auto 24px auto;&quot;&gt;
+    &lt;img style=&quot;width: 100%;&quot; src=&quot;&#x2F;images&#x2F;blog&#x2F;many-pictures&#x2F;example_many.gif&quot;&gt;&lt;&#x2F;img&gt;
+    &lt;p class=&quot;img-desc&quot;&gt;woooooo~&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;
+    Feel free to check out this website&#x27;s source on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;many-pictures&#x2F;many-pictures.github.io&quot;&gt;GitHub&lt;&#x2F;a&gt; if you&#x27;d like to see how I used the Pixabay API, or have any other questions
+&lt;&#x2F;p&gt;</content>
+        
+    </entry>
+</feed>

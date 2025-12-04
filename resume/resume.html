@@ -1,0 +1,292 @@
+<!doctype html>
+
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="colours.css">
+        <title>Gabriel Stang - Resume</title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1 id="name" style="font-weight: 600;">
+                    Gabriel Stang
+                </h1>
+                <p style="font-family: monospace;" class="grey">
+                    // oh, hello!
+                </p>
+            </div>
+
+            <div style="display: inline-block; margin-right: 0.25in;">
+                <span id="phone">
+                    <object data="/resume/images/phone.svg" type="image/svg+xml"></object>
+                    [on request]
+                </span>
+
+                <br>
+
+                <span id="email">
+                    <object data="/resume/images/mail.svg" type="image/svg+xml"></object>
+                    gabriel_stang@sfu.ca
+                </span>
+
+                <br>
+
+                <span id="website">
+                    <a class="blue" style="text-decoration: none;" href="https://gebdev.net">
+                        <object data="/resume/images/planet.svg" type="image/svg+xml"></object>
+                        gebdev.net (portfolio)
+                    </a>
+                </span>
+
+                <br>
+
+                <span id="github">
+                    <a class="blue" style="text-decoration: none;" href="https://github.com/EarthenSky">
+                        <object data="/resume/images/github.svg" type="image/svg+xml"></object>
+                        github.com/EarthenSky
+                    </a>
+                </span>
+            </div>
+
+            <div class="grey" style="display: inline-block; margin-right: 0.25in; font-family: monospace;">
+                <b class="blue">float</b> y = x * <span class="teal">0.5f</span>; <br>
+                <b class="blue">long</b> i  = *(<b class="blue">long</b> *) &x; <br>
+                i = <span class="teal">0x5f3759df</span> - (i >> <span class="teal">1</span>); <br>
+                x = *(<b class="blue">float</b> *) &i; <br>
+                <b class="blue">return</b> x * (<span class="teal">1.5f</span> - (y*x*x)); <br>
+            </div>
+        </header>
+
+        <content>
+            <div class="left">
+                <section>
+                    <p style="margin-top: -0.2in;">
+                        A new graduate with experience in
+                        optimization, graphics, & game dev. 
+                        Interested in understanding everything about computers!
+                    </p>
+                    <br>
+
+                    <div style="display: flex;">
+                        <h2 style="display: inline-block;">WORK</h2>
+                        <img src="/resume/images/banner_small.png" style="transform: scaleX(-1); display: block; height: 1.5rem; image-rendering: pixelated; margin-left: auto;">
+                    </div>
+                    
+                    <p style="display: flex;" class="dark-green">
+                        <b>OSENSA Innovations</b>
+                        <b style="margin-left: auto;">Python</b>
+                    </p>
+                    <p style="display: flex;" class="grey">
+                        <span>// Software Engineering Intern</span>
+                        <span style="margin-left: auto;">May - Sep 2024</span>
+                        <b style="margin-left: 15px;">4 month</b>
+                    </p>
+                    <ul>
+                        <li>Improved analog pin read speed of our RaspberryPi SDK by <b>18 times</b>, motivating a new client to adopt the product</li>
+                        <li>Diagnosed root cause of inconsistent system degradation with Linux system tooling</li>
+                    </ul>
+                    <br>
+
+                    <p style="display: flex;" class="dark-green">
+                        <b class="dark-green">Reliable Systems Lab, SFU</b>
+                        <b style="margin-left: auto;">Rust</b>
+                    </p>
+                    <p style="display: flex;" class="grey">
+                        <span>// Research Assistant</span>
+                        <span style="margin-left: auto;">Feb - Sep 2023</span>
+                        <b style="margin-left: 15px;">8 month</b>
+                    </p>
+                    <ul>
+                        <li>Collaborated with peers to find an important optimization for our concolic execution engine</li>
+                        <li>Discovered automatic method to detect logic inconsistencies between Rust semantics & the Z3 SMT solver</li>
+                    </ul>
+                    <br>
+
+                    <p style="display: flex;" class="dark-green">
+                        <b class="dark-green">Safe Software</b>
+                        <b style="margin-left: auto;">C++</b>
+                    </p>
+                    <p style="display: flex;" class="grey">
+                        <span>// C++ Software Developer Intern</span>
+                        <span style="margin-left: auto;">May - Sep 2021</span>
+                        <b style="margin-left: 15px;">4 month</b>
+                    </p>
+                    <ul>
+                        <li>Optimized Geodatabase raster writing, decreasing user wait for long operations by up to <b>10 times</b></li>
+                        <li>Fixed several issues requiring changes to both the front and backend of the FME desktop application</li>
+                    </ul>
+                    <br>
+
+                    <p style="display: flex;" class="dark-green">
+                        <b class="dark-green">Brockman Brumme Labs, SFU</b>
+                        <b style="margin-left: auto;">Python</b>
+                    </p>
+                    <p style="display: flex;" class="grey">
+                        <span>// Part-time Webtool Programmer</span>
+                        <span style="margin-left: auto;">Jul 2018 - May 2021</span>
+                        <b style="margin-left: 15px;"> 3 year</b>
+                    </p>
+                    <ul>
+                        <li>Developed an interactive graph visualization tool in D3.js to help researchers quickly find trends in large amounts of data</li>
+                        <li>Updated Perl webtools to modern Python 3 to ease upkeep</li>
+                    </ul>
+                    <br>
+                </section>
+
+                <section>
+                    <div style="display: flex;">
+                        <h2 style="display: inline-block;">PROJECTS</h2>
+                        <img src="/resume/images/banner_small.png" style="transform: scaleX(-1); display: block; height: 1.5rem; image-rendering: pixelated; margin-left: auto;">
+                    </div>
+
+                    <div id="projects" style="display: flex; flex-wrap: wrap;">
+                        <div>
+                            <p style="display: flex;" class="dark-green">
+                                <b>Inst. Segmentation</b>
+                                <b style="margin-left: auto;">Pytorch</b>
+                            </p>
+                            <p style="display: flex;" class="grey">
+                                <span>// Computer Vision</span>
+                                <span style="margin-left: auto;">Nov 2023</span>
+                            </p>
+                            <ul>
+                                <li>Avoided overfitting by tuning dropout layers, placing <b>1st</b> of 107 students on test set</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <p style="display: flex;" class="dark-green">
+                                <b>CPU Raytracer</b>
+                                <b style="margin-left: auto;">Zig</b>
+                            </p>
+                            <p style="display: flex;" class="grey">
+                                <span>// Personal Project</span>
+                                <span style="margin-left: auto;">Sep 2023</span>
+                            </p>
+                            <ul>
+                                <li><b>Doubled</b> rendering speed of big scenes by implementing a bounding volume hierarchy</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <p style="display: flex;" class="dark-green">
+                                <b class="dark-green">Decaf Compiler</b>
+                                <b style="margin-left: auto;">C++</b>
+                            </p>
+                            <p style="display: flex;">
+                                <span class="grey">// Compiler Design</span>
+                                <span style="margin-left: auto;" class="grey">Dec 2020</span>
+                            </p>
+                            <ul>
+                                <li>Preemptively identified bugs with Valgrind, passing <b>99.7%</b> of 751 non-trivial testcases</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <p class="grey" style="font-family: Fredoka; text-align: center;">
+                                + many more :)
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+
+            <div class="right">
+                <section>
+                    <h2>SKILLS</h2>
+
+                    <div>
+                        <b class="dark-green" style="font-family: ASAP; font-size: 1rem;">Languages</b> <br>
+                        C, C++, C#, Rust, Python, Java, Lua, OCaml, Haskell, HTML, CSS, JS
+                    </div>
+
+                    <div>
+                        <b class="dark-green" style="font-family: ASAP; font-size: 1rem;">Technologies</b> <br>
+                        Unity, SDL2, OpenGL, Git, Vim, Lex, Yacc, PyTorch, D3.js
+                    </div>
+                    <br>
+                </section>
+
+                <section>
+                    <h2>EDUCATION</h2>
+                    
+                    <h3 class="dark-green">Simon Fraser University</h3>
+                    <p>
+                        Computing Science Honours <br>
+                        <span class="grey">// Sep 2019 - Apr 2025</span> <br>
+                    </p>
+                    <ul>
+                        <li>3.94 / 4.33 GPA</li>
+                        <li>President's Honour Roll (2 terms)</li>
+                    </ul>
+                    <br>
+                </section>
+
+                <section>
+                    <h2>VOLUNTEERING</h2>
+                    
+                    <h3 class="dark-green">System Administrator</h3>
+                    <p>
+                        Computing Science Student Society <br>
+                        <span class="grey">// Feb 2024 - Present</span>
+                    </p>
+                    <ul>
+                        <li>Maintain <a class="blue" style="text-decoration: none;" href="https://sfucsss.org">sfucsss.org</a> & other services, with FastAPI, Nginx, etc.</li>
+                    </ul>
+                    <br>
+
+                    <h3 class="dark-green">Treasurer</h3>
+                    <p>
+                        Computing Science Student Society <br>
+                        <span class="grey">// May 2022 - Apr 2024</span>
+                    </p>
+                    <br>
+
+                    <h3 class="dark-green">President</h3>
+                    <p>
+                        SFU Game Dev Club <br>
+                        <span class="grey">// Mar 2021 - Sep 2024</span>
+                    </p>
+                    <ul>
+                        <li>Bi-weekly meetings, industry speakers, 24-hour <a class="blue" style="text-decoration: none;" href="https://itch.io/jam/mountain-top-game-jam-2023">game jam</a></li>
+                    </ul>
+                    <br>
+                </section>
+
+                <section>
+                    <h2>INTERESTS</h2>
+                    <ul> 
+                        <li>
+                            <b>
+                                <a class="dark-green" style="text-decoration: none;" href="https://chipscompo.com/user/Zechnition">
+                                    Composing music
+                                </a>
+                            </b> - won the 4-month NGADM 2022 competition
+                        </li>
+                        <li>
+                            <b class="dark-green">Indie games</b> - my favourites are Celeste and Factorio
+                        </li>
+                        <li>Learning programming languages</li>
+                        <li>Hard problems in math & computer science</li>
+                    </ul>
+                </section>
+            </div>
+        </content>
+
+        <footer>
+            <div style="display: flex;">
+                <img 
+                    src="/resume/images/banner_bottom_full_cherry.png"
+                    style="transform: scaleX(-1); image-rendering: pixelated; display: inline-block; width: 100%; margin-top: 8px;">
+            </div>
+        </footer>
+    </body>
+</html>

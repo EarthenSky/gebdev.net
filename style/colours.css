@@ -1,0 +1,109 @@
+:root {
+    /* TODO: pine blue for background */
+    --front-hard: #e9efe9;
+    --front-soft: #7e7f8e;
+    --front-softer: #5a5e5a;
+    --back: #2f3335;
+    --back-darker: #131414;
+    /*--black: #000000;*/
+    --color1-high: #c3dd66;
+    --color1-high-trans: #c3dd6641;
+    --color1-high-trans2: #c3dd669a;
+    --color1-mid: #87ce3c;
+    --color1-mid-trans: #87ce3c41;
+    --color1-low: #3f8d4c;
+    --color1-low-trans: #3f8d4c41;
+    --color2-high: #8af1c6;
+    --color2-mid: #26d399;
+    --color2-low: #2e8f6f;
+
+    --header: "ASAP";
+
+    /* Georgia, serif */
+    /* -apple-system, BlinkMacSystemFont */
+    /* "Alte Haas Grotesk 2" */
+    --body: -apple-system,BlinkMacSystemFont,"Segoe UI",monospace;
+
+    --a1: #5ba675;
+    --a1-trans: #5ba67541;
+    --a2: #6bc96c;
+    --a2-trans: #6bc96c41;
+    --a3: #abdd64;
+    --a4: #fcef8d;
+
+    --b1: #8465ec;
+    --b1-trans: #8465ec41;
+    --b2: #6d80fa;
+    --b2-trans: #6d80fa41;
+    --b3: #8db7ff;
+    --b4: #aee2ff;
+
+    /* -------- new --------- */
+    --invisible: #ffffff00;
+    --soft-blue-trans: #9dcdfc41;
+    --blue-trans: #4da6ff41;
+    --soft-green-trans: #b3e99141;
+    --softer-grey-trans: #8789c441;
+    --soft-yellow-trans: #ffeda741;
+    --stars-trans: #473b7841;
+    --stars-on-black-trans: #8368bc41;
+    --soft-purple-trans: #b38eea41;
+    --white-trans: #ffffeb41;
+    --black-trans: #01011241;
+
+    --stars-on-black: #8368bc;
+    --stars-on-black-filter: invert(49%) sepia(13%) saturate(2009%) hue-rotate(218deg) brightness(87%) contrast(81%);
+    --white-on-black-filter: invert(100%);
+    --warm-purple: #c25acd;
+    --soft-purple: #b38eea;
+
+    --space: #262631; /*#272736;*/
+    --light-space: #3c3c4c;
+    --stars: #473b78;
+    --white: #ffffeb;
+    --softer-grey: #8789c4;
+    --soft-grey-2: #6d6f94;
+    --soft-grey: #5a5d5e;
+    --black: #010112;
+    --soft-blue: #9dcdfc;
+    --light-blue: #6ccbff;
+    --blue: #4da6ff;
+    --dark-blue: #4b5bab;
+    --darker-blue: #323f82;
+    --dark-green: #37573e;
+    --medium-green: #8dd163;
+    --green: #8fde5d;
+    --warm-green: #6bc96c;
+    --light-green: #c3dd66;
+    --soft-green: #b3e991;
+    --warm-yellow: #e0a64f;
+    --yellow: #ffe478;
+    --soft-yellow: #ffeda7;
+    --orange: #f2a65e;
+    --brown: #964253;
+    --red: #de3e71;
+    --dark-red: #6f1833;
+
+    --everforest-green: #91c867;
+    --everforest-red: #e87878;
+    --everforest-orange: #ea9a75;
+    --everforest-blue: #81cdc3;
+    --everforest-aqua: #53dd81;
+    --everforest-purple: #d085b5;
+    --everforest-yellow: #f3d77d;
+
+    --tag-green: #66ad37;
+    --tag-yellow: #eed056;
+    --tag-blue: #4da6ff;
+    --tag-puprle: #b38eea;
+    --tag-red: #d5264a;
+    --tag-white: #ebe7db;
+}
+
+soft-yellow {
+    color: var(--soft-yellow);
+}
+
+soft-green {
+    color: var(--soft-green);
+}

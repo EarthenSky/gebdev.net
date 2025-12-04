@@ -1,0 +1,344 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/style/colours.css?v0.03">
+        <link rel="stylesheet" href="/style/main.css?v0.06">
+        <link rel="stylesheet" href="/style/projects.css?v0.03">
+        <link rel="stylesheet" href="/style/widgets.css?v0.03">
+        
+        <link rel="stylesheet" href="/style/cards.css?v0.02">
+        <link rel="stylesheet" href="/style/blog.css?v0.02">
+
+         
+
+        <link rel="icon" type="image/x-icon" href="/images/main.ico">
+        <title> Pathological PATH </title>
+    </head>
+
+    <body>
+        <div id="column-container">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <a href="/">
+                        <b>gebdev.net</b>
+                    </a>
+                    <div id="nav-menu">
+                        <span><a href="/blog" title="blogosphere" class="green-link"><b>blog</b></a></span>
+                        <span>| <a href="/things" title="all of it!"><b>file browser</b></a></span>
+                        <span>| <a href="/about" title="hi" class="green-link"><b>about</b></a></span>
+                    </div>
+                </div>
+            </header>
+
+             
+
+            
+<article>
+    <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; text-align: center; margin-top: 16px; margin-bottom: 36px;">
+        <h2 style="font-size: 3rem; margin: 0;">Pathological PATH</h2>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            A deep dive into shells and their default PATH
+            
+        </div>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/osh/">#osh</a>,
+                        
+                    
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/linux/">#linux</a>
+                    
+                 |
+            
+            November 24, 2025
+        </div>
+    </div>
+
+    <p>Sometimes it's your CI server, sometimes it's cross compilation, and sometimes someone on a Mac just wants to build your code. Even in the wild west of the early 80s, you still REALLY wanted to be able to run the code you <a href="https://archive.org/details/byte-magazine-1980-07/page/n43/mode/2up">painstakingly typed out by hand from BYTE magazine</a>. Compatibility has always been important.</p>
+<p>I've been helping improve the compatibility of <a href="https://oils.pub/osh.html">osh</a> as part of the <a href="https://oils.pub/">oils project</a>, but ran into this weird inconsistency between shells regarding <code>PATH</code> in an empty environment.</p>
+<p>It reminded me how <code>PATH</code> can be the ultimate compatibility ruiner. If you haven't had the displeasure of trying to figure out why you couldn't run a newly installed version of some program or library, then you've surely fought with one of <code>PATH</code>'s close relatives, <a href="https://stackoverflow.com/questions/1899436/pylint-unable-to-import-error-how-to-set-pythonpath"><code>PYTHONPATH</code></a> or <a href="https://stackoverflow.com/questions/21964709/how-to-set-or-change-the-default-java-jdk-version-on-macos/24657630#24657630"><code>JAVA_HOME</code></a>.</p>
+<p>But if <code>PATH</code> is truly so important for compatibility, why can't different shells agree on this small example?</p>
+<pre><code>$ env -i /bin/mksh -c <string>'echo $PATH'</string>
+<comment>/bin:/usr/bin</comment>
+
+$ env -i /bin/zsh -c <string>'echo $PATH'</string>
+<comment>/bin:/usr/bin:/usr/ucb:/usr/local/bin</comment>
+
+$ env -i /bin/ash -c <string>'echo $PATH'</string>
+<comment>/sbin:/usr/sbin:/bin:/usr/bin</comment>
+
+$ env -i /bin/bash -c <string>'echo $PATH'</string>
+<comment>/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:.</comment>
+
+$ env -i /bin/sh -c <string>'echo $PATH'</string>
+<comment>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</comment>
+</code></pre>
+<p>What's going on above is</p>
+<ul>
+<li><code>env -i</code> → Clears the environment. All environment variables, including <code>PATH</code>, get removed.</li>
+<li><code>&lt;shell&gt; -c</code> → Evaluates the following string in a non-interactive shell. This is the same mode as when you run a shell script.</li>
+<li><code>'echo $PATH'</code> → You'd expect this to be empty because <code>PATH</code> is an environment variable and it just got cleared. But <code>PATH</code> is so important that shells have a built-in default included in their source code!</li>
+</ul>
+<p>I'm getting a little ahead of myself. Let's start from the beginning of the story.</p>
+<div style="text-align: center; margin-bottom: 16px;">
+    <div style="margin: auto; display: inline-block; text-align: left;">
+        <a href="#a-pivotal-path">A. Pivotal <code>PATH</code></a>
+        <br>
+        <a href="#b-where-do-my-binaries-live">B. Where do my binaries live?</a>
+        <br>
+        <a href="#c-where-do-paths-come-from">C. Where do <code>PATH</code>s come from?</a>
+        <br>
+        <a href="#d-nobody-uses-anything-but-bash-anyways">D. Nobody uses anything but <code>bash</code> anyways</a>
+        <br>
+        <a href="#e-this-matters-in-the-real-world">E. This matters in the real world!</a>
+        <br>
+    </div>
+</div>
+<h2 id="a-pivotal-path">A. Pivotal <code>PATH</code></h2>
+<p>Your shell uses <a href="https://en.wikipedia.org/wiki/PATH_(variable)"><code>PATH</code></a> to find the right binary when you run a command. Running commands is important.<sup><a href="https://www.explainxkcd.com/wiki/index.php/285:_Wikipedian_Protester">[citation needed]</a></sup> Say we wanted to run the following in <code>bash</code>:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ gcc main.c -o main
+</code></pre>
+<p>Per <code>bash</code>'s <a href="https://www.gnu.org/software/bash/manual/bash.html#Command-Search-and-Execution-1">reference manual</a> it would perform the following steps:</p>
+<ol start="0">
+<li>Check if <code>gcc</code> contains any slashes in its name → <soft-yellow>nope.</soft-yellow></li>
+<li>Check if <code>gcc</code> is a shell function → <soft-yellow>nope.</soft-yellow></li>
+<li>Check if <code>gcc</code> is a shell builtin → <soft-yellow>also nope.</soft-yellow></li>
+<li>Search each directory in <code>PATH</code> for an executable file named <code>gcc</code> → <soft-green>Aha!</soft-green> Found <code>/usr/bin/gcc</code>.</li>
+<li>Execute <code>gcc</code> in a separate execution environment.</li>
+</ol>
+<h2 id="b-where-do-my-binaries-live">B. Where do my binaries live?</h2>
+<div class="question" style="margin-bottom: 16px;">
+    <img src="/images/profiles/default3.png">
+    <div>
+        Why is <code>gcc</code> in <code>/usr/bin</code>? Just <code>/bin</code> sounds like it would be simpler.
+    </div>
+</div>
+<p>To answer this question, we're first assuming you're on a Linux system. But even then, different Linux systems vary on where they place certain binaries. Luckily, most Linux distributions make it their policy to follow FHS, or the <a href="https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard">Filesystem Hierarchy Standard</a>, originally developed in 1994 by the Linux Foundation to unify conventions regarding key directories.</p>
+<h3 id="bin-and-usr-bin"><code>/bin</code> and <code>/usr/bin</code></h3>
+<p>According to FHS, <code>/bin</code> is for <strong>programs that may be used by anyone</strong>, but which are required when no other filesystems are mounted. <code>/usr/bin</code> is just the primary directory for executable commands on the system.</p>
+<p>On Debian <code>/bin</code> is a symlink to <code>/usr/bin</code>, which sounds like a good call.</p>
+<div class="question">
+    <img src="/images/profiles/default5.png">
+    <div>
+        Wait... why would <code>/bin</code> and <code>/usr/bin</code> be separate directories in the first place?
+    </div>
+</div>
+<div class="answer">
+    <div>
+        Good question!
+    </div>
+</div>
+<div class="answer">
+    <div>
+        Back in the olden days <a href="https://ourworldindata.org/grapher/historical-cost-of-computer-memory-and-storage">drives were expensive</a> and not very large. The idea was that you could save space and money by sharing a single <code>/usr</code> drive (filled with all sorts of useful goodies) between a large number of hosts.
+    </div>
+</div>
+<div class="answer">
+    <div>
+        However, if you were playing around and <a href="https://xkcd.com/456/">messed up your system</a> such that mounting <code>/usr</code> failed, you REALLY wanted all the commands needed to fix the issue on your current drive.
+    </div>
+</div>
+<h3 id="sbin-and-usr-sbin"><code>/sbin</code> and <code>/usr/sbin</code></h3>
+<p><code>/usr/sbin</code> is for binaries <strong>used exclusively by the system administrator</strong>. Just like before, <code>/sbin</code> is typically a symlink to <code>/usr/sbin</code>. This directory consists of commands for configuring the system, like <code>adduser</code>, <code>chroot</code>, or <code>ip</code>.</p>
+<h3 id="usr-local-bin-and-usr-local-sbin"><code>/usr/local/bin</code> and <code>/usr/local/sbin</code></h3>
+<p>FHS recommends placing locally installed software in <code>/usr/local/bin</code> and <code>/usr/local/sbin</code>. It notes that system updates shouldn't mess with anything under <code>/usr/local</code>. Informally, this is where software goes that wasn't installed using a package manager.</p>
+<h3 id="usr-ucb"><code>/usr/ucb</code></h3>
+<p>An unexpected directory to be built-in to <code>zsh</code>'s default <code>PATH</code>.</p>
+<p>FHS does not specify <code>/ucb</code> anywhere, because it's a convention on BSD! Apparently <code>ucb</code> stands for &quot;University of California, Berkeley&quot; where BSD originated, and the directory was <strong>intended for compatibility with tools developed for BSD</strong> systems. Although <code>/bin/ucb</code> seems to have been deprecated in some BSD systems <a href="https://docs-archive.freebsd.org/44doc/smm/01.setup/paper.pdf">since as early as 1993</a>, which may be part of the reason is doesn't appear in FHS.</p>
+<h3 id="current-directory">Current directory</h3>
+<p><code>.</code> of course refers to the current directory. If <code>.</code> is in your <code>PATH</code>, then you can run any binaries in the current directory without needing to prepend <code>./</code>.</p>
+<h2 id="c-where-do-paths-come-from">C. Where do <code>PATH</code>s come from?</h2>
+<div class="question" style="margin-bottom: 16px;">
+    <img src="/images/profiles/default18.png">
+    <div>
+        When I do <code>echo $PATH</code> in <code>bash</code> I get a whole lot of paths, but none of them are <code>"."</code>, as above. What's going on?
+    </div>
+</div>
+<p>Contrary to popular belief, A stork does not fly to your Linux distro and set its <code>PATH</code> during installation. Unfortunately, there's actually a lot of nuance regarding which config scripts get run when the environment is setup. The following are only the most common examples.</p>
+<h3 id="interactive-shells">Interactive shells</h3>
+<p>When you open your terminal, this is called an interactive shell. It gives feedback when you type commands, which is helpful for human brains.</p>
+<p>When <code>bash</code> starts up as an interactive shell it follows a <a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">startup routine</a>. It first executes <code>/etc/profile</code> which is the system wide initialization script for shells. <code>bash</code> then runs the following in order: <code>~/.bash_profile</code>, <code>~/.bash_login</code>, and finally <code>~/.profile</code>.</p>
+<h3 id="non-interactive-shells">Non-interactive shells</h3>
+<div class="question">
+    <img src="/images/profiles/default18.png">
+    <div>
+        I looked at <code>/etc/profile</code> and saw it assigns <code>PATH</code>, but it's different than <code>env -i /bin/bash -c 'echo $PATH'</code>.
+    </div>
+</div>
+<div class="question" style="margin-left: calc(2.5em + 6px)">
+    <div>
+        Since <code>/etc/profile</code> is the first script to <code>export PATH</code>, it has to be the default <code>PATH</code>, right?
+    </div>
+</div>
+<div class="answer">
+    <div>
+        Yes, <code>/etc/profile</code> is the default <code>PATH</code> for interactive shells. However, non-interactive shells don't follow the startup routine above.
+    </div>
+</div>
+<div class="answer">
+    <div>
+        So what's the value of <code>PATH</code> before <code>/etc/profile</code>? That's the <b>true</b> default <code>PATH</code>. You can find it <a href="https://github.com/bminor/bash/blob/a8a1c2fac029404d3f42cd39f5a20f24b6e4fe4b/config-top.h#L61">embedded in bash's source code</a>.
+    </div>
+</div>
+<h3 id="environment-variables-exist-outside-of-shells">Environment variables exist outside of shells</h3>
+<div class="question">
+    <img src="/images/profiles/default18.png">
+    <div>
+        I started a non-interactive shell with <code>bash -c 'echo $PATH'</code> but it still doesn't show the default <code>PATH</code>. Why?
+    </div>
+</div>
+<div class="answer">
+    <div>
+        <code>/etc/profile</code> exports <code>PATH</code>, which makes it an environment variable. Environment variables are <a href="https://tldp.org/LDP/tlk/kernel/processes.html#:~:text=environment%20variables">per-process</a>, typically stored <a href="https://refspecs.linuxfoundation.org/elf/x86_64-abi-0.98.pdf">near the beginning of the stack</a>, but before the first function frame.
+    </div>
+</div>
+<div class="answer">
+    <div>
+        Crucially, when a child processes is <a href="https://man7.org/linux/man-pages/man2/execve.2.html">executed</a> it <a href="https://man7.org/linux/man-pages/man7/environ.7.html#:~:text=it%20inherits%20a%20copy%20of%20its%0A%20%20%20%20%20%20%20parent%27s%20environment">inherits environment variables</a> from its parent.
+    </div>
+</div>
+<div class="question">
+    <img src="/images/profiles/default18.png">
+    <div>
+        Then how can you get the true default <code>PATH</code>?
+    </div>
+</div>
+<div class="answer">
+    <div>
+        If you really want to reset your environment, you can use <code>env -i</code>. <code>env</code> is for modifying the environment of a child process, while the <code>-i</code> (or <code>--ignore-environment</code>) starts with an empty environment.
+    </div>
+</div>
+<h3 id="etc-sudoers"><code>/etc/sudoers</code></h3>
+<p>The sudo policy affects auditing, logging, and policy decisions. <code>/etc/sudoers</code> specifies the default sudo policy.</p>
+<p>The most important aspect of the sudo policy, in our situation, is how it affects the <a href="https://man7.org/linux/man-pages/man5/sudoers.5.html#:~:text=proto(5).-,Command%20environment,-Since%20environment%20variables">command environment</a>. Notably, it can restrict which environment variables are inherited after running the <code>sudo</code> command!</p>
+<p>By default <code>/etc/sudoers</code> appears to have <code>env_reset</code> set, with <code>secure_path</code> equal to <code>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</code>. This means that if no <code>PATH</code> environment variable is set, whatever is run by the <code>sudo</code> command will get the value of <code>secure_path</code>. This works as follows:</p>
+<pre><code>$ env -i bash -c <string>"sudo ./echo_path.sh"</string>
+<comment>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</comment>
+
+<comment># modify secure_path in /etc/sudoers</comment>
+$ env -i bash -c <string>"sudo ./echo_path.sh"</string>
+<comment>/this:/is:/a:/modified:/secure:/path</comment>
+</code></pre>
+<details style="margin-bottom: 16px;">
+    <summary style="cursor: pointer;">Some lame additional details about <code>/etc/sudoers</code> for those interested</summary>
+    <div>
+        <blockquote>
+            By default, the <code>env_reset</code> flag is enabled. This causes commands to be executed with a new, minimal environment ... [which] is initialized with the contents of <code>/etc/environment</code>.
+        </blockquote>
+        <blockquote>
+            Additional variables, such as <code>DISPLAY</code>, <code>PATH</code> and <code>TERM</code>, are preserved from the invoking user's environment if permitted by the <code>env_check</code>, or <code>env_keep</code> options.
+        </blockquote>
+        <blockquote>
+            If the <code>PATH</code> and <code>TERM</code> variables are not preserved from the user's environment, they will be set to default values.
+        </blockquote>
+        <blockquote>
+            If, however, the <code>env_reset</code> flag is disabled, any variables not explicitly denied by the <code>env_check</code> and <code>env_delete</code> options are allowed and their values are inherited from the invoking process.
+        </blockquote>
+    </div>
+</details>
+<h2 id="d-nobody-uses-anything-but-bash-anyways">D. Nobody uses anything but <code>bash</code> anyways</h2>
+<p>I have <a href="https://www.reddit.com/r/linux4noobs/comments/12wfzb8/best_shell_in_your_opinion_2023/">little evidence</a>, but even before diving into shells I'd see <code>zsh</code> in surprising places, often because of its ease of customization for interactive use. There is <strong>at least</strong> a small place in the world for <a href="https://www.oilshell.org/blog/2021/01/why-a-new-shell.html">new shells</a>!</p>
+<p>One such shell is <code>osh</code>. Its goal is to move on from <code>bash</code>. Sure, <code>bash</code> has always been there for us, <a href="https://news.ycombinator.com/item?id=35992575">but</a> <a href="https://wizardzines.com/zines/bite-size-bash/#:~:text=Variable%20assignment%20is%20weird">it's</a> <a href="https://wizardzines.com/zines/bite-size-bash/#:~:text=if%20statements%20run%20programs%20instead%20of%20checking%20a%20boolean%20value">time</a>.</p>
+<p><code>osh</code>'s key contribution is a 3-stage <a href="https://oils.pub/osh.html">upgrade path</a> that makes transitioning from <code>bash</code> to a better tool as easy as possible:</p>
+<ol>
+<li>
+<p><strong>Transparency</strong>. Replace <code>bash</code> with <code>osh</code> and don't notice anything.</p>
+<p><code>bash</code> is the default shell language on most Linux systems, and the one that most shells scripts target. If <code>osh</code> hopes to be easy to adopt, compatibility with <code>bash</code> is crucial!</p>
+</li>
+<li>
+<p><strong>Error Checking</strong>. Opt into a bunch of <a href="https://oils.pub/release/latest/doc/error-catalog.html#OILS-ERR-301">helpful error checks</a> by enabling strict mode <code>shopt --set strict:all</code>.</p>
+</li>
+<li>
+<p><strong>New Paradigm</strong>. Upgrade to <code>ysh</code>, a modern shell language that shares most of its runtime with <code>osh</code>, with <code>shopt --set ysh:upgrade</code>.</p>
+</li>
+</ol>
+<h2 id="e-this-matters-in-the-real-world">E. This matters in the real world!</h2>
+<p>I've recently been helping with a <a href="https://oils.pub/blog/2025/09/releases.html#:~:text=of%20work%20on-,regtest/aports,-%2C%20a%20batch%20job">&quot;secret project&quot;</a> to make <code>osh</code> more <code>bash</code> compatible.</p>
+<h3 id="the-not-so-secret-project">The (not so) secret project</h3>
+<div style="margin-top: 16px;"></div>
+<ol start="0">
+<li>Spin up an alpine linux instance.</li>
+<li>Replace <code>/bin/bash</code>, <code>/bin/sh</code>, and <code>/bin/ash</code> with <a href="https://en.wikipedia.org/wiki/Symbolic_link">symlinks</a> to <code>osh</code>.</li>
+<li>Try to build a specific package, like <code>nginx</code>.</li>
+<li>If it fails, deduce which shell script caused the bug and fix it.</li>
+<li>Repeat for every package from the <a href="https://pkgs.alpinelinux.org/packages">alpine linux package index</a>.</li>
+</ol>
+<p>This is a cool idea because if someone using alpine linux (<a href="https://ish.app/">like me</a>) happened to sneeze and <code>ash</code> (alpine's default shell) got replaced with <code>osh</code>, they almost wouldn't notice. Commands, package builds, and scripts would all work the same as before!</p>
+<p>Given the alpine package manager's wide usage, such a detailed suite of automated tests approximately enumerates all observable shell behaviour. So according to <a href="https://www.hyrumslaw.com/">Hyrum's Law</a>, <code>osh</code> and <code>ash</code> would be approximately indistinguishable! However, <code>ash</code>, and <code>bash</code> are incompatible shells themselves, so it's a dream that could never be. At least these tests help <code>osh</code> find a lot of <code>bash</code> incompatibilities along the way.</p>
+<h3 id="default-path-matters">Default <code>PATH</code> matters</h3>
+<p>My role in this project has been to dig into packages that fail to build, then find their <strong>root cause</strong>.</p>
+<p>For example, when you try to build the <code>lua-aports</code> package, <a href="https://web.archive.org/web/20251114091059/https://op.oils.pub/aports-build/2025-10-22.wwz/_tmp/aports-report/2025-10-22/disagree-2025-10-15-main/osh-as-sh/log/lua-aports.log.txt">a bunch of tests fail</a>. It's not clear to me what <code>lua-aports</code> does exactly, but Lua is definitely involved. One failing test is the following:</p>
+<pre><code>[ RUN      ] spec/abuild_spec.lua:36: abuild get_conf should return the value of a configuration variable from the user config
+Unable to deduce build architecture. Install apk-tools, or set CBUILD.
+spec/abuild_spec.lua:37: Expected objects to be equal.
+Passed in:
+(string) <string>''</string>
+Expected:
+(string) <string>'myvalue'</string>
+
+stack traceback:
+	spec/abuild_spec.lua:37: in function &lt;spec/abuild_spec.lua:36&gt;
+</code></pre>
+<!-- TODO: clean up formatting past here -->
+<p>Of course, this doesn't seem to be related to the default <code>PATH</code> at all, but debugging can be tricky like that. If you're interested in the (slightly compressed) trail I followed, it was:</p>
+<ol start="0">
+<li>
+<p><code>MYVAR</code> doesn't exist in the current environment? Something must be up. </p>
+<pre><code>describe(<string>"get_conf"</string>, function()<br>    local abuild = require(<string>"aports.abuild"</string>)<br>    it(<string>"should return the value of a configuration variable from the user config"</string>, function()<br>        <comment>-- This assertion is failing!</comment><br>        assert.equal(<string>"myvalue"</string>, abuild.get_conf(<string>"MYVAR"</string>))<br>    end)<br>end)</code></pre>
+</li>
+<li>
+<p>This Lua test is part of a test framework called <code>lua-busted</code>, which is invoked after the package builds using the command <code>env -i busted-$(LUA_VERSION) --verbose</code>. <code>busted-5.4</code> (our current version) starts with a shebang, so the error might occur before the testsuite is run?</p>
+<pre><code><comment>#!/usr/bin/lua5.4</comment><br><comment>-- Busted command-line runner</comment><br>require <string>'busted.runner'</string>({ standalone = <const>false</const> })</code></pre>
+</li>
+<li>
+<p>Oh wow, just running <code>./busted-5.4</code> without <code>env -i</code> passes all tests. Something in the environment must be causing these issues.</p>
+</li>
+<li>
+<p>There are a few key differences between the environment variables of <code>ash</code> and <code>osh</code> (only differences shown):</p>
+<pre><code>$ cat ./display_env.sh<br><comment>env</comment><br><br>ash$ env -i ./display_env.sh<br><comment>PATH=/sbin:/usr/sbin:/bin:/usr/bin</comment><br><comment>SHLVL=1</comment><br><br>osh-0.36$ env -i ./display_env.sh<br><comment>PATH=/bin:/usr/bin</comment><br><comment>LINES=63</comment><br><comment>COLUMNS=141</comment></code></pre>
+</li>
+<li>
+<p>Aha! Adding <code>/sbin:/usr/sbin</code> to <code>osh</code>'s default <code>PATH</code> solves the build failures. The testing framework must have depended on a non-interactive subshell that tried to run system configuration commands, likely for the local environment.</p>
+</li>
+</ol>
+<p>Now we reach the end of our story where the <a href="https://en.wikipedia.org/wiki/Corner_case">pathological case</a>... was the shell's default <code>PATH</code>.</p>
+
+
+    <div style="display: flex; flex-direction: row; margin-top: 48px;">
+        <span style="font-size: 14px; color: var(--soft-grey-2);">this was written <b>without</b> any use of generative ai</span>
+
+        <a href="/blog" style="margin-left: auto; font-size: 14px;">back to blog</a>
+    </div>
+
+</article>
+
+
+            <footer style="color: var(--soft-grey-2);">
+                <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
+                <p style="margin-bottom: 48px;">
+                    <em id="after-selected-color" style="padding: 0;">
+                        a starry night sky
+                    </em>
+                </p>
+            </footer>
+        </div>
+    </body>
+
+    <!-- TODO: simplify this ... <script src="scripts/colours.js"></script> -->
+
+     
+
+</html>

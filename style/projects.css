@@ -1,0 +1,78 @@
+.project-tag-green {
+    font-size: 1rem;
+    font-weight: bold;
+
+    border-radius: 8px;
+
+    color: var(--yellow);
+}
+.project-tag-green:hover {
+    color: var(--soft-yellow);
+    text-decoration-color: var(--soft-yellow-trans);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: row;
+
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+
+    background-color: var(--dark-green);
+}
+.project-card > div {
+    display: flex;
+    flex-direction: row;
+
+    width: calc(100%);
+}
+.project-card > div > div {
+    width: calc(100% - 16px);
+
+    line-height: 1.0;
+}
+.project-card > div > .barrier-end {
+    width: 8px;
+    height: 1px;
+    margin: 0 0 0 8px;
+    border-radius: 8px;
+
+    background-color: var(--stars);
+
+    transition: height 0.15s ease-in-out, background-color 0.2s ease;
+}
+.project-card:hover > div > .barrier-end {
+    height: 100%;
+    background-color: var(--soft-yellow);
+}
+.project-card > div > div > .project-title {
+    font-family: 'Lato', 'ASAP', sans-serif;
+    font-weight: 900;
+
+    color: var(--yellow);
+
+    margin-bottom: 3px;
+
+    line-height: 1.0;
+}
+.project-card > div > div > .project-tags {
+    display: inline-block;
+}
+.project-card > div > div > .project-tags > span {
+    font-size: 1em;
+
+    color: var(--soft-yellow);
+}
+.project-card > div > div > .project-desc {
+    margin-top: 3px;
+
+    font-family: 'Lato', sans-serif; font-weight: 500;
+
+    font-size: 0.85em;
+    line-height: 1.2;
+
+    color: var(--white);
+}

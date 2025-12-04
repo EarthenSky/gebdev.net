@@ -1,0 +1,290 @@
+<!doctype html>
+
+<html lang="en" data-theme="auto">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/style/colours.css?v0.03">
+        <link rel="stylesheet" href="/style/main.css?v0.06">
+        <link rel="stylesheet" href="/style/projects.css?v0.03">
+        <link rel="stylesheet" href="/style/widgets.css?v0.03">
+        
+        <link rel="stylesheet" href="/style/cards.css?v0.02">
+        <link rel="stylesheet" href="/style/blog.css?v0.02">
+
+         
+
+        <link rel="icon" type="image/x-icon" href="/images/main.ico">
+        <title> Patch Parsers Properly </title>
+    </head>
+
+    <body>
+        <div id="column-container">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <a href="/">
+                        <b>gebdev.net</b>
+                    </a>
+                    <div id="nav-menu">
+                        <span><a href="/blog" title="blogosphere" class="green-link"><b>blog</b></a></span>
+                        <span>| <a href="/things" title="all of it!"><b>file browser</b></a></span>
+                        <span>| <a href="/about" title="hi" class="green-link"><b>about</b></a></span>
+                    </div>
+                </div>
+            </header>
+
+             
+
+            
+<article>
+    <div style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; text-align: center; margin-top: 16px; margin-bottom: 36px;">
+        <h2 style="font-size: 3rem; margin: 0;">Patch Parsers Properly</h2>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            How to update a parser without introducing tech debt
+            
+        </div>
+        <div style="font-size: 14px; color: var(--soft-grey-2);">
+            
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/osh/">#osh</a>,
+                        
+                    
+                
+                    <a class="grey-link" href="https://gebdev.net/tags/parsing/">#parsing</a>
+                    
+                 |
+            
+            December 03, 2025
+        </div>
+    </div>
+
+    <p><code>osh</code> is a cool shell that's trying to become compatible with <code>bash</code>. The <code>mdev-conf</code> <a href="https://pkgs.alpinelinux.org/package/edge/main/armhf/mdev-conf">alpine linux package</a> was failing to build with <code>osh</code> as the system shell. Andy and Bram from the <a href="https://oils.pub/">Oils project</a> traced the <strong>root cause</strong> to the following bug in <code>osh</code>'s here doc parser:</p>
+<pre><code><symbol>$</symbol> cat bug.sh
+<comment># don't understand this syntax? Me neither. Keep reading and I cover it!</comment> 
+<session>cat &lt;&lt;EOF
+a \"quote\"
+EOF</session>
+
+<symbol>$</symbol> osh bug.sh
+<session>a "quote"</session>
+
+<symbol>$</symbol> bash bug.sh
+<session>a \"quote\"</session>
+</code></pre>
+<p>Interestingly enough, <code>toysh</code>, <code>sush</code>, and <code>brush</code> all fail in the same way. This seems to be the kind of thing <a href="https://oilshell.zulipchat.com/#narrow/channel/503208-bug-post-mortem/topic/mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs/near/553270324">you need to make your shell <strong>mature</strong></a>.</p>
+<p>I think it's an interesting distinction, so let's run through how this bug was fixed &amp; why it was done in a specific way.</p>
+<div style="text-align: center; margin-bottom: 16px;">
+    <div style="margin: auto; display: inline-block; text-align: left;">
+        1. <a href="#where-doc">Where doc?</a>
+        <br>
+        2. <a href="#initial-fix-just-the-parser">Initial fix: just the parser</a>
+        <br>
+        3. <a href="#second-attempt-both-parser-lexer">Second attempt: both parser & lexer</a>
+        <br>
+        4. <a href="#what-not-to-do">What not to do</a>
+    </div>
+</div>
+<h2 id="where-doc">Where doc?</h2>
+<p>A <a href="https://www.gnu.org/software/bash/manual/bash.html#Here-Documents">here document</a> (commonly shortened to here doc) is like a multiline string from the olden days. Seriously, you're gonna say &quot;oh yeah, that sounds like what they'd do back then.&quot;</p>
+<p>A here doc starts with <code>&lt;&lt;</code> followed by a single word. Like <code>&lt;&lt;MY_END_TOKEN</code>. After that, all lines of text until <code>MY_END_TOKEN\n</code> will comprise a large string.</p>
+<pre><code><keyword>$</keyword> <string>&lt;&lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can "quote things" without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN</string>
+</code></pre>
+<p>The only purpose of a here doc is that, when placed after a command, <a href="https://www.gnu.org/software/bash/manual/bash.html#Here-Documents:~:text=All%20of%20the%20lines%20read%20up%20to%20that%20point%20then%20become%20the%20standard%20input">its contents become the command's stdin</a>. A little known fact is that if <code>cat</code> is not given an argument, it will echo its stdin. Thus, the easiest way to see the contents of a here doc is to <code>cat</code> it. Of course, we can use the pipe to convert stdout into stdin.</p>
+<pre><code><keyword>$</keyword> echo <string>"please cat this"</string> | cat
+<session>please cat this</session>
+</code></pre>
+<p>Now, we can display the contents of a here doc using <code>cat</code>:</p>
+<pre><code><keyword>$</keyword> cat <string>&lt;&lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can "quote things" without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN</string>
+<session>This is my cool essay where I can "quote things" without needing to escape them.
+Oh the freedom...</session>
+</code></pre>
+<p>Variables even get expanded in here docs:</p>
+<pre><code><keyword>$</keyword> x=<const>10</const>
+<keyword>$</keyword> y=$((x*<const>2</const>))
+<keyword>$</keyword> cat <string>&lt;&lt;END
+$x * 2 = $y
+END</string>
+<session>10 * 2 = 20</session>
+</code></pre>
+<h2 id="initial-fix-just-the-parser">Initial fix: just the parser</h2>
+<p>Now that we've learned some cursed <code>bash</code> knowledge, lets fix <code>osh</code>'s parser. Game plan:</p>
+<ul>
+<li>Dive into <code>osh</code>'s parser and figure out where it converts <code>\&quot;</code> into <code>&quot;</code>.</li>
+<li>Don't.</li>
+</ul>
+<p>Seems simple enough?</p>
+<p>I was quickly able to find where here docs are parsed. It mostly shares functionality with the parsing of double quote strings.</p>
+<pre><code><keyword>def</keyword> <symbol>ReadHereDocBody</symbol><bra>(</bra>self, parts<bra>)</bra>:
+    <comment># type: (List[word_part_t]) -> None</comment>
+    <string>"""
+    A here doc is like a double quoted context, except " and \" aren't special.
+    """</string>
+    self.<symbol>_ReadLikeDQ</symbol><bra>(</bra><const>None</const>, <const>False</const>, parts<bra>)</bra>
+</code></pre>
+<p>We can then use <code>osh</code>'s awesome utility <code>osh --tool tokens</code> to peek at the results of the tokenization step.</p>
+<pre><code><keyword>$</keyword> osh --tool tokens
+cat <string>&lt;&lt;END
+hello! \" \$ \\
+END</string><session>
+    0 Lit_Chars            'cat'
+    1 WS_Space             ' '
+    2 Redir_DLess          '<<'
+    3 Lit_Chars            'END'
+    4 Op_Newline           '\n'
+    5 Lit_Chars            'hello! '
+    6 Lit_EscapedChar      '\\"'
+    7 Lit_Chars            ' '
+    8 Lit_EscapedChar      '\\$'
+    9 Lit_Chars            ' '
+   10 Lit_EscapedChar      '\\\\'
+   11 Lit_Chars            '\n'
+   12 Eof_Real             ''
+   13 Lit_CharsWithoutPrefix ''
+   14 Undefined_Tok        'END\n'
+   15 Eof_Real             ''
+(16 tokens)</session>
+</code></pre>
+<p><code>\&quot;</code> is converted into a <code>Lit_EscapedChar</code> token, so we just need to add some logic to treat this differently. Sure enough <code>_ReadLikeDQ</code> has a clause predicated on <code>Id.Lit_EscapedChar</code> which extracts the second character in the token's string. We can simply replace the escaped char token with a token literal during parsing, and the problem is resolved!</p>
+<pre><code> <keyword>if</keyword> <const>self</const>.token_type <op>==</op> Id.Lit_EscapedChar:
+     ch = lexer.<symbol>TokenSliceLeft</symbol><bra>(</bra>tok, <const>1</const><bra>)</bra>
+<addition>+    <keyword>if</keyword> ch <op>==</op> <string>'"'</string> <op>and</op> is_here_doc:</addition>
+<addition>+        tok.id <op>=</op> Id.Lit_Chars</addition>
+<addition>+        part <op>=</op> tok</addition>
+<addition>+    <keyword>else</keyword>:</addition>
+<removal >-    part <op>=</op> word_part.<symbol>EscapedLiteral</symbol><bra>(</bra>tok, ch<bra>)</bra>  <comment># type: word_part_t</comment></removal>
+<addition>+        part <op>=</op> word_part.<symbol>EscapedLiteral</symbol><bra>(</bra>tok, ch<bra>)</bra>  <comment># type: word_part_t</comment></addition>
+</code></pre>
+<p>Easy. Simple. 2 line change. All <code>osh</code> tests pass with flying colours.</p>
+<p>Actually, it's worthwhile to mention how helpful the <a href="https://web.archive.org/web/20251128184718/https://op.oilshell.org/uuu/github-jobs/10842/"><code>osh</code> test suite</a> is for making quick changes like these. I wasn't sure whether introducing sequential <code>Lit_Chars</code> tokens like we do above into the result of <code>_ReadLikeDQ</code> might break an implicit assumption somewhere else. However, these assumptions are either included in tests or considered bugs.</p>
+<h2 id="second-attempt-both-parser-lexer">Second attempt: both parser &amp; lexer</h2>
+<p>Nothing in life is easy. Any idea what's wrong with this code change? I'll give you 3 seconds to try to think up some weird reason... Okay, time's up!</p>
+<p>This code is <a href="https://youtu.be/VuG4QhA89es?si=7XEKoC2QZVZ6080J&amp;t=1577">pretty good</a> but it's breaking a contract between <code>osh</code>'s parser and its lexer.</p>
+<p>The source code passed into an interpreter will touch 3 main parts, in order:</p>
+<ul>
+<li><strong>Lexer</strong> -&gt; processing strings sucks. It's horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).</li>
+<li><strong>Parser</strong> -&gt; turn your stream of tokens into an AST. In our case we're a leaf node, so we get away with returning a list of &quot;parts,&quot; where an escaped character is one part.</li>
+<li><strong>Evaluator</strong> -&gt; make your AST nodes do the thing they're supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string &amp; pass it on.</li>
+</ul>
+<p>Now remember 2 moments ago when we said strings suck so they shouldn't be in the parser? We check <code>ch == '&quot;'</code> above. Why did we put strings in the parser?!</p>
+<p>Instead, lets update our lexer's rule to turn <code>\&quot;</code> into <code>Lit_BackslashDoubleQuote</code>. Then when it's time to convert, we compare tokens, not strings.</p>
+<pre><code> <comment># DQ stands for "double quote." Here docs share the same lexer rule as double quoted strings.</comment>
+ LEXER_DEF<bra>[</bra>lex_mode_e.DQ<bra>]</bra> <op>=</op> <bra>[</bra>
+     <comment># R(...) stands for regex</comment>
+<removal >-    <symbol>R</symbol><bra>(</bra><string>r'\\[$`"\\]'</string>, Id.Lit_EscapedChar<bra>)</bra>,</removal>
+<addition>+    <symbol>R</symbol><bra>(</bra><string>r'\\[$`\\]'</string>, Id.Lit_EscapedChar<bra>)</bra>,</addition>
+     <comment># C(...) stands for constant</comment>
+<addition>+    <symbol>C</symbol><bra>(</bra><string>'\\"'</string>, Id.Lit_BackslashDoubleQuote<bra>)</bra>,</addition>
+     <symbol>C</symbol><bra>(</bra><string>'\\\n'</string>, Id.Ignored_LineCont<bra>)</bra>,
+     <symbol>C</symbol><bra>(</bra><string>'\\'</string>, Id.Lit_BadBackslash<bra>)</bra>,  <comment># syntax error in YSH, but NOT in OSH</comment>
+ <bra>]</bra> <op>+</op> _LEFT_SUBS <op>+</op> _VARS <op>+</op> <bra>[</bra>
+     <symbol>R</symbol><bra>(</bra><string>r'[^$`"\0\\]+'</string>, Id.Lit_Chars<bra>)</bra>,  <comment># matches a line at most</comment>
+     <symbol>C</symbol><bra>(</bra><string>'$'</string>, Id.Lit_Dollar<bra>)</bra>,  <comment># completion of var names relies on this</comment>
+     <comment># NOTE: When parsing here doc line, this token doesn't end it.</comment>
+     <symbol>C</symbol><bra>(</bra><string>'"'</string>, Id.Right_DoubleQuote<bra>)</bra>,
+ ]
+</code></pre>
+<p>Then update the parser as well.</p>
+<pre><code>  <keyword>if</keyword> <const>self</const>.token_type <op>==</op> Id.Lit_EscapedChar:
+     ch <op>=</op> lexer.<symbol>TokenSliceLeft</symbol><bra>(</bra>tok, <const>1</const><bra>)</bra>
+     part <op>=</op> word_part.<symbol>EscapedLiteral</symbol><bra>(</bra>tok, ch<bra>)</bra>  <comment># type: word_part_t</comment>
+<addition>+
++ <keyword>elif</keyword> <const>self</const>.token_type <op>==</op> Id.Lit_BackslashDoubleQuote:
++    <keyword>if</keyword> left_token:
++        ch <op>=</op> lexer.<symbol>TokenSliceLeft</symbol><bra>(</bra>tok, <const>1</const><bra>)</bra>
++        part <op>=</op> word_part.<symbol>EscapedLiteral</symbol><bra>(</bra>tok, ch<bra>)</bra>
++    <keyword>else</keyword>:
++        <comment># in here docs \" should not be escaped, staying as literal characters</comment>
++        tok.id <op>=</op> Id.Lit_Chars
++        part <op>=</op> tok</addition>
+</code></pre>
+<h2 id="what-not-to-do">What not to do</h2>
+<p>While our new change looks good, there's a third way to do it. The wrong way. We could have implemented our fix by modifying only the evaluator, like so:</p>
+<ol>
+<li>Mark all <code>EscapedLiteral</code> if they're part of here docs.</li>
+<li>During evaluation, replace any <code>&quot;</code> with <code>\&quot;</code>, undoing the original behaviour the parser.</li>
+</ol>
+<p>This approach also solves the string escaping problem, but introduces a new seriously bad side-effect...</p>
+<p>One might assume each interpreted line of code is lexed, parsed, and evaluated each time it's run. While this is possible, no serious interpreter works this way! Typically, lexing and parsing is only performed once, while <em>evaluation</em> is performed dynamically. We can see this distinction in the short example:</p>
+<pre><code><keyword>$</keyword> cat ./test.sh
+<session>#!./bin/osh
+
+for i in $(seq 1 4); do
+cat &lt;&lt;END
+    loop \"$i\"
+END
+done</session>
+</code></pre>
+<p>I then added a few trace statements to <code>osh</code> so we can see what's going on inside. Running this code now shows that we were partially right! <code>ReadHereDocBody()</code> only gets parsed once, but the same string is evaluated multiple times. Our hypothetical change would be to <code>EscapedLiteral</code>, so it really would be run each loop iteration.</p>
+<pre><code><keyword>$</keyword> ./test.sh
+<session><comment># This is the parsing stage for here docs</comment>
+in ReadHereDocBody()
+
+in _EvalWordPart('    loop ') @ Literal
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\n') @ Literal
+    loop \"1\"
+
+in _EvalWordPart('    loop ') @ Literal
+<comment># Look! Look! Our escaped literals got evaluated a second time</comment>
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\n') @ Literal
+    loop \"2\"
+
+in _EvalWordPart('    loop ') @ Literal
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\n') @ Literal
+    loop \"3\"
+
+in _EvalWordPart('    loop ') @ Literal
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\\"') @ EscapedLiteral
+in _EvalWordPart('\n') @ Literal
+    loop \"4\"</session>
+</code></pre>
+<p>The <strong>seriously bad side-effect</strong> from before was that evaluation can be performed over and over again if it's in a loop, or a repeated function call. Of course the performance of a few ops is almost nothing, but as a principle, it's great our fix didn't have to change the evaluator at all!</p>
+<p>Nothing like a good feeling.</p>
+
+
+    <div style="display: flex; flex-direction: row; margin-top: 48px;">
+        <span style="font-size: 14px; color: var(--soft-grey-2);">this was written <b>without</b> any use of generative ai</span>
+
+        <a href="/blog" style="margin-left: auto; font-size: 14px;">back to blog</a>
+    </div>
+
+</article>
+
+
+            <footer style="color: var(--soft-grey-2);">
+                <p style="padding: 0;">▲◐◇</p> <!-- 🎝 -->
+                <p style="margin-bottom: 48px;">
+                    <em id="after-selected-color" style="padding: 0;">
+                        a starry night sky
+                    </em>
+                </p>
+            </footer>
+        </div>
+    </body>
+
+    <!-- TODO: simplify this ... <script src="scripts/colours.js"></script> -->
+
+     
+
+</html>
