@@ -39,7 +39,6 @@
     transform: translateX(calc(-100% - 14px - 12px + 2px)) translateY(calc(-50% - 2px)) rotate(12deg);
 }
 
-
 .outline {
     border: 1px solid var(--dark-green);
     background-color: var(--space);
@@ -186,5 +185,41 @@
     font-weight: 400;
     font-size: 0.8em;
     
+    color: var(--space);
+}
+
+.til-card {
+    display: block;
+    position: relative;
+
+    /* this is just for the span */
+    line-height: 1.15;
+
+    width: calc(50% - 14px * 2);
+    margin-bottom: 14px;
+    padding: 13px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    background-color: white; 
+
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.til-card code {
+    background-color: #ccc;
+}
+.til-card > .contents {
+    font-weight: 400;
+    font-size: 0.9em;
+
+    color: var(--space); 
+}
+.til-card > div > .date {
+    font-weight: 400;
+    font-size: 0.75em;
+
     color: var(--space);
 }
