@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} home {% endblock %}
+
+{% block style %}
+<style>
+    #slant-puzzle {
+        background-color: var(--soft-grey-2);
+        min-height: 372px;
+        width: 372px;
+
+        margin: 0 auto;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<article>
+    <section id="slant-desc" style="display: flex; flex-direction: column; margin-top: -12px; justify-content: center; font-size: 0.8em;">
+        <h2>Slant</h2>
+        <div>
+            <b>How to Play</b>
+            <p>
+                Place a diagonal line in every grid square such that:
+                <ol>
+                    <li>Every numbered point has that many lines touching it</li>
+                    <li>One cannot draw a loop (cycle) using the placed lines</li>
+                </ol>
+            </p>
+        </div>
+    </section>
+
+    <section id="slant-puzzle" style="display: flex; flex-direction: row; justify-content: center; font-size: 1em;">
+        
+    </section>
+</article>
+{% endblock content %}
+
+{% block scripts %}
+<!-- TODO: refactor each puzzle into its own page, eventually -->
+<script src="scripts/puzzles/slant.js"></script>
+{% endblock scripts %}
