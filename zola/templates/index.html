@@ -29,9 +29,14 @@
 
     <section style="display: flex; flex-direction: column; justify-content: center; font-size: 1em;">
         <div class="posts">
-            <div
-                style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
-            >
+            <div style="
+                display: flex;
+                flex-direction: row;
+                font-weight: 400;
+                font-size: 0.95em;
+                color: var(--soft-grey-2);
+                padding: 6px 0;
+            ">
                 <div style="margin-right: 6px;">Today I Learned</div>
 
                 <a href="/tags" class="grey-link" style="margin-left: auto;">...</a>
@@ -45,19 +50,21 @@
                 -->
             </div>
 
-            <!-- TODO: I want these cards to be half sized & blocky -->
-            <!-- TODO: I want each card to have its own anchor on a big page, so it can be linked to -->
-            <a href="link" class="til-card">
-                <span class="contents">
-                    TIL if you try to <code>malloc()</code> something medium-large, the kernel
-                    can decide to instead give you some random non-heap memory just
-                    wherever.
-                </span>
-                <div style="display: flex; flex-direction: row-reverse; margin-top: 2px;">
-                    <!--<h2>malloc</h2>-->
-                    <div class="date">January 13, 2026</div>
-                </div>
-            </a>
+            <div style="display: flex; flex-direction: row; gap: 8px;">
+                <!-- TODO: I want each card to have its own anchor on a big page, so it can be linked to -->
+                {% set tils = load_data(path="data/til.json") %}
+                {% for til in tils %}
+                    <a href="til/{{ til.date }}/{{ til.title | slugify }}" class="til-card">
+                        <span class="contents">
+                            {{ til.body | safe }}
+                        </span>
+                        <div style="display: flex; flex-direction: row-reverse; margin-top: 2px;">
+                            <!--<h2>malloc</h2>-->
+                            <div class="date">{{ til.date | date(format="%B %d, %Y") }}</div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
         </div>
 
         <div class="posts">

@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Malloc internals",
+    "date": "2026-01-13",
+    "tags": ["C", "Linux"],
+    "body": "TIL if you try to <code>malloc()</code> something medium-large, the kernel can decide to instead give you some random non-heap memory just wherever."
+  },
+  {
+    "title": "Virtual address space",
+    "date": "2026-01-13",
+    "tags": ["Linux"],
+    "body": "also TIL you should expect to only be able to allocate up to ~50% of your virtual address space before malloc starts failing, which on 32-bit systems is ~1GB per process 🥹"
+  }
+]
