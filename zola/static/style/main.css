@@ -328,10 +328,16 @@ pre code {
 }
 
 .badge {
+    padding-right: 4px;
+}
+.badge img {
     width: 88px;
     height: 31px;
-    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
-.badge:hover {
+.badge, .badge:hover {
+    text-decoration: none;
+}
+.badge:hover img {
     filter: brightness(0.9);
 }
