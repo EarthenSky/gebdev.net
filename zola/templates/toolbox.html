@@ -1,0 +1,102 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Toolbox {% endblock %}
+
+{% block content %}
+<article>
+    <section id="gutenberg-newline" name="gutenberg-newline">
+        <div style="display: flex; gap: 8px;">
+ 
+            <input type="file" id="input" multiple />
+            <!--<div onclick="upload()">
+                upload
+            </div>-->
+            <div id="status">
+
+            </div>
+        </div>
+        <p>
+            This tool removes newlines between contiguous lines of content from texts. For examples, see works published in .txt form by project gutenberg. 
+        </p>
+    </section>
+</article>
+
+<script>
+    // TODO: use one class per widget
+
+    /// @brief we assume lines may be \n or \r\n terminated
+    function removeNewlines(text) {
+        result = ""
+        for (
+            const line
+            of text.replace("\r\n", "\n").split("\n")
+        ) {
+            if (result !== "") {
+                result += "\n"
+            }
+            result += line
+        }
+    }
+     
+    function getTextFromFile(file, reader) {
+        let p = new Promise((resolve, reject) => {
+            reader.onload = (e) => {
+                resolve(e.target.result)
+            }
+            // reader error?
+        })
+        reader.readAsDataURL(file);
+        return p
+    }
+
+    function processFile(name, text) {
+        if ((name !== null) && !name.endsWith(".txt")) {
+            throw new Error("invalid file name")
+        }
+
+        if (typeof text == "string") {
+        
+        } else if (typeof text == "File") {
+            const reader = new FileReader();
+            text = await getTextFromFile(text, reader)
+        }
+
+        resultText = removeNewlines(text)
+        return resultText
+    }
+
+
+// TODO: this!
+function download(content, filename, contentType)
+{
+    if(!contentType) contentType = 'application/octet-stream';
+        var a = document.createElement('a');
+        var blob = new Blob([content], {'type':contentType});
+        a.href = window.URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+}
+
+
+    const elem = document.getElementById("input");
+    elem.addEventListener("change", handleFiles);
+    function handleFiles() {
+        // TODO: are files uploaded webpage wide?
+        const fileList = this.files;
+        const numFiles = fileList.length;
+        if (fileList.length == 0) {
+            return
+        } else if (fileList.length == 1) {
+            
+        }
+
+        // TODO: zip them all together
+        for (const file of fileList) {
+            resultText = processFile(file.name, 
+        }
+    }
+</script>
+
+{% endblock content %}
+
+ <!-- TODO: what is the script block called again? -->
