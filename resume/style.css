@@ -1,0 +1,127 @@
+@media print {
+    /* remove display stuff when printing */
+    html {
+        padding: 0 !important;
+    }
+    body {
+        /*margin: 0 !important;*/
+        margin-top: 0.25in !important;
+        padding: 0 !important;
+        size: letter;
+    }
+}
+
+p, h1, h2, h3, h4, h5, h6, ul, li {
+    margin: 0;
+}
+
+ul {
+    padding-left: 0.15in;
+    list-style-type: "-  ";
+}
+
+html {
+    /* padding: 0.25in 0.25in 0.25in 0.25in; */
+    background-color: #333;
+
+    font-family: "Schibsted Grotesk", monospace;
+}
+
+body {
+    /* take padding into account: US letter is 8.5 x 11 */
+    width: calc(8.5in - 2 * 0.65in); /* 7.2 in */
+    height: calc(11in - 0.75in - 0.5in);
+    /* 0.5in is an (overly) safe margin */
+    padding: 0.75in 0.65in 0.5in 0.65in;
+
+    margin: 0 auto;
+
+    font-size: 14px;
+
+    background-color: #fff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 1.1in;
+}
+
+content {
+    display: flex;
+
+    width: 100%;
+    height: calc(11in - 0.75in - 0.5in - 1.1in - 1in);
+}
+
+content .left {
+    display: inline-block;
+
+    width: 4.45in;
+    margin-right: 0.25in;
+
+    height: inherit;
+}
+
+content .left li {
+    text-align: justify;
+    text-justify: inter-word;
+
+    hyphens: auto;
+}
+
+content .right {
+    display: inline-block;
+
+    width: 2.5in;
+    height: inherit;
+}
+
+footer {
+    display: block;
+
+    width: 100%;
+    height: 1in;
+}
+
+/* ---------------------------------------- */
+
+object {
+    text-align: center;
+    display: inline-block; width: 0.15in; height: 0.15in; color: #00aaff;
+
+    transform: translateY(0.03in);
+}
+
+#name {
+    display: inline-block;
+    margin-right: 0.25in;
+
+    margin-top: -0.04in;
+
+    font-size: 2rem;
+}
+
+section h2 {
+    font-weight: 400;
+    font-family: "Fredoka", sans-serif;
+    font-size: 1.5rem;
+}
+
+section h3 {
+    font-family: ASAP;
+    font-size: 1rem;
+}
+
+a:hover {
+    text-decoration: underline !important;
+}
+
+#projects {
+    gap: 0.2in;
+}
+#projects > div {
+    width: calc(50% - 0.1in);
+}

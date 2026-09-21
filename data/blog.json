@@ -1,0 +1,36 @@
+{
+    "posts": [
+        {
+            "title": "Many Pictures",
+            "slug": "many-pictures",
+            "desc": "A small screensaver website",
+            "tags": ["webdev"],
+            "kind": "project-recap",
+            "img": null
+        },
+        {
+            "title": "Slant[0]",
+            "slug": "slant-0",
+            "desc": "A bit of analysis on a niche puzzle game I really like",
+            "tags": ["math"],
+            "kind": "blog-post",
+            "img": null
+        },
+        {
+            "title": "Spring 2025 Hops",
+            "slug": "2025-hops",
+            "desc": "A photo blog growing hops for the first time!",
+            "tags": ["food", "gardening"],
+            "kind": "photo-blog",
+            "img": null
+        },
+        {
+            "title": "CSSS Garden",
+            "slug": "csss-garden",
+            "desc": "A history of the CSSS Garden",
+            "tags": ["gardening"],
+            "kind": "photo-blog",
+            "img": null
+        }
+    ]
+}

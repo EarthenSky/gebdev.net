@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - parsing</title>
+    <link rel="self" type="application/atom+xml" href="https://gebdev.net/tags/parsing/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://gebdev.net"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-12-03T00:00:00+00:00</updated>
+    <id>https://gebdev.net/tags/parsing/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Patch Parsers Properly</title>
+        <published>2025-12-03T00:00:00+00:00</published>
+        <updated>2025-12-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://gebdev.net/blog/patch-parsers-properly/"/>
+        <id>https://gebdev.net/blog/patch-parsers-properly/</id>
+        
+        <content type="html" xml:base="https://gebdev.net/blog/patch-parsers-properly/">&lt;p&gt;&lt;code&gt;osh&lt;&#x2F;code&gt; is a cool shell that&#x27;s trying to become compatible with &lt;code&gt;bash&lt;&#x2F;code&gt;. The &lt;code&gt;mdev-conf&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;pkgs.alpinelinux.org&#x2F;package&#x2F;edge&#x2F;main&#x2F;armhf&#x2F;mdev-conf&quot;&gt;alpine linux package&lt;&#x2F;a&gt; was failing to build with &lt;code&gt;osh&lt;&#x2F;code&gt; as the system shell. Andy and Bram from the &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;&quot;&gt;Oils project&lt;&#x2F;a&gt; traced the &lt;strong&gt;root cause&lt;&#x2F;strong&gt; to the following bug in &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s here doc parser:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;symbol&gt;$&lt;&#x2F;symbol&gt; cat bug.sh
+&lt;comment&gt;# don&#x27;t understand this syntax? Me neither. Keep reading and I cover it!&lt;&#x2F;comment&gt; 
+&lt;session&gt;cat &amp;lt;&amp;lt;EOF
+a \&quot;quote\&quot;
+EOF&lt;&#x2F;session&gt;
+
+&lt;symbol&gt;$&lt;&#x2F;symbol&gt; osh bug.sh
+&lt;session&gt;a &quot;quote&quot;&lt;&#x2F;session&gt;
+
+&lt;symbol&gt;$&lt;&#x2F;symbol&gt; bash bug.sh
+&lt;session&gt;a \&quot;quote\&quot;&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Interestingly enough, &lt;code&gt;toysh&lt;&#x2F;code&gt;, &lt;code&gt;sush&lt;&#x2F;code&gt;, and &lt;code&gt;brush&lt;&#x2F;code&gt; all fail in the same way. This seems to be the kind of thing &lt;a href=&quot;https:&#x2F;&#x2F;oilshell.zulipchat.com&#x2F;#narrow&#x2F;channel&#x2F;503208-bug-post-mortem&#x2F;topic&#x2F;mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs&#x2F;near&#x2F;553270324&quot;&gt;you need to make your shell &lt;strong&gt;mature&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I think it&#x27;s an interesting distinction, so let&#x27;s run through how this bug was fixed &amp;amp; why it was done in a specific way.&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center; margin-bottom: 16px;&quot;&gt;
+    &lt;div style=&quot;margin: auto; display: inline-block; text-align: left;&quot;&gt;
+        1. &lt;a href=&quot;#where-doc&quot;&gt;Where doc?&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        2. &lt;a href=&quot;#initial-fix-just-the-parser&quot;&gt;Initial fix: just the parser&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        3. &lt;a href=&quot;#second-attempt-both-parser-lexer&quot;&gt;Second attempt: both parser &amp; lexer&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        4. &lt;a href=&quot;#what-not-to-do&quot;&gt;What not to do&lt;&#x2F;a&gt;
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;where-doc&quot;&gt;Where doc?&lt;&#x2F;h2&gt;
+&lt;p&gt;A &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;bash.html#Here-Documents&quot;&gt;here document&lt;&#x2F;a&gt; (commonly shortened to here doc) is like a multiline string from the olden days. Seriously, you&#x27;re gonna say &amp;quot;oh yeah, that sounds like what they&#x27;d do back then.&amp;quot;&lt;&#x2F;p&gt;
+&lt;p&gt;A here doc starts with &lt;code&gt;&amp;lt;&amp;lt;&lt;&#x2F;code&gt; followed by a single word. Like &lt;code&gt;&amp;lt;&amp;lt;MY_END_TOKEN&lt;&#x2F;code&gt;. After that, all lines of text until &lt;code&gt;MY_END_TOKEN\n&lt;&#x2F;code&gt; will comprise a large string.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; &lt;string&gt;&amp;lt;&amp;lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN&lt;&#x2F;string&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The only purpose of a here doc is that, when placed after a command, &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;bash.html#Here-Documents:~:text=All%20of%20the%20lines%20read%20up%20to%20that%20point%20then%20become%20the%20standard%20input&quot;&gt;its contents become the command&#x27;s stdin&lt;&#x2F;a&gt;. A little known fact is that if &lt;code&gt;cat&lt;&#x2F;code&gt; is not given an argument, it will echo its stdin. Thus, the easiest way to see the contents of a here doc is to &lt;code&gt;cat&lt;&#x2F;code&gt; it. Of course, we can use the pipe to convert stdout into stdin.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; echo &lt;string&gt;&quot;please cat this&quot;&lt;&#x2F;string&gt; | cat
+&lt;session&gt;please cat this&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, we can display the contents of a here doc using &lt;code&gt;cat&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat &lt;string&gt;&amp;lt;&amp;lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN&lt;&#x2F;string&gt;
+&lt;session&gt;This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Variables even get expanded in here docs:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; x=&lt;const&gt;10&lt;&#x2F;const&gt;
+&lt;keyword&gt;$&lt;&#x2F;keyword&gt; y=$((x*&lt;const&gt;2&lt;&#x2F;const&gt;))
+&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat &lt;string&gt;&amp;lt;&amp;lt;END
+$x * 2 = $y
+END&lt;&#x2F;string&gt;
+&lt;session&gt;10 * 2 = 20&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;initial-fix-just-the-parser&quot;&gt;Initial fix: just the parser&lt;&#x2F;h2&gt;
+&lt;p&gt;Now that we&#x27;ve learned some cursed &lt;code&gt;bash&lt;&#x2F;code&gt; knowledge, lets fix &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser. Game plan:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dive into &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and figure out where it converts &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Don&#x27;t.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Seems simple enough?&lt;&#x2F;p&gt;
+&lt;p&gt;I was quickly able to find where here docs are parsed. It mostly shares functionality with the parsing of double quote strings.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;def&lt;&#x2F;keyword&gt; &lt;symbol&gt;ReadHereDocBody&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;self, parts&lt;bra&gt;)&lt;&#x2F;bra&gt;:
+    &lt;comment&gt;# type: (List[word_part_t]) -&gt; None&lt;&#x2F;comment&gt;
+    &lt;string&gt;&quot;&quot;&quot;
+    A here doc is like a double quoted context, except &quot; and \&quot; aren&#x27;t special.
+    &quot;&quot;&quot;&lt;&#x2F;string&gt;
+    self.&lt;symbol&gt;_ReadLikeDQ&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;const&gt;None&lt;&#x2F;const&gt;, &lt;const&gt;False&lt;&#x2F;const&gt;, parts&lt;bra&gt;)&lt;&#x2F;bra&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We can then use &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s awesome utility &lt;code&gt;osh --tool tokens&lt;&#x2F;code&gt; to peek at the results of the tokenization step.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; osh --tool tokens
+cat &lt;string&gt;&amp;lt;&amp;lt;END
+hello! \&quot; \$ \\
+END&lt;&#x2F;string&gt;&lt;session&gt;
+    0 Lit_Chars            &#x27;cat&#x27;
+    1 WS_Space             &#x27; &#x27;
+    2 Redir_DLess          &#x27;&lt;&lt;&#x27;
+    3 Lit_Chars            &#x27;END&#x27;
+    4 Op_Newline           &#x27;\n&#x27;
+    5 Lit_Chars            &#x27;hello! &#x27;
+    6 Lit_EscapedChar      &#x27;\\&quot;&#x27;
+    7 Lit_Chars            &#x27; &#x27;
+    8 Lit_EscapedChar      &#x27;\\$&#x27;
+    9 Lit_Chars            &#x27; &#x27;
+   10 Lit_EscapedChar      &#x27;\\\\&#x27;
+   11 Lit_Chars            &#x27;\n&#x27;
+   12 Eof_Real             &#x27;&#x27;
+   13 Lit_CharsWithoutPrefix &#x27;&#x27;
+   14 Undefined_Tok        &#x27;END\n&#x27;
+   15 Eof_Real             &#x27;&#x27;
+(16 tokens)&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; is converted into a &lt;code&gt;Lit_EscapedChar&lt;&#x2F;code&gt; token, so we just need to add some logic to treat this differently. Sure enough &lt;code&gt;_ReadLikeDQ&lt;&#x2F;code&gt; has a clause predicated on &lt;code&gt;Id.Lit_EscapedChar&lt;&#x2F;code&gt; which extracts the second character in the token&#x27;s string. We can simply replace the escaped char token with a token literal during parsing, and the problem is resolved!&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt; &lt;keyword&gt;if&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_EscapedChar:
+     ch = lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
+&lt;addition&gt;+    &lt;keyword&gt;if&lt;&#x2F;keyword&gt; ch &lt;op&gt;==&lt;&#x2F;op&gt; &lt;string&gt;&#x27;&quot;&#x27;&lt;&#x2F;string&gt; &lt;op&gt;and&lt;&#x2F;op&gt; is_here_doc:&lt;&#x2F;addition&gt;
+&lt;addition&gt;+        tok.id &lt;op&gt;=&lt;&#x2F;op&gt; Id.Lit_Chars&lt;&#x2F;addition&gt;
+&lt;addition&gt;+        part &lt;op&gt;=&lt;&#x2F;op&gt; tok&lt;&#x2F;addition&gt;
+&lt;addition&gt;+    &lt;keyword&gt;else&lt;&#x2F;keyword&gt;:&lt;&#x2F;addition&gt;
+&lt;removal &gt;-    part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;&lt;&#x2F;removal&gt;
+&lt;addition&gt;+        part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;&lt;&#x2F;addition&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Easy. Simple. 2 line change. All &lt;code&gt;osh&lt;&#x2F;code&gt; tests pass with flying colours.&lt;&#x2F;p&gt;
+&lt;p&gt;Actually, it&#x27;s worthwhile to mention how helpful the &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20251128184718&#x2F;https:&#x2F;&#x2F;op.oilshell.org&#x2F;uuu&#x2F;github-jobs&#x2F;10842&#x2F;&quot;&gt;&lt;code&gt;osh&lt;&#x2F;code&gt; test suite&lt;&#x2F;a&gt; is for making quick changes like these. I wasn&#x27;t sure whether introducing sequential &lt;code&gt;Lit_Chars&lt;&#x2F;code&gt; tokens like we do above into the result of &lt;code&gt;_ReadLikeDQ&lt;&#x2F;code&gt; might break an implicit assumption somewhere else. However, these assumptions are either included in tests or considered bugs.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;second-attempt-both-parser-lexer&quot;&gt;Second attempt: both parser &amp;amp; lexer&lt;&#x2F;h2&gt;
+&lt;p&gt;Nothing in life is easy. Any idea what&#x27;s wrong with this code change? I&#x27;ll give you 3 seconds to try to think up some weird reason... Okay, time&#x27;s up!&lt;&#x2F;p&gt;
+&lt;p&gt;This code is &lt;a href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;VuG4QhA89es?si=7XEKoC2QZVZ6080J&amp;amp;t=1577&quot;&gt;pretty good&lt;&#x2F;a&gt; but it&#x27;s breaking a contract between &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and its lexer.&lt;&#x2F;p&gt;
+&lt;p&gt;The source code passed into an interpreter will touch 3 main parts, in order:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Lexer&lt;&#x2F;strong&gt; -&amp;gt; processing strings sucks. It&#x27;s horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Parser&lt;&#x2F;strong&gt; -&amp;gt; turn your stream of tokens into an AST. In our case we&#x27;re a leaf node, so we get away with returning a list of &amp;quot;parts,&amp;quot; where an escaped character is one part.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Evaluator&lt;&#x2F;strong&gt; -&amp;gt; make your AST nodes do the thing they&#x27;re supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string &amp;amp; pass it on.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Now remember 2 moments ago when we said strings suck so they shouldn&#x27;t be in the parser? We check &lt;code&gt;ch == &#x27;&amp;quot;&#x27;&lt;&#x2F;code&gt; above. Why did we put strings in the parser?!&lt;&#x2F;p&gt;
+&lt;p&gt;Instead, lets update our lexer&#x27;s rule to turn &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;Lit_BackslashDoubleQuote&lt;&#x2F;code&gt;. Then when it&#x27;s time to convert, we compare tokens, not strings.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt; &lt;comment&gt;# DQ stands for &quot;double quote.&quot; Here docs share the same lexer rule as double quoted strings.&lt;&#x2F;comment&gt;
+ LEXER_DEF&lt;bra&gt;[&lt;&#x2F;bra&gt;lex_mode_e.DQ&lt;bra&gt;]&lt;&#x2F;bra&gt; &lt;op&gt;=&lt;&#x2F;op&gt; &lt;bra&gt;[&lt;&#x2F;bra&gt;
+     &lt;comment&gt;# R(...) stands for regex&lt;&#x2F;comment&gt;
+&lt;removal &gt;-    &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;\\[$`&quot;\\]&#x27;&lt;&#x2F;string&gt;, Id.Lit_EscapedChar&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;removal&gt;
+&lt;addition&gt;+    &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;\\[$`\\]&#x27;&lt;&#x2F;string&gt;, Id.Lit_EscapedChar&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;addition&gt;
+     &lt;comment&gt;# C(...) stands for constant&lt;&#x2F;comment&gt;
+&lt;addition&gt;+    &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\&quot;&#x27;&lt;&#x2F;string&gt;, Id.Lit_BackslashDoubleQuote&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;addition&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\\n&#x27;&lt;&#x2F;string&gt;, Id.Ignored_LineCont&lt;bra&gt;)&lt;&#x2F;bra&gt;,
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\&#x27;&lt;&#x2F;string&gt;, Id.Lit_BadBackslash&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# syntax error in YSH, but NOT in OSH&lt;&#x2F;comment&gt;
+ &lt;bra&gt;]&lt;&#x2F;bra&gt; &lt;op&gt;+&lt;&#x2F;op&gt; _LEFT_SUBS &lt;op&gt;+&lt;&#x2F;op&gt; _VARS &lt;op&gt;+&lt;&#x2F;op&gt; &lt;bra&gt;[&lt;&#x2F;bra&gt;
+     &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;[^$`&quot;\0\\]+&#x27;&lt;&#x2F;string&gt;, Id.Lit_Chars&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# matches a line at most&lt;&#x2F;comment&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;$&#x27;&lt;&#x2F;string&gt;, Id.Lit_Dollar&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# completion of var names relies on this&lt;&#x2F;comment&gt;
+     &lt;comment&gt;# NOTE: When parsing here doc line, this token doesn&#x27;t end it.&lt;&#x2F;comment&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;&quot;&#x27;&lt;&#x2F;string&gt;, Id.Right_DoubleQuote&lt;bra&gt;)&lt;&#x2F;bra&gt;,
+ ]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then update the parser as well.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;  &lt;keyword&gt;if&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_EscapedChar:
+     ch &lt;op&gt;=&lt;&#x2F;op&gt; lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
+     part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;
+&lt;addition&gt;+
++ &lt;keyword&gt;elif&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_BackslashDoubleQuote:
++    &lt;keyword&gt;if&lt;&#x2F;keyword&gt; left_token:
++        ch &lt;op&gt;=&lt;&#x2F;op&gt; lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
++        part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;
++    &lt;keyword&gt;else&lt;&#x2F;keyword&gt;:
++        &lt;comment&gt;# in here docs \&quot; should not be escaped, staying as literal characters&lt;&#x2F;comment&gt;
++        tok.id &lt;op&gt;=&lt;&#x2F;op&gt; Id.Lit_Chars
++        part &lt;op&gt;=&lt;&#x2F;op&gt; tok&lt;&#x2F;addition&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-not-to-do&quot;&gt;What not to do&lt;&#x2F;h2&gt;
+&lt;p&gt;While our new change looks good, there&#x27;s a third way to do it. The wrong way. We could have implemented our fix by modifying only the evaluator, like so:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Mark all &lt;code&gt;EscapedLiteral&lt;&#x2F;code&gt; if they&#x27;re part of here docs.&lt;&#x2F;li&gt;
+&lt;li&gt;During evaluation, replace any &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt; with &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt;, undoing the original behaviour the parser.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;This approach also solves the string escaping problem, but introduces a new seriously bad side-effect...&lt;&#x2F;p&gt;
+&lt;p&gt;One might assume each interpreted line of code is lexed, parsed, and evaluated each time it&#x27;s run. While this is possible, no serious interpreter works this way! Typically, lexing and parsing is only performed once, while &lt;em&gt;evaluation&lt;&#x2F;em&gt; is performed dynamically. We can see this distinction in the short example:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat .&#x2F;test.sh
+&lt;session&gt;#!.&#x2F;bin&#x2F;osh
+
+for i in $(seq 1 4); do
+cat &amp;lt;&amp;lt;END
+    loop \&quot;$i\&quot;
+END
+done&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I then added a few trace statements to &lt;code&gt;osh&lt;&#x2F;code&gt; so we can see what&#x27;s going on inside. Running this code now shows that we were partially right! &lt;code&gt;ReadHereDocBody()&lt;&#x2F;code&gt; only gets parsed once, but the same string is evaluated multiple times. Our hypothetical change would be to &lt;code&gt;EscapedLiteral&lt;&#x2F;code&gt;, so it really would be run each loop iteration.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; .&#x2F;test.sh
+&lt;session&gt;&lt;comment&gt;# This is the parsing stage for here docs&lt;&#x2F;comment&gt;
+in ReadHereDocBody()
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;1\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+&lt;comment&gt;# Look! Look! Our escaped literals got evaluated a second time&lt;&#x2F;comment&gt;
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;2\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;3\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;4\&quot;&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;strong&gt;seriously bad side-effect&lt;&#x2F;strong&gt; from before was that evaluation can be performed over and over again if it&#x27;s in a loop, or a repeated function call. Of course the performance of a few ops is almost nothing, but as a principle, it&#x27;s great our fix didn&#x27;t have to change the evaluator at all!&lt;&#x2F;p&gt;
+&lt;p&gt;Nothing like a good feeling.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

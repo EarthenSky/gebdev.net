@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - osh</title>
+    <link rel="self" type="application/atom+xml" href="https://gebdev.net/tags/osh/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://gebdev.net"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-12-03T00:00:00+00:00</updated>
+    <id>https://gebdev.net/tags/osh/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Patch Parsers Properly</title>
+        <published>2025-12-03T00:00:00+00:00</published>
+        <updated>2025-12-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://gebdev.net/blog/patch-parsers-properly/"/>
+        <id>https://gebdev.net/blog/patch-parsers-properly/</id>
+        
+        <content type="html" xml:base="https://gebdev.net/blog/patch-parsers-properly/">&lt;p&gt;&lt;code&gt;osh&lt;&#x2F;code&gt; is a cool shell that&#x27;s trying to become compatible with &lt;code&gt;bash&lt;&#x2F;code&gt;. The &lt;code&gt;mdev-conf&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;pkgs.alpinelinux.org&#x2F;package&#x2F;edge&#x2F;main&#x2F;armhf&#x2F;mdev-conf&quot;&gt;alpine linux package&lt;&#x2F;a&gt; was failing to build with &lt;code&gt;osh&lt;&#x2F;code&gt; as the system shell. Andy and Bram from the &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;&quot;&gt;Oils project&lt;&#x2F;a&gt; traced the &lt;strong&gt;root cause&lt;&#x2F;strong&gt; to the following bug in &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s here doc parser:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;symbol&gt;$&lt;&#x2F;symbol&gt; cat bug.sh
+&lt;comment&gt;# don&#x27;t understand this syntax? Me neither. Keep reading and I cover it!&lt;&#x2F;comment&gt; 
+&lt;session&gt;cat &amp;lt;&amp;lt;EOF
+a \&quot;quote\&quot;
+EOF&lt;&#x2F;session&gt;
+
+&lt;symbol&gt;$&lt;&#x2F;symbol&gt; osh bug.sh
+&lt;session&gt;a &quot;quote&quot;&lt;&#x2F;session&gt;
+
+&lt;symbol&gt;$&lt;&#x2F;symbol&gt; bash bug.sh
+&lt;session&gt;a \&quot;quote\&quot;&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Interestingly enough, &lt;code&gt;toysh&lt;&#x2F;code&gt;, &lt;code&gt;sush&lt;&#x2F;code&gt;, and &lt;code&gt;brush&lt;&#x2F;code&gt; all fail in the same way. This seems to be the kind of thing &lt;a href=&quot;https:&#x2F;&#x2F;oilshell.zulipchat.com&#x2F;#narrow&#x2F;channel&#x2F;503208-bug-post-mortem&#x2F;topic&#x2F;mdev-conf.20-.20.5C.22.20should.20not.20be.20escape.20sequence.20in.20here.20docs&#x2F;near&#x2F;553270324&quot;&gt;you need to make your shell &lt;strong&gt;mature&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I think it&#x27;s an interesting distinction, so let&#x27;s run through how this bug was fixed &amp;amp; why it was done in a specific way.&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center; margin-bottom: 16px;&quot;&gt;
+    &lt;div style=&quot;margin: auto; display: inline-block; text-align: left;&quot;&gt;
+        1. &lt;a href=&quot;#where-doc&quot;&gt;Where doc?&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        2. &lt;a href=&quot;#initial-fix-just-the-parser&quot;&gt;Initial fix: just the parser&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        3. &lt;a href=&quot;#second-attempt-both-parser-lexer&quot;&gt;Second attempt: both parser &amp; lexer&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        4. &lt;a href=&quot;#what-not-to-do&quot;&gt;What not to do&lt;&#x2F;a&gt;
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;where-doc&quot;&gt;Where doc?&lt;&#x2F;h2&gt;
+&lt;p&gt;A &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;bash.html#Here-Documents&quot;&gt;here document&lt;&#x2F;a&gt; (commonly shortened to here doc) is like a multiline string from the olden days. Seriously, you&#x27;re gonna say &amp;quot;oh yeah, that sounds like what they&#x27;d do back then.&amp;quot;&lt;&#x2F;p&gt;
+&lt;p&gt;A here doc starts with &lt;code&gt;&amp;lt;&amp;lt;&lt;&#x2F;code&gt; followed by a single word. Like &lt;code&gt;&amp;lt;&amp;lt;MY_END_TOKEN&lt;&#x2F;code&gt;. After that, all lines of text until &lt;code&gt;MY_END_TOKEN\n&lt;&#x2F;code&gt; will comprise a large string.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; &lt;string&gt;&amp;lt;&amp;lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN&lt;&#x2F;string&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The only purpose of a here doc is that, when placed after a command, &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;bash.html#Here-Documents:~:text=All%20of%20the%20lines%20read%20up%20to%20that%20point%20then%20become%20the%20standard%20input&quot;&gt;its contents become the command&#x27;s stdin&lt;&#x2F;a&gt;. A little known fact is that if &lt;code&gt;cat&lt;&#x2F;code&gt; is not given an argument, it will echo its stdin. Thus, the easiest way to see the contents of a here doc is to &lt;code&gt;cat&lt;&#x2F;code&gt; it. Of course, we can use the pipe to convert stdout into stdin.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; echo &lt;string&gt;&quot;please cat this&quot;&lt;&#x2F;string&gt; | cat
+&lt;session&gt;please cat this&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, we can display the contents of a here doc using &lt;code&gt;cat&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat &lt;string&gt;&amp;lt;&amp;lt;MY_FANCY_END_TOKEN
+This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...
+MY_FANCY_END_TOKEN&lt;&#x2F;string&gt;
+&lt;session&gt;This is my cool essay where I can &quot;quote things&quot; without needing to escape them.
+Oh the freedom...&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Variables even get expanded in here docs:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; x=&lt;const&gt;10&lt;&#x2F;const&gt;
+&lt;keyword&gt;$&lt;&#x2F;keyword&gt; y=$((x*&lt;const&gt;2&lt;&#x2F;const&gt;))
+&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat &lt;string&gt;&amp;lt;&amp;lt;END
+$x * 2 = $y
+END&lt;&#x2F;string&gt;
+&lt;session&gt;10 * 2 = 20&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;initial-fix-just-the-parser&quot;&gt;Initial fix: just the parser&lt;&#x2F;h2&gt;
+&lt;p&gt;Now that we&#x27;ve learned some cursed &lt;code&gt;bash&lt;&#x2F;code&gt; knowledge, lets fix &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser. Game plan:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dive into &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and figure out where it converts &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Don&#x27;t.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Seems simple enough?&lt;&#x2F;p&gt;
+&lt;p&gt;I was quickly able to find where here docs are parsed. It mostly shares functionality with the parsing of double quote strings.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;def&lt;&#x2F;keyword&gt; &lt;symbol&gt;ReadHereDocBody&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;self, parts&lt;bra&gt;)&lt;&#x2F;bra&gt;:
+    &lt;comment&gt;# type: (List[word_part_t]) -&gt; None&lt;&#x2F;comment&gt;
+    &lt;string&gt;&quot;&quot;&quot;
+    A here doc is like a double quoted context, except &quot; and \&quot; aren&#x27;t special.
+    &quot;&quot;&quot;&lt;&#x2F;string&gt;
+    self.&lt;symbol&gt;_ReadLikeDQ&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;const&gt;None&lt;&#x2F;const&gt;, &lt;const&gt;False&lt;&#x2F;const&gt;, parts&lt;bra&gt;)&lt;&#x2F;bra&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We can then use &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s awesome utility &lt;code&gt;osh --tool tokens&lt;&#x2F;code&gt; to peek at the results of the tokenization step.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; osh --tool tokens
+cat &lt;string&gt;&amp;lt;&amp;lt;END
+hello! \&quot; \$ \\
+END&lt;&#x2F;string&gt;&lt;session&gt;
+    0 Lit_Chars            &#x27;cat&#x27;
+    1 WS_Space             &#x27; &#x27;
+    2 Redir_DLess          &#x27;&lt;&lt;&#x27;
+    3 Lit_Chars            &#x27;END&#x27;
+    4 Op_Newline           &#x27;\n&#x27;
+    5 Lit_Chars            &#x27;hello! &#x27;
+    6 Lit_EscapedChar      &#x27;\\&quot;&#x27;
+    7 Lit_Chars            &#x27; &#x27;
+    8 Lit_EscapedChar      &#x27;\\$&#x27;
+    9 Lit_Chars            &#x27; &#x27;
+   10 Lit_EscapedChar      &#x27;\\\\&#x27;
+   11 Lit_Chars            &#x27;\n&#x27;
+   12 Eof_Real             &#x27;&#x27;
+   13 Lit_CharsWithoutPrefix &#x27;&#x27;
+   14 Undefined_Tok        &#x27;END\n&#x27;
+   15 Eof_Real             &#x27;&#x27;
+(16 tokens)&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; is converted into a &lt;code&gt;Lit_EscapedChar&lt;&#x2F;code&gt; token, so we just need to add some logic to treat this differently. Sure enough &lt;code&gt;_ReadLikeDQ&lt;&#x2F;code&gt; has a clause predicated on &lt;code&gt;Id.Lit_EscapedChar&lt;&#x2F;code&gt; which extracts the second character in the token&#x27;s string. We can simply replace the escaped char token with a token literal during parsing, and the problem is resolved!&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt; &lt;keyword&gt;if&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_EscapedChar:
+     ch = lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
+&lt;addition&gt;+    &lt;keyword&gt;if&lt;&#x2F;keyword&gt; ch &lt;op&gt;==&lt;&#x2F;op&gt; &lt;string&gt;&#x27;&quot;&#x27;&lt;&#x2F;string&gt; &lt;op&gt;and&lt;&#x2F;op&gt; is_here_doc:&lt;&#x2F;addition&gt;
+&lt;addition&gt;+        tok.id &lt;op&gt;=&lt;&#x2F;op&gt; Id.Lit_Chars&lt;&#x2F;addition&gt;
+&lt;addition&gt;+        part &lt;op&gt;=&lt;&#x2F;op&gt; tok&lt;&#x2F;addition&gt;
+&lt;addition&gt;+    &lt;keyword&gt;else&lt;&#x2F;keyword&gt;:&lt;&#x2F;addition&gt;
+&lt;removal &gt;-    part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;&lt;&#x2F;removal&gt;
+&lt;addition&gt;+        part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;&lt;&#x2F;addition&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Easy. Simple. 2 line change. All &lt;code&gt;osh&lt;&#x2F;code&gt; tests pass with flying colours.&lt;&#x2F;p&gt;
+&lt;p&gt;Actually, it&#x27;s worthwhile to mention how helpful the &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20251128184718&#x2F;https:&#x2F;&#x2F;op.oilshell.org&#x2F;uuu&#x2F;github-jobs&#x2F;10842&#x2F;&quot;&gt;&lt;code&gt;osh&lt;&#x2F;code&gt; test suite&lt;&#x2F;a&gt; is for making quick changes like these. I wasn&#x27;t sure whether introducing sequential &lt;code&gt;Lit_Chars&lt;&#x2F;code&gt; tokens like we do above into the result of &lt;code&gt;_ReadLikeDQ&lt;&#x2F;code&gt; might break an implicit assumption somewhere else. However, these assumptions are either included in tests or considered bugs.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;second-attempt-both-parser-lexer&quot;&gt;Second attempt: both parser &amp;amp; lexer&lt;&#x2F;h2&gt;
+&lt;p&gt;Nothing in life is easy. Any idea what&#x27;s wrong with this code change? I&#x27;ll give you 3 seconds to try to think up some weird reason... Okay, time&#x27;s up!&lt;&#x2F;p&gt;
+&lt;p&gt;This code is &lt;a href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;VuG4QhA89es?si=7XEKoC2QZVZ6080J&amp;amp;t=1577&quot;&gt;pretty good&lt;&#x2F;a&gt; but it&#x27;s breaking a contract between &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s parser and its lexer.&lt;&#x2F;p&gt;
+&lt;p&gt;The source code passed into an interpreter will touch 3 main parts, in order:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Lexer&lt;&#x2F;strong&gt; -&amp;gt; processing strings sucks. It&#x27;s horrible. Turn strings into tokens right at the start and live a good life (and also keep the parser fast).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Parser&lt;&#x2F;strong&gt; -&amp;gt; turn your stream of tokens into an AST. In our case we&#x27;re a leaf node, so we get away with returning a list of &amp;quot;parts,&amp;quot; where an escaped character is one part.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Evaluator&lt;&#x2F;strong&gt; -&amp;gt; make your AST nodes do the thing they&#x27;re supposed to. Evaluating a command? Get your arguments, lookup the binary, then start that subprocess! Evaluating a here doc? Turn it into a string &amp;amp; pass it on.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Now remember 2 moments ago when we said strings suck so they shouldn&#x27;t be in the parser? We check &lt;code&gt;ch == &#x27;&amp;quot;&#x27;&lt;&#x2F;code&gt; above. Why did we put strings in the parser?!&lt;&#x2F;p&gt;
+&lt;p&gt;Instead, lets update our lexer&#x27;s rule to turn &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt; into &lt;code&gt;Lit_BackslashDoubleQuote&lt;&#x2F;code&gt;. Then when it&#x27;s time to convert, we compare tokens, not strings.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt; &lt;comment&gt;# DQ stands for &quot;double quote.&quot; Here docs share the same lexer rule as double quoted strings.&lt;&#x2F;comment&gt;
+ LEXER_DEF&lt;bra&gt;[&lt;&#x2F;bra&gt;lex_mode_e.DQ&lt;bra&gt;]&lt;&#x2F;bra&gt; &lt;op&gt;=&lt;&#x2F;op&gt; &lt;bra&gt;[&lt;&#x2F;bra&gt;
+     &lt;comment&gt;# R(...) stands for regex&lt;&#x2F;comment&gt;
+&lt;removal &gt;-    &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;\\[$`&quot;\\]&#x27;&lt;&#x2F;string&gt;, Id.Lit_EscapedChar&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;removal&gt;
+&lt;addition&gt;+    &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;\\[$`\\]&#x27;&lt;&#x2F;string&gt;, Id.Lit_EscapedChar&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;addition&gt;
+     &lt;comment&gt;# C(...) stands for constant&lt;&#x2F;comment&gt;
+&lt;addition&gt;+    &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\&quot;&#x27;&lt;&#x2F;string&gt;, Id.Lit_BackslashDoubleQuote&lt;bra&gt;)&lt;&#x2F;bra&gt;,&lt;&#x2F;addition&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\\n&#x27;&lt;&#x2F;string&gt;, Id.Ignored_LineCont&lt;bra&gt;)&lt;&#x2F;bra&gt;,
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;\\&#x27;&lt;&#x2F;string&gt;, Id.Lit_BadBackslash&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# syntax error in YSH, but NOT in OSH&lt;&#x2F;comment&gt;
+ &lt;bra&gt;]&lt;&#x2F;bra&gt; &lt;op&gt;+&lt;&#x2F;op&gt; _LEFT_SUBS &lt;op&gt;+&lt;&#x2F;op&gt; _VARS &lt;op&gt;+&lt;&#x2F;op&gt; &lt;bra&gt;[&lt;&#x2F;bra&gt;
+     &lt;symbol&gt;R&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;r&#x27;[^$`&quot;\0\\]+&#x27;&lt;&#x2F;string&gt;, Id.Lit_Chars&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# matches a line at most&lt;&#x2F;comment&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;$&#x27;&lt;&#x2F;string&gt;, Id.Lit_Dollar&lt;bra&gt;)&lt;&#x2F;bra&gt;,  &lt;comment&gt;# completion of var names relies on this&lt;&#x2F;comment&gt;
+     &lt;comment&gt;# NOTE: When parsing here doc line, this token doesn&#x27;t end it.&lt;&#x2F;comment&gt;
+     &lt;symbol&gt;C&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;&lt;string&gt;&#x27;&quot;&#x27;&lt;&#x2F;string&gt;, Id.Right_DoubleQuote&lt;bra&gt;)&lt;&#x2F;bra&gt;,
+ ]
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then update the parser as well.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;  &lt;keyword&gt;if&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_EscapedChar:
+     ch &lt;op&gt;=&lt;&#x2F;op&gt; lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
+     part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;  &lt;comment&gt;# type: word_part_t&lt;&#x2F;comment&gt;
+&lt;addition&gt;+
++ &lt;keyword&gt;elif&lt;&#x2F;keyword&gt; &lt;const&gt;self&lt;&#x2F;const&gt;.token_type &lt;op&gt;==&lt;&#x2F;op&gt; Id.Lit_BackslashDoubleQuote:
++    &lt;keyword&gt;if&lt;&#x2F;keyword&gt; left_token:
++        ch &lt;op&gt;=&lt;&#x2F;op&gt; lexer.&lt;symbol&gt;TokenSliceLeft&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, &lt;const&gt;1&lt;&#x2F;const&gt;&lt;bra&gt;)&lt;&#x2F;bra&gt;
++        part &lt;op&gt;=&lt;&#x2F;op&gt; word_part.&lt;symbol&gt;EscapedLiteral&lt;&#x2F;symbol&gt;&lt;bra&gt;(&lt;&#x2F;bra&gt;tok, ch&lt;bra&gt;)&lt;&#x2F;bra&gt;
++    &lt;keyword&gt;else&lt;&#x2F;keyword&gt;:
++        &lt;comment&gt;# in here docs \&quot; should not be escaped, staying as literal characters&lt;&#x2F;comment&gt;
++        tok.id &lt;op&gt;=&lt;&#x2F;op&gt; Id.Lit_Chars
++        part &lt;op&gt;=&lt;&#x2F;op&gt; tok&lt;&#x2F;addition&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-not-to-do&quot;&gt;What not to do&lt;&#x2F;h2&gt;
+&lt;p&gt;While our new change looks good, there&#x27;s a third way to do it. The wrong way. We could have implemented our fix by modifying only the evaluator, like so:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Mark all &lt;code&gt;EscapedLiteral&lt;&#x2F;code&gt; if they&#x27;re part of here docs.&lt;&#x2F;li&gt;
+&lt;li&gt;During evaluation, replace any &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt; with &lt;code&gt;\&amp;quot;&lt;&#x2F;code&gt;, undoing the original behaviour the parser.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;This approach also solves the string escaping problem, but introduces a new seriously bad side-effect...&lt;&#x2F;p&gt;
+&lt;p&gt;One might assume each interpreted line of code is lexed, parsed, and evaluated each time it&#x27;s run. While this is possible, no serious interpreter works this way! Typically, lexing and parsing is only performed once, while &lt;em&gt;evaluation&lt;&#x2F;em&gt; is performed dynamically. We can see this distinction in the short example:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; cat .&#x2F;test.sh
+&lt;session&gt;#!.&#x2F;bin&#x2F;osh
+
+for i in $(seq 1 4); do
+cat &amp;lt;&amp;lt;END
+    loop \&quot;$i\&quot;
+END
+done&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I then added a few trace statements to &lt;code&gt;osh&lt;&#x2F;code&gt; so we can see what&#x27;s going on inside. Running this code now shows that we were partially right! &lt;code&gt;ReadHereDocBody()&lt;&#x2F;code&gt; only gets parsed once, but the same string is evaluated multiple times. Our hypothetical change would be to &lt;code&gt;EscapedLiteral&lt;&#x2F;code&gt;, so it really would be run each loop iteration.&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;keyword&gt;$&lt;&#x2F;keyword&gt; .&#x2F;test.sh
+&lt;session&gt;&lt;comment&gt;# This is the parsing stage for here docs&lt;&#x2F;comment&gt;
+in ReadHereDocBody()
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;1\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+&lt;comment&gt;# Look! Look! Our escaped literals got evaluated a second time&lt;&#x2F;comment&gt;
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;2\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;3\&quot;
+
+in _EvalWordPart(&#x27;    loop &#x27;) @ Literal
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\\&quot;&#x27;) @ EscapedLiteral
+in _EvalWordPart(&#x27;\n&#x27;) @ Literal
+    loop \&quot;4\&quot;&lt;&#x2F;session&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;strong&gt;seriously bad side-effect&lt;&#x2F;strong&gt; from before was that evaluation can be performed over and over again if it&#x27;s in a loop, or a repeated function call. Of course the performance of a few ops is almost nothing, but as a principle, it&#x27;s great our fix didn&#x27;t have to change the evaluator at all!&lt;&#x2F;p&gt;
+&lt;p&gt;Nothing like a good feeling.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Pathological PATH</title>
+        <published>2025-11-24T00:00:00+00:00</published>
+        <updated>2025-11-24T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://gebdev.net/blog/pathological-path/"/>
+        <id>https://gebdev.net/blog/pathological-path/</id>
+        
+        <content type="html" xml:base="https://gebdev.net/blog/pathological-path/">&lt;p&gt;Sometimes it&#x27;s your CI server, sometimes it&#x27;s cross compilation, and sometimes someone on a Mac just wants to build your code. Even in the wild west of the early 80s, you still REALLY wanted to be able to run the code you &lt;a href=&quot;https:&#x2F;&#x2F;archive.org&#x2F;details&#x2F;byte-magazine-1980-07&#x2F;page&#x2F;n43&#x2F;mode&#x2F;2up&quot;&gt;painstakingly typed out by hand from BYTE magazine&lt;&#x2F;a&gt;. Compatibility has always been important.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ve been helping improve the compatibility of &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;osh.html&quot;&gt;osh&lt;&#x2F;a&gt; as part of the &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;&quot;&gt;oils project&lt;&#x2F;a&gt;, but ran into this weird inconsistency between shells regarding &lt;code&gt;PATH&lt;&#x2F;code&gt; in an empty environment.&lt;&#x2F;p&gt;
+&lt;p&gt;It reminded me how &lt;code&gt;PATH&lt;&#x2F;code&gt; can be the ultimate compatibility ruiner. If you haven&#x27;t had the displeasure of trying to figure out why you couldn&#x27;t run a newly installed version of some program or library, then you&#x27;ve surely fought with one of &lt;code&gt;PATH&lt;&#x2F;code&gt;&#x27;s close relatives, &lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;1899436&#x2F;pylint-unable-to-import-error-how-to-set-pythonpath&quot;&gt;&lt;code&gt;PYTHONPATH&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; or &lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;21964709&#x2F;how-to-set-or-change-the-default-java-jdk-version-on-macos&#x2F;24657630#24657630&quot;&gt;&lt;code&gt;JAVA_HOME&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;But if &lt;code&gt;PATH&lt;&#x2F;code&gt; is truly so important for compatibility, why can&#x27;t different shells agree on this small example?&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;$ env -i &#x2F;bin&#x2F;mksh -c &lt;string&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;bin:&#x2F;usr&#x2F;bin&lt;&#x2F;comment&gt;
+
+$ env -i &#x2F;bin&#x2F;zsh -c &lt;string&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;bin:&#x2F;usr&#x2F;bin:&#x2F;usr&#x2F;ucb:&#x2F;usr&#x2F;local&#x2F;bin&lt;&#x2F;comment&gt;
+
+$ env -i &#x2F;bin&#x2F;ash -c &lt;string&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;sbin:&#x2F;usr&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;bin&lt;&#x2F;comment&gt;
+
+$ env -i &#x2F;bin&#x2F;bash -c &lt;string&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;bin:&#x2F;sbin:.&lt;&#x2F;comment&gt;
+
+$ env -i &#x2F;bin&#x2F;sh -c &lt;string&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin&lt;&#x2F;comment&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;What&#x27;s going on above is&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;env -i&lt;&#x2F;code&gt; → Clears the environment. All environment variables, including &lt;code&gt;PATH&lt;&#x2F;code&gt;, get removed.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;shell&amp;gt; -c&lt;&#x2F;code&gt; → Evaluates the following string in a non-interactive shell. This is the same mode as when you run a shell script.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;&#x27;echo $PATH&#x27;&lt;&#x2F;code&gt; → You&#x27;d expect this to be empty because &lt;code&gt;PATH&lt;&#x2F;code&gt; is an environment variable and it just got cleared. But &lt;code&gt;PATH&lt;&#x2F;code&gt; is so important that shells have a built-in default included in their source code!&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I&#x27;m getting a little ahead of myself. Let&#x27;s start from the beginning of the story.&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center; margin-bottom: 16px;&quot;&gt;
+    &lt;div style=&quot;margin: auto; display: inline-block; text-align: left;&quot;&gt;
+        &lt;a href=&quot;#a-pivotal-path&quot;&gt;A. Pivotal &lt;code&gt;PATH&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;#b-where-do-my-binaries-live&quot;&gt;B. Where do my binaries live?&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;#c-where-do-paths-come-from&quot;&gt;C. Where do &lt;code&gt;PATH&lt;&#x2F;code&gt;s come from?&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;#d-nobody-uses-anything-but-bash-anyways&quot;&gt;D. Nobody uses anything but &lt;code&gt;bash&lt;&#x2F;code&gt; anyways&lt;&#x2F;a&gt;
+        &lt;br&gt;
+        &lt;a href=&quot;#e-this-matters-in-the-real-world&quot;&gt;E. This matters in the real world!&lt;&#x2F;a&gt;
+        &lt;br&gt;
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;a-pivotal-path&quot;&gt;A. Pivotal &lt;code&gt;PATH&lt;&#x2F;code&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Your shell uses &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;PATH_(variable)&quot;&gt;&lt;code&gt;PATH&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; to find the right binary when you run a command. Running commands is important.&lt;sup&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.explainxkcd.com&#x2F;wiki&#x2F;index.php&#x2F;285:_Wikipedian_Protester&quot;&gt;[citation needed]&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; Say we wanted to run the following in &lt;code&gt;bash&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;$ gcc main.c -o main
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Per &lt;code&gt;bash&lt;&#x2F;code&gt;&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;bash.html#Command-Search-and-Execution-1&quot;&gt;reference manual&lt;&#x2F;a&gt; it would perform the following steps:&lt;&#x2F;p&gt;
+&lt;ol start=&quot;0&quot;&gt;
+&lt;li&gt;Check if &lt;code&gt;gcc&lt;&#x2F;code&gt; contains any slashes in its name → &lt;soft-yellow&gt;nope.&lt;&#x2F;soft-yellow&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Check if &lt;code&gt;gcc&lt;&#x2F;code&gt; is a shell function → &lt;soft-yellow&gt;nope.&lt;&#x2F;soft-yellow&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Check if &lt;code&gt;gcc&lt;&#x2F;code&gt; is a shell builtin → &lt;soft-yellow&gt;also nope.&lt;&#x2F;soft-yellow&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Search each directory in &lt;code&gt;PATH&lt;&#x2F;code&gt; for an executable file named &lt;code&gt;gcc&lt;&#x2F;code&gt; → &lt;soft-green&gt;Aha!&lt;&#x2F;soft-green&gt; Found &lt;code&gt;&#x2F;usr&#x2F;bin&#x2F;gcc&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Execute &lt;code&gt;gcc&lt;&#x2F;code&gt; in a separate execution environment.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;b-where-do-my-binaries-live&quot;&gt;B. Where do my binaries live?&lt;&#x2F;h2&gt;
+&lt;div class=&quot;question&quot; style=&quot;margin-bottom: 16px;&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default3.png&quot;&gt;
+    &lt;div&gt;
+        Why is &lt;code&gt;gcc&lt;&#x2F;code&gt; in &lt;code&gt;&#x2F;usr&#x2F;bin&lt;&#x2F;code&gt;? Just &lt;code&gt;&#x2F;bin&lt;&#x2F;code&gt; sounds like it would be simpler.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;To answer this question, we&#x27;re first assuming you&#x27;re on a Linux system. But even then, different Linux systems vary on where they place certain binaries. Luckily, most Linux distributions make it their policy to follow FHS, or the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Filesystem_Hierarchy_Standard&quot;&gt;Filesystem Hierarchy Standard&lt;&#x2F;a&gt;, originally developed in 1994 by the Linux Foundation to unify conventions regarding key directories.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bin-and-usr-bin&quot;&gt;&lt;code&gt;&#x2F;bin&lt;&#x2F;code&gt; and &lt;code&gt;&#x2F;usr&#x2F;bin&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;According to FHS, &lt;code&gt;&#x2F;bin&lt;&#x2F;code&gt; is for &lt;strong&gt;programs that may be used by anyone&lt;&#x2F;strong&gt;, but which are required when no other filesystems are mounted. &lt;code&gt;&#x2F;usr&#x2F;bin&lt;&#x2F;code&gt; is just the primary directory for executable commands on the system.&lt;&#x2F;p&gt;
+&lt;p&gt;On Debian &lt;code&gt;&#x2F;bin&lt;&#x2F;code&gt; is a symlink to &lt;code&gt;&#x2F;usr&#x2F;bin&lt;&#x2F;code&gt;, which sounds like a good call.&lt;&#x2F;p&gt;
+&lt;div class=&quot;question&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default5.png&quot;&gt;
+    &lt;div&gt;
+        Wait... why would &lt;code&gt;&#x2F;bin&lt;&#x2F;code&gt; and &lt;code&gt;&#x2F;usr&#x2F;bin&lt;&#x2F;code&gt; be separate directories in the first place?
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        Good question!
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        Back in the olden days &lt;a href=&quot;https:&#x2F;&#x2F;ourworldindata.org&#x2F;grapher&#x2F;historical-cost-of-computer-memory-and-storage&quot;&gt;drives were expensive&lt;&#x2F;a&gt; and not very large. The idea was that you could save space and money by sharing a single &lt;code&gt;&#x2F;usr&lt;&#x2F;code&gt; drive (filled with all sorts of useful goodies) between a large number of hosts.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        However, if you were playing around and &lt;a href=&quot;https:&#x2F;&#x2F;xkcd.com&#x2F;456&#x2F;&quot;&gt;messed up your system&lt;&#x2F;a&gt; such that mounting &lt;code&gt;&#x2F;usr&lt;&#x2F;code&gt; failed, you REALLY wanted all the commands needed to fix the issue on your current drive.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;sbin-and-usr-sbin&quot;&gt;&lt;code&gt;&#x2F;sbin&lt;&#x2F;code&gt; and &lt;code&gt;&#x2F;usr&#x2F;sbin&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;&#x2F;usr&#x2F;sbin&lt;&#x2F;code&gt; is for binaries &lt;strong&gt;used exclusively by the system administrator&lt;&#x2F;strong&gt;. Just like before, &lt;code&gt;&#x2F;sbin&lt;&#x2F;code&gt; is typically a symlink to &lt;code&gt;&#x2F;usr&#x2F;sbin&lt;&#x2F;code&gt;. This directory consists of commands for configuring the system, like &lt;code&gt;adduser&lt;&#x2F;code&gt;, &lt;code&gt;chroot&lt;&#x2F;code&gt;, or &lt;code&gt;ip&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usr-local-bin-and-usr-local-sbin&quot;&gt;&lt;code&gt;&#x2F;usr&#x2F;local&#x2F;bin&lt;&#x2F;code&gt; and &lt;code&gt;&#x2F;usr&#x2F;local&#x2F;sbin&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;FHS recommends placing locally installed software in &lt;code&gt;&#x2F;usr&#x2F;local&#x2F;bin&lt;&#x2F;code&gt; and &lt;code&gt;&#x2F;usr&#x2F;local&#x2F;sbin&lt;&#x2F;code&gt;. It notes that system updates shouldn&#x27;t mess with anything under &lt;code&gt;&#x2F;usr&#x2F;local&lt;&#x2F;code&gt;. Informally, this is where software goes that wasn&#x27;t installed using a package manager.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;usr-ucb&quot;&gt;&lt;code&gt;&#x2F;usr&#x2F;ucb&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;An unexpected directory to be built-in to &lt;code&gt;zsh&lt;&#x2F;code&gt;&#x27;s default &lt;code&gt;PATH&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;FHS does not specify &lt;code&gt;&#x2F;ucb&lt;&#x2F;code&gt; anywhere, because it&#x27;s a convention on BSD! Apparently &lt;code&gt;ucb&lt;&#x2F;code&gt; stands for &amp;quot;University of California, Berkeley&amp;quot; where BSD originated, and the directory was &lt;strong&gt;intended for compatibility with tools developed for BSD&lt;&#x2F;strong&gt; systems. Although &lt;code&gt;&#x2F;bin&#x2F;ucb&lt;&#x2F;code&gt; seems to have been deprecated in some BSD systems &lt;a href=&quot;https:&#x2F;&#x2F;docs-archive.freebsd.org&#x2F;44doc&#x2F;smm&#x2F;01.setup&#x2F;paper.pdf&quot;&gt;since as early as 1993&lt;&#x2F;a&gt;, which may be part of the reason is doesn&#x27;t appear in FHS.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;current-directory&quot;&gt;Current directory&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;.&lt;&#x2F;code&gt; of course refers to the current directory. If &lt;code&gt;.&lt;&#x2F;code&gt; is in your &lt;code&gt;PATH&lt;&#x2F;code&gt;, then you can run any binaries in the current directory without needing to prepend &lt;code&gt;.&#x2F;&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;c-where-do-paths-come-from&quot;&gt;C. Where do &lt;code&gt;PATH&lt;&#x2F;code&gt;s come from?&lt;&#x2F;h2&gt;
+&lt;div class=&quot;question&quot; style=&quot;margin-bottom: 16px;&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default18.png&quot;&gt;
+    &lt;div&gt;
+        When I do &lt;code&gt;echo $PATH&lt;&#x2F;code&gt; in &lt;code&gt;bash&lt;&#x2F;code&gt; I get a whole lot of paths, but none of them are &lt;code&gt;&quot;.&quot;&lt;&#x2F;code&gt;, as above. What&#x27;s going on?
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Contrary to popular belief, A stork does not fly to your Linux distro and set its &lt;code&gt;PATH&lt;&#x2F;code&gt; during installation. Unfortunately, there&#x27;s actually a lot of nuance regarding which config scripts get run when the environment is setup. The following are only the most common examples.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;interactive-shells&quot;&gt;Interactive shells&lt;&#x2F;h3&gt;
+&lt;p&gt;When you open your terminal, this is called an interactive shell. It gives feedback when you type commands, which is helpful for human brains.&lt;&#x2F;p&gt;
+&lt;p&gt;When &lt;code&gt;bash&lt;&#x2F;code&gt; starts up as an interactive shell it follows a &lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;bash&#x2F;manual&#x2F;html_node&#x2F;Bash-Startup-Files.html&quot;&gt;startup routine&lt;&#x2F;a&gt;. It first executes &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; which is the system wide initialization script for shells. &lt;code&gt;bash&lt;&#x2F;code&gt; then runs the following in order: &lt;code&gt;~&#x2F;.bash_profile&lt;&#x2F;code&gt;, &lt;code&gt;~&#x2F;.bash_login&lt;&#x2F;code&gt;, and finally &lt;code&gt;~&#x2F;.profile&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;non-interactive-shells&quot;&gt;Non-interactive shells&lt;&#x2F;h3&gt;
+&lt;div class=&quot;question&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default18.png&quot;&gt;
+    &lt;div&gt;
+        I looked at &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; and saw it assigns &lt;code&gt;PATH&lt;&#x2F;code&gt;, but it&#x27;s different than &lt;code&gt;env -i &#x2F;bin&#x2F;bash -c &#x27;echo $PATH&#x27;&lt;&#x2F;code&gt;.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;question&quot; style=&quot;margin-left: calc(2.5em + 6px)&quot;&gt;
+    &lt;div&gt;
+        Since &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; is the first script to &lt;code&gt;export PATH&lt;&#x2F;code&gt;, it has to be the default &lt;code&gt;PATH&lt;&#x2F;code&gt;, right?
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        Yes, &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; is the default &lt;code&gt;PATH&lt;&#x2F;code&gt; for interactive shells. However, non-interactive shells don&#x27;t follow the startup routine above.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        So what&#x27;s the value of &lt;code&gt;PATH&lt;&#x2F;code&gt; before &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt;? That&#x27;s the &lt;b&gt;true&lt;&#x2F;b&gt; default &lt;code&gt;PATH&lt;&#x2F;code&gt;. You can find it &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bminor&#x2F;bash&#x2F;blob&#x2F;a8a1c2fac029404d3f42cd39f5a20f24b6e4fe4b&#x2F;config-top.h#L61&quot;&gt;embedded in bash&#x27;s source code&lt;&#x2F;a&gt;.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;environment-variables-exist-outside-of-shells&quot;&gt;Environment variables exist outside of shells&lt;&#x2F;h3&gt;
+&lt;div class=&quot;question&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default18.png&quot;&gt;
+    &lt;div&gt;
+        I started a non-interactive shell with &lt;code&gt;bash -c &#x27;echo $PATH&#x27;&lt;&#x2F;code&gt; but it still doesn&#x27;t show the default &lt;code&gt;PATH&lt;&#x2F;code&gt;. Why?
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        &lt;code&gt;&#x2F;etc&#x2F;profile&lt;&#x2F;code&gt; exports &lt;code&gt;PATH&lt;&#x2F;code&gt;, which makes it an environment variable. Environment variables are &lt;a href=&quot;https:&#x2F;&#x2F;tldp.org&#x2F;LDP&#x2F;tlk&#x2F;kernel&#x2F;processes.html#:~:text=environment%20variables&quot;&gt;per-process&lt;&#x2F;a&gt;, typically stored &lt;a href=&quot;https:&#x2F;&#x2F;refspecs.linuxfoundation.org&#x2F;elf&#x2F;x86_64-abi-0.98.pdf&quot;&gt;near the beginning of the stack&lt;&#x2F;a&gt;, but before the first function frame.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        Crucially, when a child processes is &lt;a href=&quot;https:&#x2F;&#x2F;man7.org&#x2F;linux&#x2F;man-pages&#x2F;man2&#x2F;execve.2.html&quot;&gt;executed&lt;&#x2F;a&gt; it &lt;a href=&quot;https:&#x2F;&#x2F;man7.org&#x2F;linux&#x2F;man-pages&#x2F;man7&#x2F;environ.7.html#:~:text=it%20inherits%20a%20copy%20of%20its%0A%20%20%20%20%20%20%20parent%27s%20environment&quot;&gt;inherits environment variables&lt;&#x2F;a&gt; from its parent.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;question&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;profiles&#x2F;default18.png&quot;&gt;
+    &lt;div&gt;
+        Then how can you get the true default &lt;code&gt;PATH&lt;&#x2F;code&gt;?
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;answer&quot;&gt;
+    &lt;div&gt;
+        If you really want to reset your environment, you can use &lt;code&gt;env -i&lt;&#x2F;code&gt;. &lt;code&gt;env&lt;&#x2F;code&gt; is for modifying the environment of a child process, while the &lt;code&gt;-i&lt;&#x2F;code&gt; (or &lt;code&gt;--ignore-environment&lt;&#x2F;code&gt;) starts with an empty environment.
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;etc-sudoers&quot;&gt;&lt;code&gt;&#x2F;etc&#x2F;sudoers&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The sudo policy affects auditing, logging, and policy decisions. &lt;code&gt;&#x2F;etc&#x2F;sudoers&lt;&#x2F;code&gt; specifies the default sudo policy.&lt;&#x2F;p&gt;
+&lt;p&gt;The most important aspect of the sudo policy, in our situation, is how it affects the &lt;a href=&quot;https:&#x2F;&#x2F;man7.org&#x2F;linux&#x2F;man-pages&#x2F;man5&#x2F;sudoers.5.html#:~:text=proto(5).-,Command%20environment,-Since%20environment%20variables&quot;&gt;command environment&lt;&#x2F;a&gt;. Notably, it can restrict which environment variables are inherited after running the &lt;code&gt;sudo&lt;&#x2F;code&gt; command!&lt;&#x2F;p&gt;
+&lt;p&gt;By default &lt;code&gt;&#x2F;etc&#x2F;sudoers&lt;&#x2F;code&gt; appears to have &lt;code&gt;env_reset&lt;&#x2F;code&gt; set, with &lt;code&gt;secure_path&lt;&#x2F;code&gt; equal to &lt;code&gt;&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin&lt;&#x2F;code&gt;. This means that if no &lt;code&gt;PATH&lt;&#x2F;code&gt; environment variable is set, whatever is run by the &lt;code&gt;sudo&lt;&#x2F;code&gt; command will get the value of &lt;code&gt;secure_path&lt;&#x2F;code&gt;. This works as follows:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;$ env -i bash -c &lt;string&gt;&quot;sudo .&#x2F;echo_path.sh&quot;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin&lt;&#x2F;comment&gt;
+
+&lt;comment&gt;# modify secure_path in &#x2F;etc&#x2F;sudoers&lt;&#x2F;comment&gt;
+$ env -i bash -c &lt;string&gt;&quot;sudo .&#x2F;echo_path.sh&quot;&lt;&#x2F;string&gt;
+&lt;comment&gt;&#x2F;this:&#x2F;is:&#x2F;a:&#x2F;modified:&#x2F;secure:&#x2F;path&lt;&#x2F;comment&gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;details style=&quot;margin-bottom: 16px;&quot;&gt;
+    &lt;summary style=&quot;cursor: pointer;&quot;&gt;Some lame additional details about &lt;code&gt;&#x2F;etc&#x2F;sudoers&lt;&#x2F;code&gt; for those interested&lt;&#x2F;summary&gt;
+    &lt;div&gt;
+        &lt;blockquote&gt;
+            By default, the &lt;code&gt;env_reset&lt;&#x2F;code&gt; flag is enabled. This causes commands to be executed with a new, minimal environment ... [which] is initialized with the contents of &lt;code&gt;&#x2F;etc&#x2F;environment&lt;&#x2F;code&gt;.
+        &lt;&#x2F;blockquote&gt;
+        &lt;blockquote&gt;
+            Additional variables, such as &lt;code&gt;DISPLAY&lt;&#x2F;code&gt;, &lt;code&gt;PATH&lt;&#x2F;code&gt; and &lt;code&gt;TERM&lt;&#x2F;code&gt;, are preserved from the invoking user&#x27;s environment if permitted by the &lt;code&gt;env_check&lt;&#x2F;code&gt;, or &lt;code&gt;env_keep&lt;&#x2F;code&gt; options.
+        &lt;&#x2F;blockquote&gt;
+        &lt;blockquote&gt;
+            If the &lt;code&gt;PATH&lt;&#x2F;code&gt; and &lt;code&gt;TERM&lt;&#x2F;code&gt; variables are not preserved from the user&#x27;s environment, they will be set to default values.
+        &lt;&#x2F;blockquote&gt;
+        &lt;blockquote&gt;
+            If, however, the &lt;code&gt;env_reset&lt;&#x2F;code&gt; flag is disabled, any variables not explicitly denied by the &lt;code&gt;env_check&lt;&#x2F;code&gt; and &lt;code&gt;env_delete&lt;&#x2F;code&gt; options are allowed and their values are inherited from the invoking process.
+        &lt;&#x2F;blockquote&gt;
+    &lt;&#x2F;div&gt;
+&lt;&#x2F;details&gt;
+&lt;h2 id=&quot;d-nobody-uses-anything-but-bash-anyways&quot;&gt;D. Nobody uses anything but &lt;code&gt;bash&lt;&#x2F;code&gt; anyways&lt;&#x2F;h2&gt;
+&lt;p&gt;I have &lt;a href=&quot;https:&#x2F;&#x2F;www.reddit.com&#x2F;r&#x2F;linux4noobs&#x2F;comments&#x2F;12wfzb8&#x2F;best_shell_in_your_opinion_2023&#x2F;&quot;&gt;little evidence&lt;&#x2F;a&gt;, but even before diving into shells I&#x27;d see &lt;code&gt;zsh&lt;&#x2F;code&gt; in surprising places, often because of its ease of customization for interactive use. There is &lt;strong&gt;at least&lt;&#x2F;strong&gt; a small place in the world for &lt;a href=&quot;https:&#x2F;&#x2F;www.oilshell.org&#x2F;blog&#x2F;2021&#x2F;01&#x2F;why-a-new-shell.html&quot;&gt;new shells&lt;&#x2F;a&gt;!&lt;&#x2F;p&gt;
+&lt;p&gt;One such shell is &lt;code&gt;osh&lt;&#x2F;code&gt;. Its goal is to move on from &lt;code&gt;bash&lt;&#x2F;code&gt;. Sure, &lt;code&gt;bash&lt;&#x2F;code&gt; has always been there for us, &lt;a href=&quot;https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=35992575&quot;&gt;but&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;wizardzines.com&#x2F;zines&#x2F;bite-size-bash&#x2F;#:~:text=Variable%20assignment%20is%20weird&quot;&gt;it&#x27;s&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;wizardzines.com&#x2F;zines&#x2F;bite-size-bash&#x2F;#:~:text=if%20statements%20run%20programs%20instead%20of%20checking%20a%20boolean%20value&quot;&gt;time&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s key contribution is a 3-stage &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;osh.html&quot;&gt;upgrade path&lt;&#x2F;a&gt; that makes transitioning from &lt;code&gt;bash&lt;&#x2F;code&gt; to a better tool as easy as possible:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Transparency&lt;&#x2F;strong&gt;. Replace &lt;code&gt;bash&lt;&#x2F;code&gt; with &lt;code&gt;osh&lt;&#x2F;code&gt; and don&#x27;t notice anything.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;bash&lt;&#x2F;code&gt; is the default shell language on most Linux systems, and the one that most shells scripts target. If &lt;code&gt;osh&lt;&#x2F;code&gt; hopes to be easy to adopt, compatibility with &lt;code&gt;bash&lt;&#x2F;code&gt; is crucial!&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Error Checking&lt;&#x2F;strong&gt;. Opt into a bunch of &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;release&#x2F;latest&#x2F;doc&#x2F;error-catalog.html#OILS-ERR-301&quot;&gt;helpful error checks&lt;&#x2F;a&gt; by enabling strict mode &lt;code&gt;shopt --set strict:all&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;New Paradigm&lt;&#x2F;strong&gt;. Upgrade to &lt;code&gt;ysh&lt;&#x2F;code&gt;, a modern shell language that shares most of its runtime with &lt;code&gt;osh&lt;&#x2F;code&gt;, with &lt;code&gt;shopt --set ysh:upgrade&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;e-this-matters-in-the-real-world&quot;&gt;E. This matters in the real world!&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;ve recently been helping with a &lt;a href=&quot;https:&#x2F;&#x2F;oils.pub&#x2F;blog&#x2F;2025&#x2F;09&#x2F;releases.html#:~:text=of%20work%20on-,regtest&#x2F;aports,-%2C%20a%20batch%20job&quot;&gt;&amp;quot;secret project&amp;quot;&lt;&#x2F;a&gt; to make &lt;code&gt;osh&lt;&#x2F;code&gt; more &lt;code&gt;bash&lt;&#x2F;code&gt; compatible.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-not-so-secret-project&quot;&gt;The (not so) secret project&lt;&#x2F;h3&gt;
+&lt;div style=&quot;margin-top: 16px;&quot;&gt;&lt;&#x2F;div&gt;
+&lt;ol start=&quot;0&quot;&gt;
+&lt;li&gt;Spin up an alpine linux instance.&lt;&#x2F;li&gt;
+&lt;li&gt;Replace &lt;code&gt;&#x2F;bin&#x2F;bash&lt;&#x2F;code&gt;, &lt;code&gt;&#x2F;bin&#x2F;sh&lt;&#x2F;code&gt;, and &lt;code&gt;&#x2F;bin&#x2F;ash&lt;&#x2F;code&gt; with &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Symbolic_link&quot;&gt;symlinks&lt;&#x2F;a&gt; to &lt;code&gt;osh&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Try to build a specific package, like &lt;code&gt;nginx&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;If it fails, deduce which shell script caused the bug and fix it.&lt;&#x2F;li&gt;
+&lt;li&gt;Repeat for every package from the &lt;a href=&quot;https:&#x2F;&#x2F;pkgs.alpinelinux.org&#x2F;packages&quot;&gt;alpine linux package index&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;This is a cool idea because if someone using alpine linux (&lt;a href=&quot;https:&#x2F;&#x2F;ish.app&#x2F;&quot;&gt;like me&lt;&#x2F;a&gt;) happened to sneeze and &lt;code&gt;ash&lt;&#x2F;code&gt; (alpine&#x27;s default shell) got replaced with &lt;code&gt;osh&lt;&#x2F;code&gt;, they almost wouldn&#x27;t notice. Commands, package builds, and scripts would all work the same as before!&lt;&#x2F;p&gt;
+&lt;p&gt;Given the alpine package manager&#x27;s wide usage, such a detailed suite of automated tests approximately enumerates all observable shell behaviour. So according to &lt;a href=&quot;https:&#x2F;&#x2F;www.hyrumslaw.com&#x2F;&quot;&gt;Hyrum&#x27;s Law&lt;&#x2F;a&gt;, &lt;code&gt;osh&lt;&#x2F;code&gt; and &lt;code&gt;ash&lt;&#x2F;code&gt; would be approximately indistinguishable! However, &lt;code&gt;ash&lt;&#x2F;code&gt;, and &lt;code&gt;bash&lt;&#x2F;code&gt; are incompatible shells themselves, so it&#x27;s a dream that could never be. At least these tests help &lt;code&gt;osh&lt;&#x2F;code&gt; find a lot of &lt;code&gt;bash&lt;&#x2F;code&gt; incompatibilities along the way.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;default-path-matters&quot;&gt;Default &lt;code&gt;PATH&lt;&#x2F;code&gt; matters&lt;&#x2F;h3&gt;
+&lt;p&gt;My role in this project has been to dig into packages that fail to build, then find their &lt;strong&gt;root cause&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, when you try to build the &lt;code&gt;lua-aports&lt;&#x2F;code&gt; package, &lt;a href=&quot;https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20251114091059&#x2F;https:&#x2F;&#x2F;op.oils.pub&#x2F;aports-build&#x2F;2025-10-22.wwz&#x2F;_tmp&#x2F;aports-report&#x2F;2025-10-22&#x2F;disagree-2025-10-15-main&#x2F;osh-as-sh&#x2F;log&#x2F;lua-aports.log.txt&quot;&gt;a bunch of tests fail&lt;&#x2F;a&gt;. It&#x27;s not clear to me what &lt;code&gt;lua-aports&lt;&#x2F;code&gt; does exactly, but Lua is definitely involved. One failing test is the following:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;[ RUN      ] spec&#x2F;abuild_spec.lua:36: abuild get_conf should return the value of a configuration variable from the user config
+Unable to deduce build architecture. Install apk-tools, or set CBUILD.
+spec&#x2F;abuild_spec.lua:37: Expected objects to be equal.
+Passed in:
+(string) &lt;string&gt;&#x27;&#x27;&lt;&#x2F;string&gt;
+Expected:
+(string) &lt;string&gt;&#x27;myvalue&#x27;&lt;&#x2F;string&gt;
+
+stack traceback:
+	spec&#x2F;abuild_spec.lua:37: in function &amp;lt;spec&#x2F;abuild_spec.lua:36&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;!-- TODO: clean up formatting past here --&gt;
+&lt;p&gt;Of course, this doesn&#x27;t seem to be related to the default &lt;code&gt;PATH&lt;&#x2F;code&gt; at all, but debugging can be tricky like that. If you&#x27;re interested in the (slightly compressed) trail I followed, it was:&lt;&#x2F;p&gt;
+&lt;ol start=&quot;0&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;MYVAR&lt;&#x2F;code&gt; doesn&#x27;t exist in the current environment? Something must be up. &lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;describe(&lt;string&gt;&quot;get_conf&quot;&lt;&#x2F;string&gt;, function()&lt;br&gt;    local abuild = require(&lt;string&gt;&quot;aports.abuild&quot;&lt;&#x2F;string&gt;)&lt;br&gt;    it(&lt;string&gt;&quot;should return the value of a configuration variable from the user config&quot;&lt;&#x2F;string&gt;, function()&lt;br&gt;        &lt;comment&gt;-- This assertion is failing!&lt;&#x2F;comment&gt;&lt;br&gt;        assert.equal(&lt;string&gt;&quot;myvalue&quot;&lt;&#x2F;string&gt;, abuild.get_conf(&lt;string&gt;&quot;MYVAR&quot;&lt;&#x2F;string&gt;))&lt;br&gt;    end)&lt;br&gt;end)&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;This Lua test is part of a test framework called &lt;code&gt;lua-busted&lt;&#x2F;code&gt;, which is invoked after the package builds using the command &lt;code&gt;env -i busted-$(LUA_VERSION) --verbose&lt;&#x2F;code&gt;. &lt;code&gt;busted-5.4&lt;&#x2F;code&gt; (our current version) starts with a shebang, so the error might occur before the testsuite is run?&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;comment&gt;#!&#x2F;usr&#x2F;bin&#x2F;lua5.4&lt;&#x2F;comment&gt;&lt;br&gt;&lt;comment&gt;-- Busted command-line runner&lt;&#x2F;comment&gt;&lt;br&gt;require &lt;string&gt;&#x27;busted.runner&#x27;&lt;&#x2F;string&gt;({ standalone = &lt;const&gt;false&lt;&#x2F;const&gt; })&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Oh wow, just running &lt;code&gt;.&#x2F;busted-5.4&lt;&#x2F;code&gt; without &lt;code&gt;env -i&lt;&#x2F;code&gt; passes all tests. Something in the environment must be causing these issues.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;There are a few key differences between the environment variables of &lt;code&gt;ash&lt;&#x2F;code&gt; and &lt;code&gt;osh&lt;&#x2F;code&gt; (only differences shown):&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;$ cat .&#x2F;display_env.sh&lt;br&gt;&lt;comment&gt;env&lt;&#x2F;comment&gt;&lt;br&gt;&lt;br&gt;ash$ env -i .&#x2F;display_env.sh&lt;br&gt;&lt;comment&gt;PATH=&#x2F;sbin:&#x2F;usr&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;bin&lt;&#x2F;comment&gt;&lt;br&gt;&lt;comment&gt;SHLVL=1&lt;&#x2F;comment&gt;&lt;br&gt;&lt;br&gt;osh-0.36$ env -i .&#x2F;display_env.sh&lt;br&gt;&lt;comment&gt;PATH=&#x2F;bin:&#x2F;usr&#x2F;bin&lt;&#x2F;comment&gt;&lt;br&gt;&lt;comment&gt;LINES=63&lt;&#x2F;comment&gt;&lt;br&gt;&lt;comment&gt;COLUMNS=141&lt;&#x2F;comment&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Aha! Adding &lt;code&gt;&#x2F;sbin:&#x2F;usr&#x2F;sbin&lt;&#x2F;code&gt; to &lt;code&gt;osh&lt;&#x2F;code&gt;&#x27;s default &lt;code&gt;PATH&lt;&#x2F;code&gt; solves the build failures. The testing framework must have depended on a non-interactive subshell that tried to run system configuration commands, likely for the local environment.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Now we reach the end of our story where the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Corner_case&quot;&gt;pathological case&lt;&#x2F;a&gt;... was the shell&#x27;s default &lt;code&gt;PATH&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

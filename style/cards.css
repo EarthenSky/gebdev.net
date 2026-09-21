@@ -1,0 +1,190 @@
+/*
+    This file contains style for css cards
+*/
+
+.blog-card {
+    display: block;
+    position: relative;
+
+    /* this is just for the span */
+    line-height: 1.05;
+
+    width: calc(100% - 14px * 2);
+    margin-bottom: 14px;
+    padding: 13px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.filled {
+    border: 1px solid var(--soft-green);
+    background-color: var(--soft-green);
+}
+.filled::before {
+    position: absolute;
+    vertical-align: middle;
+
+    top: 50%;
+    transform: translateX(calc(-100% - 14px - 12px)) translateY(-50%) rotate(-20deg);
+    color: var(--soft-green);
+    content: 'New!';
+
+    transition: color 0.25s ease, transform 0.35s ease;
+}
+.blog-card.filled:hover::before {
+    color: var(--soft-yellow);
+    transform: translateX(calc(-100% - 14px - 12px + 2px)) translateY(calc(-50% - 2px)) rotate(12deg);
+}
+
+
+.outline {
+    border: 1px solid var(--dark-green);
+    background-color: var(--space);
+}
+.blog-card.filled:hover {
+    border: 1px solid var(--soft-yellow);
+    background-color: var(--soft-yellow);
+
+    text-decoration: none;
+}
+.blog-card.outline:hover {
+    border: 1px solid var(--soft-yellow);
+
+    text-decoration: none;
+}
+.blog-card div {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+
+    line-height: 1.25;
+
+    margin-bottom: -2px;
+}
+.blog-card div h2 {
+    padding: 0;
+
+    line-height: 1;
+
+    font-family: Spectral;
+    font-weight: 600;
+    font-size: 30px;
+
+    margin: 0 0 4px 0;
+
+    transition: color 0.25s ease;
+}
+.filled div h2 {
+    color: var(--space);
+}
+.outline div h2 {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover div h2 {
+    color: var(--soft-yellow);
+}
+.blog-card > div > div {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 3px;
+    margin-left: auto;
+}
+.blog-card > div > div > div {
+    margin-left: auto;
+
+    font-weight: 400;
+    font-size: 0.8em;
+
+    text-align: right;
+
+    transition: color 0.25s ease;
+}
+.filled div div div {
+    color: var(--space);
+}
+.outline div div div {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover div div div {
+    color: var(--soft-yellow);
+}
+.blog-card span {
+    font-size: 1.0em;
+    font-weight: 400;
+
+    transition: color 0.25s ease;
+}
+.filled span {
+    color: var(--space);
+}
+.outline span {
+    color: var(--soft-green);
+}
+.blog-card.outline:hover span {
+    color: var(--soft-yellow);
+}
+@media screen and (max-width: 600px),
+       screen and (max-device-width: 1000px) {
+    .filled::before {
+        transform: translateX(calc(-100% - 14px + 3px)) translateY(-50%) rotate(-85deg);
+    }
+    .blog-card.filled:hover::before {
+        transform: translateX(calc(-100% - 14px + 3px + 1px)) translateY(calc(-50% - 1px)) rotate(-95deg);
+    }
+    .blog-card {
+        line-height: 0.9;
+    }
+    .blog-card div h2 {
+        font-size: 1.6em;
+    }
+    .blog-card > div > div > div {
+        font-size: 0.725em;
+    }
+    .blog-card span {
+        font-size: 0.85em;
+    }
+}
+
+.file-browser-card {
+    display: inline-block;
+
+    padding: 11px;
+    margin-bottom: 16px;
+
+    border: 1px solid var(--soft-blue);
+    border-radius: 6px;
+
+    background-color: var(--soft-blue);
+
+    cursor: pointer;
+
+    transition: background-color 0.25s ease, border 0.25s ease;
+}
+.file-browser-card:hover {
+    border: 1px solid var(--blue);
+    background-color: var(--blue);
+
+    text-decoration: none;
+}
+.file-browser-card h3 {
+    padding: 0;
+    margin: 0;
+
+    font-family: Spectral;
+    font-weight: 600;
+    font-size: 1.25em;
+
+    color: var(--space);
+
+    margin-bottom: -4px;
+}
+.file-browser-card span {
+    font-weight: 400;
+    font-size: 0.8em;
+    
+    color: var(--space);
+}
