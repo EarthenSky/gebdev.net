@@ -206,10 +206,11 @@
 
     background-color: white; 
 
-    transition: border-color 0.25s ease, background-color 0.25s ease;
+    transition: border-radius linear 0.2s,border-color 0.25s ease, background-color 0.25s ease;
 }
 .til-card:hover {
     text-decoration: none;
+    border-top-left-radius: 0;
 }
 .til-card code {
     background-color: #ccc;

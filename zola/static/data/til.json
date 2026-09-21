@@ -2,13 +2,24 @@
   {
     "title": "Malloc internals",
     "date": "2026-01-13",
+    "updates": [
+      { "2026-09-01": "Make wording a bit nicer + added a long description and sources." }
+    ],
     "tags": ["C", "Linux"],
-    "body": "TIL if you try to <code>malloc()</code> something medium-large, the kernel can decide to instead give you some random non-heap memory just wherever."
+    "body": "TIL if you <code>malloc()</code> something large enough, the kernel can decide to instead give you some random non-heap memory just wherever.",
+    "long": "Balancing memory fragmentation with fast allocation is tricky. Contrary to popular belief, you are not simply given an increasing address of the heap. On Linux there are 3 main layers that malloc is an interface to. The first is the glibc allocator, the second is the syscall `sblk()`, and the third is the syscall `mmap()`. Of course, this is a deep rabbit hole, but put simply: (1) glibc is pre-allocated with a fixed allocator and is great for small allocations. (2) sblk represents the heap we think of; allocations are simple increases to the shared heap address. But make sure you deallocate soon, or you'll block the heap from being able to reclaim memory. (3) mmap is the mother of all memory syscalls. You can grab an arbitary segment of virtual address space, and blocks get paged into physical memory as you go.",
+    "sources": "[0] [1] [2]"
   },
   {
     "title": "Virtual address space",
     "date": "2026-01-13",
     "tags": ["Linux"],
-    "body": "also TIL you should expect to only be able to allocate up to ~50% of your virtual address space before malloc starts failing, which on 32-bit systems is ~1GB per process 🥹"
+    "body": "TIL you should expect to only be able to allocate up to ~50% of your virtual address space before `malloc()` starts failing, which on 32-bit systems is ~1GB per process 🥹"
+  },
+  {
+    "title": "?",
+    "date": "2026-01-14",
+    "tags": [],
+    "body": "..."
   }
 ]
