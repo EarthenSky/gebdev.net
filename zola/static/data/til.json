@@ -1,25 +1,247 @@
 [
   {
-    "title": "Malloc internals",
-    "date": "2026-01-13",
-    "updates": [
-      { "2026-09-01": "Make wording a bit nicer + added a long description and sources." }
-    ],
-    "tags": ["C", "Linux"],
-    "body": "TIL if you <code>malloc()</code> something large enough, the kernel can decide to instead give you some random non-heap memory just wherever.",
-    "long": "Balancing memory fragmentation with fast allocation is tricky. Contrary to popular belief, you are not simply given an increasing address of the heap. On Linux there are 3 main layers that malloc is an interface to. The first is the glibc allocator, the second is the syscall `sblk()`, and the third is the syscall `mmap()`. Of course, this is a deep rabbit hole, but put simply: (1) glibc is pre-allocated with a fixed allocator and is great for small allocations. (2) sblk represents the heap we think of; allocations are simple increases to the shared heap address. But make sure you deallocate soon, or you'll block the heap from being able to reclaim memory. (3) mmap is the mother of all memory syscalls. You can grab an arbitary segment of virtual address space, and blocks get paged into physical memory as you go.",
-    "sources": "[0] [1] [2]"
+    "date": "2021-04-06T02:26:00+08:00",
+    "tags": ["python", "c++"],
+    "body": "TIL sometimes python is only 1/2 the speed of c++",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I think I was under the impression that interpreted languages were exceptionally slower than compiled languages. Surely the overhead of a switch statement + possible parsing would (at least) double or triple the execution time of every instruction. I hadn't learned about out-of-order processors yet, and I bet that's the reason whatever python code I was running at 2am was faster than I expected."
+      }
+    ]
   },
   {
-    "title": "Virtual address space",
+    "date": "2021-11-10T19:46:00+08:00",
+    "tags": ["c"],
+    "body": "TIL you can make a pointer point to itself in c",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I don't think I was surprised at the time, but that it was a fun piece of self-reference to share. Fun!"
+      }
+    ]
+  },
+  {
+    "date": "2022-02-13T12:41:00+08:00",
+    "tags": ["numpy"],
+    "body": "well, TIL rounding errors can be terrifying",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I think this was during CMPT 419, which was my first math heavy course on machine learning at SFU. The question involved some numpy equation one of my friends were working on that blew up 19.0 to 10^-29. Not sure what the function was, but I didn't realize that floating point error could compound, and that eps = 10^-9 would save us!"
+      }
+    ]
+  },
+  {
+    "date": "2022-10-08T12:54:00+08:00",
+    "tags": ["gcc"],
+    "body": "TIL in gcc only <code>a = x ?: y;<br>a = x ? x : y;</code> are identical",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "Not sure why I was looking into gcc extensions, but isn't that top one cool! Well, 4 years later, maybe it's a bit ugly... but I can see the joy in it for sure."
+      }
+    ]
+  },
+  {
+    "date": "2023-02-07T23:55:00+08:00",
+    "tags": ["windows"],
+    "body": "TIL you can grep in windows using `findstr` like `echo adfhadfhadfhadfh | findstr adf`",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "Today I relearned this. Windows often makes me sad, so this is a sigh for sore eyes."
+      }
+    ]
+  },
+  {
+    "date": "2023-06-15T01:54:00+08:00",
+    "tags": [],
+    "body": "til <a href=\"https://en.wikipedia.org/wiki/Blackboard_(design_pattern)\">https://en.wikipedia.org/wiki/Blackboard_(design_pattern)</a> is a thing",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I don't think I've ever used this design pattern, but it seems kinda cool?"
+      }
+    ]
+  },
+  {
+    "date": "2025-05-15T21:36:00+08:00",
+    "tags": ["c++"],
+    "body": "TIL about function try block syntax in c++ <code>int foo() try {<br>return do_stuff();<br>} catch (...) {<br>    std::cerr << \"Oh god there's an error I'm gonna throw up\n\";<br>    return 404;<br>}</code>",
+    "comments": [
+      {
+        "date": "2025-05-15",
+        "notes": "I kinda like it?"
+      }
+    ]
+  },
+  {
+    "date": "2025-07-25T16:48:00+08:00",
+    "tags": ["c"],
+    "body": "TIL signed overflow in C is UB, and now C is no longer my friend <a href=\"https://godbolt.org/z/KoYa7cTqr\">https://godbolt.org/z/KoYa7cTqr</a>",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I think I learned this when I was writing my C compiler. Don't worry, C is still my friend. But I'd sure love to fix this..."
+      }
+    ]
+  },
+  {
+    "date": "2025-07-29T16:48:00+08:00",
+    "tags": ["c"],
+    "body": "TIL `sprintf` is slow as balls",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I assumed the slow part of `printf` was something about synchronizing with / waiting for the terminal to buffer. While that is definitely true, sprintf is surprisingly slow as well. I profiled it at half the speed of an md5 hash evaluation (~1000 instructions)."
+      }
+    ]
+  },
+  {
+    "date": "2025-10-13T17:43:00+08:00",
+    "tags": ["linux"],
+    "body": "TIL grep works on files, not just for filtering stdin",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I still think this is crazy."
+      }
+    ]
+  },
+  {
+    "date": "2025-10-19T19:48:00+08:00",
+    "tags": ["c"],
+    "body": "TIL C23 deprecated stdbool.h and just added <a href=\"https://en.cppreference.com/w/c/language/arithmetic_types.html#Boolean_type)\">bool</a> <a href=\"https://c-for-dummies.com/blog/?p=6151#:~:text=stdio.h>%0A%0Aint%20main()%0A%7B-,bool%20b%20%3D%201%3B,-if(%20b%3D%3Dtrue%20)%0A%20%20%20%20%20%20%20%20puts\">as a language feature</a>",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "This is one of my favourite things about C23."
+      }
+    ]
+  },
+  {
+    "date": "2025-10-29T22:55:00+08:00",
+    "tags": ["c", "c++"],
+    "body": "TIL you can't do the following cast in C, but you can in C++ <code>char ** x = /* … */;<br>const char * const * y = x;</code>",
+    "comments": [
+      {
+        "date": "2025-10-29T23:01:00+08:00",
+        "notes": "The reason it fails in C being that the following cast is not allowed in either C nor C++, and C wanted to have less complicated logic: <code>char ** x = /* … */;<br>const char **y = x;<br>*y = “yahoo!”; // allowed because *y is not const qualified (only **y  is)<br>x[0] += 1; // bad! yahoo is likely stored in the text section of the program (read only)!</code>"
+      },
+      {
+        "date": "2026-10-03",
+        "notes": "I found this when I was reading through <a href=\"https://c-faq.com/\">https://c-faq.com/</a>"
+      }
+    ]
+  },
+  {
     "date": "2026-01-13",
-    "tags": ["Linux"],
+    "tags": ["c", "linux"],
+    "body": "TIL if you <code>malloc()</code> something large enough, the kernel can decide to instead give you some random non-heap memory just wherever.",
+    "comments": [
+      {
+        "date": "2026-09-01",
+        "notes": "Balancing memory fragmentation with fast allocation is tricky. Contrary my original belief, you are not simply given an increasing address in the heap. On Linux there are 3 main layers that malloc is an interface to. The first is your c library's allocator, the second is the syscall `sblk()`, and the third is the syscall `mmap()`. Of course, this is a deep rabbit hole (I have not delved into), but put simply: (1) glibc is pre-allocated with a fixed allocator that is great for small allocations. (2) sblk represents the heap we think of; allocations are simple increases to the shared heap address. But make sure you deallocate soon, or you'll block the heap from being able to reclaim memory. (3) mmap is the mother of all memory syscalls, and good for large allocations. You can grab an arbitrary segment of virtual address space, then blocks get paged into physical memory as you go. In a 64-bit address space, this fixes all problems with fragmentation at the cost of expensive bookkeeping."
+      }
+    ]
+  },
+  {
+    "date": "2026-01-13",
+    "tags": ["linux"],
     "body": "TIL you should expect to only be able to allocate up to ~50% of your virtual address space before `malloc()` starts failing, which on 32-bit systems is ~1GB per process 🥹"
   },
   {
-    "title": "?",
-    "date": "2026-01-14",
-    "tags": [],
-    "body": "..."
+    "date": "2026-01-25",
+    "tags": ["python", "c", "linux"],
+    "body": "TIL you can make a python bindings for a C library by just loading a shared object with <a href=\"https://docs.python.org/3/library/ctypes.html#ctypes.LibraryLoader.LoadLibrary\">cdll.LoadLibrary</a>."
+  },
+  {
+    "date": "2026-01-26",
+    "tags": ["linux"],
+    "body": "TIL you can run `gdb` on any program and debug any shared libraries the program loads, provided that library was compiled with debug symbols."
+  },
+  {
+    "date": "2026-01-26",
+    "tags": ["git"],
+    "body": "TIL ! at the start of a line in a gitignore un-ignores whatever that line specifies."
+  },
+  {
+    "date": "2026-01-27",
+    "tags": ["git"],
+    "body": "TIL you can assign through a const pointer to dynamically allocated memory by just casting away the const."
+  },
+  {
+    "date": "2026-01-27",
+    "tags": ["gcc"],
+    "body": "TIL the attribute `visiblity(\"default\")` marks only specific symbols as visible (in the ELF symbol table), which is helpful in decreasing shared object loading times. Make sure compile with `-fvisiblity=hidden`!"
+  },
+  {
+    "date": "2026-01-28",
+    "tags": ["git"],
+    "body": "TIL you can add aliases to git. For example, `git config --global alias.s status` shortens `git status` to `git s`",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "I try to keep my software dev setup minimal, but <code>git config --global alias.s status<br>git config --global alias.ds \"diff --staged\"</code><br>is now required by my muscle memory."
+      }
+    ]
+  },
+  {
+    "date": "2026-01-28",
+    "tags": ["python"],
+    "body": "TIL on python, if the list `__all__` is assigned to in a file, ONLY the symbols in that list are accessible when you `import *` that file."
+  },
+  {
+    "date": "2026-01-30",
+    "tags": ["git"],
+    "body": "TIL gitlab allows specifying PR dependencies!"
+  },
+  {
+    "date": "2026-02-04",
+    "tags": ["c"],
+    "body": "TIL macros can't be expanded inside comments in C... unless you have a build step that does."
+  },
+  {
+    "date": "2026-02-04",
+    "tags": ["c"],
+    "body": "TIL `(void) name;` is an awesome pattern for marking a variable (often a function argument) as unused."
+  },
+  {
+    "date": "2026-02-05",
+    "tags": ["c"],
+    "body": "TIL that `free(NULL)` is totally fine.",
+    "comments": [
+      {
+        "date": "2026-10-03",
+        "notes": "Double frees are the issue. This is why we set our pointer to `NULL` after we free it!"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-06",
+    "tags": ["git"],
+    "body": "TIL you can reset changes made to a single file during rebase using `git checkout HEAD^ file`"
+  },
+  {
+    "date": "2026-02-07",
+    "tags": ["git"],
+    "body": "TIL instead of creating a new ssh key everytime you configure a new vps, you can start a local instance of the ssh-agent `eval \"$(ssh-agent -s)\"`, give it your private key `ssh-add ~/.ssh/id_ed25519`, then `ssh -A micahdb.com` to forward the key to your login shell."
+  },
+  {
+    "date": "2026-02-09T21:46:00+08:00",
+    "tags": ["linux"],
+    "body": "TIL a gnu is an animal",
+    "comments": [
+      {
+        "date": "2026-02-09T21:46:00+08:00",
+        "notes": "and not unix"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-10",
+    "tags": ["nodejs"],
+    "body": "TIL `fs.readSync(..., numBytes, ...)` casts its numBytes to i32, so if you try to read 2^32 bytes, it treats it as `-1`. This is in a language (nodejs) where there isn't even an integer type."
   }
 ]

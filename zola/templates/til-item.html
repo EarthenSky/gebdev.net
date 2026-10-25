@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+
+{% block style %}
+{% endblock style %}
+
+{% block title %} {{ section.title }} {% endblock %}
+
+{% block content %}
+<article>
+    <div class="posts">
+        <div 
+            style="display: flex; flex-direction: row; font-weight: 400; font-size: 0.95em; color: var(--soft-grey-2); padding: 6px 0;"
+        >
+            <div style="margin-right: 6px;">Blog</div>
+
+            <a href="/tags" class="grey-link" style="margin-left: auto;">search tags</a>
+
+            <!-- TODO: implement this filter 
+            <div style="margin-left: auto;">Filter:</div>
+            <div class="filter-item" style="text-decoration: underline;">newest</div>
+            <div class="filter-item">gardening</div>
+            <div class="filter-item">math</div>
+            <div class="filter-item">software</div>
+            -->
+        </div>
+
+        <!-- TODO: add one or two new TILs from my journal -->
+        <!-- TODO: make this page look nice -->
+        {% set tils = load_data(path="data/til.json") %}
+        {% for page in section.pages %}
+            <a href="{{ page.permalink | safe }}">
+                <div>
+                    <h2>{{ page.title }}</h2>
+                    <div>
+                        <div>{{ page.date | date(format="%B %d, %Y") }}</div>
+                        {% if page.taxonomies.tags %}
+                        {% endif %}
+                    </div>
+                </div>
+                <span></span>
+            </a>
+
+            <span href="link" class="til-card">
+                <span class="contents">
+                    {{ page.raw_content }}
+                </span>
+                <div style="display: flex; flex-direction: row-reverse; margin-top: 2px;">
+                    <!--<h2>malloc</h2>-->
+                    <div class="date">January 13, 2026</div>
+                </div>
+            </span>
+        {% endfor %}
+
+        <!--<p>Umbrella: Devlog 1 - <a href="">A new programming language called Umbrella</a> &nbsp;<em class="date-item">TBD</em></p>-->
+    </div>
+
+</article>
+{% endblock content %}
